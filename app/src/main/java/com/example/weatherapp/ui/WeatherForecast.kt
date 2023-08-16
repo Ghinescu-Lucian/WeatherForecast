@@ -1,6 +1,7 @@
 package com.example.weatherapp.ui
 
-
+import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,6 +25,7 @@ fun WeatherForecast(
     state: WeatherState,
     modifier: Modifier = Modifier
 ){
+//    Log.d("Luky2", state.weatherInfo?.weatherDataPerDay?.get(1).toString())
     state.weatherInfo?.weatherDataPerDay?.get(0)?.let {data ->
         Column(
             modifier = modifier
@@ -38,12 +40,15 @@ fun WeatherForecast(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
+            Log.d("Luky1", data.toString())
+
 
 
 
             LazyRow(content = {
 
-                items(data.prognoze) { weatherData ->
+                items(data.forecasts) { weatherData ->
+//                    Log.d("Luky1",weatherData.toString())
                     HourlyWeatherDisplay(
                         weatherData = weatherData,
                         modifier = Modifier
@@ -64,7 +69,7 @@ fun WeatherForecast(
 
 @Preview
 @Composable
-fun WeatherForecastPreview(){
+fun WeatherForecastPrieview(){
     WeatherAppTheme {
 
         val interactor = WeatherDataInteractorImpl()
