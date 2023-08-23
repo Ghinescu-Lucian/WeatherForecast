@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractor
 import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractorImpl
 import com.example.weatherapp.domain.weather.WeatherData
+import com.example.weatherapp.ui.animation.radialGradient
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import java.time.format.DateTimeFormatter
 @Composable
@@ -40,7 +41,7 @@ fun HourlyWeatherDisplay(
     }
     Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.outlineVariant),
+            .background(radialGradient(colorStart = MaterialTheme.colorScheme.outlineVariant, colorEnd = MaterialTheme.colorScheme.outline)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
@@ -67,14 +68,14 @@ fun HourlyPreview(){
     WeatherAppTheme {
 
 
-
-        val interactor  = WeatherDataInteractorImpl()
-        val viewModel = WeatherViewModel(interactor = interactor)
-        val weatherState = viewModel.state.collectAsState()
-
-        weatherState.value.weatherInfo?.currentWeatherData?.let {
-            HourlyWeatherDisplay(weatherData = it)
-        }
+//
+//        val interactor  = WeatherDataInteractorImpl()
+//        val viewModel = WeatherViewModel(interactor = interactor)
+//        val weatherState = viewModel.state.collectAsState()
+//
+//        weatherState.value.weatherInfo?.currentWeatherData?.let {
+//            HourlyWeatherDisplay(weatherData = it)
+//        }
 
 //        val viewModel = WeatherViewModel()
 //        viewModel.loadWeatherInfo()

@@ -61,16 +61,16 @@ fun WeatherCard(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background( radialGradient(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary))
+                    .background( radialGradient(MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.onPrimary))
                     .padding(16.dp),
 
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ) {
                 Text(
-                    text = "Today 14:00",
+                    text = data.time.toString(),
                     modifier = Modifier.align(Alignment.End),
-                    color = Color.Gray
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(
                     modifier = Modifier.height(16.dp)
@@ -134,18 +134,18 @@ fun WeatherCard(
 fun WeatherCardPreview(){
 
 
-    val interactor  = WeatherDataInteractorImpl()
-    val viewModel = WeatherViewModel(interactor = interactor)
-    val weatherState = viewModel.state.collectAsState()
-
-    WeatherAppTheme {
-//        WeatherCard(data = weatherState.weatherInfo?=.currentWeatherData , backgroundColor =Color.Blue )
-
-        WeatherCard (
-            data = weatherState.value.weatherInfo?.currentWeatherData,
-            backgroundColor = MaterialTheme.colorScheme.primary,
-                )
-
-    }
+//    val interactor  = WeatherDataInteractorImpl()
+//    val viewModel = WeatherViewModel(interactor = interactor)
+//    val weatherState = viewModel.state.collectAsState()
+//
+//    WeatherAppTheme {
+////        WeatherCard(data = weatherState.weatherInfo?=.currentWeatherData , backgroundColor =Color.Blue )
+//
+//        WeatherCard (
+//            data = weatherState.value.weatherInfo?.currentWeatherData,
+//            backgroundColor = MaterialTheme.colorScheme.primary,
+//                )
+//
+//    }
 }
 

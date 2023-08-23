@@ -25,7 +25,9 @@ fun WeatherForecast(
     state: WeatherState,
     modifier: Modifier = Modifier
 ){
-//    Log.d("Luky2", state.weatherInfo?.weatherDataPerDay?.get(1).toString())
+    Log.d("State", state.toString())
+//    if(state.weatherInfo?.weatherDataPerDay!!.size == 0) return
+//    if(state.weatherInfo?.weatherDataPerDay!!.isEmpty() == true) return
     state.weatherInfo?.weatherDataPerDay?.get(0)?.let {data ->
         Column(
             modifier = modifier
@@ -70,16 +72,16 @@ fun WeatherForecast(
 @Preview
 @Composable
 fun WeatherForecastPrieview(){
-    WeatherAppTheme {
-
-        val interactor = WeatherDataInteractorImpl()
-        val viewModel = WeatherViewModel(interactor = interactor)
-        val state = viewModel.state.collectAsState()
-        WeatherForecast(state = state.value)
-
-//        val viewModel = WeatherViewModel()
-//        viewModel.loadWeatherInfo()
-//        val state = viewModel.state
-//        WeatherForecast(state = state)
-    }
+//    WeatherAppTheme {
+//
+//        val interactor = WeatherDataInteractorImpl()
+//        val viewModel = WeatherViewModel(interactor = interactor)
+//        val state = viewModel.state.collectAsState()
+//        WeatherForecast(state = state.value)
+//
+////        val viewModel = WeatherViewModel()
+////        viewModel.loadWeatherInfo()
+////        val state = viewModel.state
+////        WeatherForecast(state = state)
+//    }
 }
