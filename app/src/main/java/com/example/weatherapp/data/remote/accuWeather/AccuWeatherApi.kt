@@ -1,10 +1,13 @@
 package com.example.weatherapp.data.remote.accuWeather
 
-import com.example.weatherapp.data.remote.accuWeather.dto.CurrentWeatherDto
-import com.example.weatherapp.data.remote.accuWeather.dto.LocationKeyDto
+import com.example.weatherapp.data.remote.accuWeather.dto.currentWeather.CurrentWeatherDto
+import com.example.weatherapp.data.remote.accuWeather.dto.hourlyWeather.HourlyWeatherDto
+import com.example.weatherapp.data.remote.accuWeather.dto.locationKey.LocationKeyDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+
+val api_key = "Rv1IGtx7Psyf8ma8hSSGneGMTU2rsisq"
 
 interface AccuWeatherApi {
 
@@ -13,15 +16,29 @@ interface AccuWeatherApi {
    suspend fun getLocationKey(
         @Query("q") lat_long: String,
         @Query("details") details: Boolean,
-        @Query("apikey") apiKey:String = "Rv1IGtx7Psyf8ma8hSSGneGMTU2rsisq"
-    ): LocationKeyDto
+        @Query("apikey") apiKey:String = api_key
+   ): LocationKeyDto
 
    @GET("forecasts/v1/hourly/1hour/{locationKey}")
-   suspend fun getCurrentForecast(
+   suspend fun getOneHourForecast(
        @Path("locationKey") locationKey: String,
        @Query("details") details: Boolean = true,
        @Query("metric") metricUnits: Boolean = true,
-       @Query("apikey") apikey: String = "Rv1IGtx7Psyf8ma8hSSGneGMTU2rsisq"
-
+       @Query("apikey") apikey: String = api_key
    ): List<CurrentWeatherDto>
+
+    @GET("currentconditions/v1/{locationKey}")
+    suspend fun getCurrentForecast(
+        @Path("locationKey") locationKey: String,
+        @Query("details") details: Boolean = true,
+        @Query("apikey") apikey: String = api_key
+    ): List<CurrentWeatherDto>
+
+    @GET("forecasts/v1/hourly/12hour/{locationKey}")
+    suspend fun getHourlyForecasts(
+        @Path("locationKey") locationKey: String ,
+        @Query("details") details: Boolean = true,
+        @Query("metric") metric: Boolean= true,
+        @Query("apikey") apikey: String = api_key
+    ):List<HourlyWeatherDto>
 }

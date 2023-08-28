@@ -1,9 +1,9 @@
-package com.example.weatherapp.data.remote.accuWeather.dto
+package com.example.weatherapp.data.remote.accuWeather.dto.hourlyWeather
 
+import com.example.weatherapp.data.remote.accuWeather.dto.PropertyDto
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
 
-data class CurrentWeatherDto(
+data class HourlyWeatherDto(
     @SerializedName("DateTime")
     val time: String,
     @SerializedName("WeatherIcon")
@@ -13,7 +13,10 @@ data class CurrentWeatherDto(
     @SerializedName("Temperature")
     val temperature: PropertyDto,
     @SerializedName("Wind")
-    val wind: WindDto,
+    val wind: WindHourlyDto,
     @SerializedName("RelativeHumidity")
-    val humidity: Double
+    val humidity: Double,
+    @SerializedName("IsDaylight")
+    val isDay: Boolean
+
 )

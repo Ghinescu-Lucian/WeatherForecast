@@ -24,7 +24,7 @@ private object weatherState{
 
 class WeatherDataInteractorImpl @Inject constructor (
     val locationTracker: LocationTracker,
-   @Named("VisualCrossing" ) val  weatherRepository: WeatherRepository
+   @Named("AccuWeather" ) val  weatherRepository: WeatherRepository
     ) : WeatherDataInteractor {
 
     override suspend fun getWeatherData(): Result<WeatherData> {

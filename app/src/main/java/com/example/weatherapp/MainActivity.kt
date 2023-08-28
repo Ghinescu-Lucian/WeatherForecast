@@ -59,10 +59,11 @@ class MainActivity : ComponentActivity() {
 
         GlobalScope.launch {
 
-            val r  = repository.getCurrentWeatherData(0.0,0.0)
+            val r  = repository.getHourlyWeatherData(0.0,0.0)
             r.onSuccess {
-                Log.d("AccuWeather",it.currentWeatherData.toString())
+                Log.d("AccuWeather",it.weatherDataPerDay.size.toString())
             }
+
         }
 
 

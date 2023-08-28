@@ -1,5 +1,6 @@
-package com.example.weatherapp.data.remote.accuWeather.dto
+package com.example.weatherapp.data.remote.accuWeather.dto.locationKey
 
+import com.example.weatherapp.data.remote.accuWeather.dto.NameDto
 import com.google.gson.annotations.SerializedName
 
 // Gson inloc de Moshi
