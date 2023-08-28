@@ -27,18 +27,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.lifecycleScope
-import com.example.weatherapp.data.location.DefaultLocationTracker
 import com.example.weatherapp.data.remote.accuWeather.AccuWeatherApi
 import com.example.weatherapp.data.remote.accuWeather.RetrofitHelperAccuWeather
 import com.example.weatherapp.data.remote.accuWeather.repository.AccuWeatherRepositoryImpl
-import com.example.weatherapp.data.remote.visualCrossing.RetrofitHelperVisual_Crossing
-import com.example.weatherapp.data.remote.visualCrossing.VisualCrossingApi
-import com.example.weatherapp.data.remote.visualCrossing.repository.VisualCrossingRepositoryImpl
-import com.example.weatherapp.ui.WeatherCard
-import com.example.weatherapp.ui.WeatherForecast
-import com.example.weatherapp.ui.WeatherState
-import com.example.weatherapp.ui.WeatherViewModel
+import com.example.weatherapp.ui.mainScreen.WeatherCard
+import com.example.weatherapp.ui.mainScreen.WeatherForecast
+import com.example.weatherapp.ui.states.WeatherState
+import com.example.weatherapp.ui.viewModels.WeatherViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.GlobalScope
@@ -152,7 +147,6 @@ fun WeatherApp(
             ) {
                 WeatherCard(
                    data = state.weatherInfo?.currentWeatherData,
-                    backgroundColor = MaterialTheme.colorScheme.primary
                 )
 
                 Spacer(

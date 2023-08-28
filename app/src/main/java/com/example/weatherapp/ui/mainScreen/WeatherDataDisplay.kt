@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui
+package com.example.weatherapp.ui.mainScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row

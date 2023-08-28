@@ -1,18 +1,13 @@
-package com.example.weatherapp.ui
+package com.example.weatherapp.ui.mainScreen
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,12 +16,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractor
-import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractorImpl
 import com.example.weatherapp.domain.weather.WeatherData
+import com.example.weatherapp.domain.weather.WeatherType
 import com.example.weatherapp.ui.animation.radialGradient
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
 @Composable
 fun HourlyWeatherDisplay(
     weatherData: WeatherData,
@@ -67,19 +63,15 @@ fun HourlyWeatherDisplay(
 @Composable
 fun HourlyPreview(){
     WeatherAppTheme {
-
-
-//
-//        val interactor  = WeatherDataInteractorImpl()
-//        val viewModel = WeatherViewModel(interactor = interactor)
-//        val weatherState = viewModel.state.collectAsState()
-//
-//        weatherState.value.weatherInfo?.currentWeatherData?.let {
-//            HourlyWeatherDisplay(weatherData = it)
-//        }
-
-//        val viewModel = WeatherViewModel()
-//        viewModel.loadWeatherInfo()
-//        viewModel.state?.weatherInfo?.currentWeatherData?.let { HourlyWeatherDisplay(weatherData = it) }
+       
+        val data = WeatherData(
+            time = LocalDateTime.now(),
+            temperatureCelsius = 25.2,
+            pressure = 1000.0,
+            humidity = 56.0,
+            weatherType = WeatherType.fromWMO(0),
+            windSpeed = 12.0
+        )
+        HourlyWeatherDisplay(weatherData = data)
     }
 }

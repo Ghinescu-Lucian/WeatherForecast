@@ -1,12 +1,11 @@
-package com.example.weatherapp.ui
+package com.example.weatherapp.ui.viewModels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractor
 import com.example.weatherapp.domain.weather.WeatherInfo
-import com.example.weatherapp.domain.location.LocationTracker
+import com.example.weatherapp.ui.states.WeatherState
 import dagger.hilt.android.lifecycle.HiltViewModel
 //import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

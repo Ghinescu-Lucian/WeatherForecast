@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui
+package com.example.weatherapp.ui.states
 
 import com.example.weatherapp.domain.weather.WeatherInfo
 
