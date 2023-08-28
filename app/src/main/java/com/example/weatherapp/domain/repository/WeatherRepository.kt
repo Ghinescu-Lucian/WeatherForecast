@@ -4,6 +4,6 @@ import com.example.weatherapp.domain.weather.WeatherInfo
 
 interface WeatherRepository {
 
-    suspend fun getWeatherData(lat: Double, long: Double): Result<WeatherInfo>
+    suspend fun getCurrentWeatherData(lat: Double, long: Double): Result<WeatherInfo>
 
 }

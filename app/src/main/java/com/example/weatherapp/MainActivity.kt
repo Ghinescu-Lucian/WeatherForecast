@@ -27,15 +27,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractorImpl
+import androidx.lifecycle.lifecycleScope
+import com.example.weatherapp.data.location.DefaultLocationTracker
+import com.example.weatherapp.data.remote.accuWeather.AccuWeatherApi
+import com.example.weatherapp.data.remote.accuWeather.RetrofitHelperAccuWeather
+import com.example.weatherapp.data.remote.accuWeather.repository.AccuWeatherRepositoryImpl
+import com.example.weatherapp.data.remote.visualCrossing.RetrofitHelperVisual_Crossing
+import com.example.weatherapp.data.remote.visualCrossing.VisualCrossingApi
+import com.example.weatherapp.data.remote.visualCrossing.repository.VisualCrossingRepositoryImpl
 import com.example.weatherapp.ui.WeatherCard
 import com.example.weatherapp.ui.WeatherForecast
 import com.example.weatherapp.ui.WeatherState
 import com.example.weatherapp.ui.WeatherViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -47,12 +54,35 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val weatherApi = RetrofitHelperAccuWeather.getInstance().create(AccuWeatherApi::class.java)
+        val repository = AccuWeatherRepositoryImpl(api =weatherApi )
+
+        GlobalScope.launch {
+
+            val r  = repository.getCurrentWeatherData(0.0,0.0)
+            r.onSuccess {
+                Log.d("AccuWeather",it.currentWeatherData.toString())
+            }
+        }
+
+
+//        val visualCrossingApi = RetrofitHelperVisual_Crossing.getInstance().create(VisualCrossingApi::class.java)
+//        val repository = VisualCrossingRepositoryImpl(visualCrossingApi)
+//        GlobalScope.launch{
+////            val r = visualCrossingApi.getW
+//            val result = repository.getWeatherData(45.189818, 22.351459).onSuccess { it ->
+//                Log.d("VisualCrossing",it.weatherDataPerDay.toString())
+//            }
+////
+//                    Log.d("VisualCrossing", result.toString())
+//        }
 
 //        val weatherApi = RetrofitHelper.getInstance().create(WeatherApi::class.java)
 //        val interactor = WeatherDataInteractorImpl()
 //        val viewModel = WeatherViewModel(
 //            interactor = interactor,
 //        )
+
 
 //        Ok
 

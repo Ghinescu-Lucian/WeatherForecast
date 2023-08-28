@@ -1,5 +1,6 @@
-package com.example.weatherapp.data.remote.OpenMeteo
+package com.example.weatherapp.data.remote.openMeteo
 
+import com.example.weatherapp.data.remote.openMeteo.dto.WeatherDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

@@ -1,7 +1,7 @@
-package com.example.weatherapp.data.remote.OpenMeteo.mappers
+package com.example.weatherapp.data.remote.openMeteo.mappers
 
-import com.example.weatherapp.data.remote.OpenMeteo.WeatherDataDto
-import com.example.weatherapp.data.remote.OpenMeteo.WeatherDto
+import com.example.weatherapp.data.remote.openMeteo.dto.WeatherDataDto
+import com.example.weatherapp.data.remote.openMeteo.dto.WeatherDto
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo

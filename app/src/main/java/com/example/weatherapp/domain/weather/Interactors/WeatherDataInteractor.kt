@@ -9,6 +9,7 @@ import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherType
 import java.time.LocalDateTime
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.Result.Companion.failure
 
 interface WeatherDataInteractor {
@@ -23,15 +24,18 @@ private object weatherState{
 
 class WeatherDataInteractorImpl @Inject constructor (
     val locationTracker: LocationTracker,
-    val  weatherRepository: WeatherRepository
+   @Named("VisualCrossing" ) val  weatherRepository: WeatherRepository
     ) : WeatherDataInteractor {
 
     override suspend fun getWeatherData(): Result<WeatherData> {
+        Log.d("Interactor",weatherRepository::class.java.simpleName.toString().takeLast(50))
         if(weatherState.currentWeather.isFailure) {
             val location = locationTracker.getCurrentLocation()
             var result: Result<WeatherData> = failure(Exception("Error on interactor"))
             location.onSuccess {
-                val r = weatherRepository.getWeatherData(it!!.latitude, it.longitude)
+                val l = it?.latitude
+                if(l == null) return Result.failure(Exception("Error on location provider."))
+                val r = weatherRepository.getCurrentWeatherData(it.latitude, it.longitude)
 
                 r.onSuccess { itt ->
                     result = Result.success(itt.currentWeatherData) as Result<WeatherData>
@@ -54,10 +58,12 @@ class WeatherDataInteractorImpl @Inject constructor (
         var result: Result<List<WeatherDataPerDay>> = failure(Exception("Error on interactor"))
 
         location.onSuccess {
-            val r = weatherRepository.getWeatherData(it!!.latitude, it.longitude)
+            val l = it?.latitude
+            if(l == null) return Result.failure(Exception("Error on location provider."))
+            val r = weatherRepository.getCurrentWeatherData(it.latitude, it.longitude)
             r.onSuccess {  itt ->
                 result = Result.success(itt.weatherDataPerDay)
-                Log.d("WeatherForecast",itt.weatherDataPerDay.get(1).toString())
+                Log.d("WeatherForecast",itt.weatherDataPerDay.get(0).toString())
 
             }
         }

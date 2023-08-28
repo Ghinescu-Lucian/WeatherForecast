@@ -44,7 +44,7 @@ class WeatherViewModel @Inject constructor (
             }
 
             val result = interactor.getWeatherData()
-                result.onFailure {
+            result.onFailure {
                     _state.update{itt->
                         itt.copy(error = it.message,
                             isLoading = false)

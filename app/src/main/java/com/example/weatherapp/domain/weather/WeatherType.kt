@@ -1,5 +1,6 @@
 package com.example.weatherapp.domain.weather
 
+import android.view.Display.Mode
 import androidx.annotation.DrawableRes
 import com.example.weatherapp.R
 //import com.plcoding.weatherapp.R
@@ -148,6 +149,56 @@ sealed class WeatherType(
                 95 -> ModerateThunderstorm
                 96 -> SlightHailThunderstorm
                 99 -> HeavyHailThunderstorm
+                else -> ClearSky
+            }
+        }
+
+        fun fromVisualCrossing(code: String):WeatherType{
+            return when(code){
+                "snow" -> ModerateSnowFall
+                "snow-shower-day" -> ModerateSnowFall
+                "snow-shower-night" -> ModerateSnowFall
+                "rain" -> ModerateRain
+                "thunder-rain" -> ModerateThunderstorm
+                "thunder-showers-day" -> ModerateThunderstorm
+                "thunder-showers-night" -> ModerateThunderstorm
+                "showers-day" -> ModerateRain
+                "showers-night" -> ModerateRain
+                "fog" -> Foggy
+                "cloudy" -> PartlyCloudy
+                "partly-cloudy-day" -> PartlyCloudy
+                "partly-cloudy-night" -> PartlyCloudy
+                else -> ClearSky
+            }
+
+        }
+
+        fun fromAccuWeather(code: Int) : WeatherType{
+            return  when(code) {
+                1 -> ClearSky
+                2 -> ClearSky
+                3 -> ClearSky
+                4 -> ClearSky
+                5 -> ClearSky
+                6 -> PartlyCloudy
+                7 -> Overcast
+                8 -> Overcast
+                9 -> Foggy
+                12 -> SlightRain
+                13 -> ModerateRain
+                14 -> ModerateRain
+                15 -> ModerateThunderstorm
+                16 -> ModerateThunderstorm
+                17 -> ModerateThunderstorm
+                18 -> HeavyRain
+                19 -> Overcast
+                20 -> Overcast
+                21 -> PartlyCloudy
+                22 -> SnowGrains
+                23 -> SnowGrains
+                25 -> DenseFreezingDrizzle
+                26 -> DenseDrizzle
+                27 -> LightFreezingDrizzle
                 else -> ClearSky
             }
         }
