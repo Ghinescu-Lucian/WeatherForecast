@@ -18,13 +18,13 @@ interface WeatherDataInteractor {
 }
 
 private object weatherState{
-     var currentWeather : Result<WeatherData> = Result.failure(Exception("Initialize"))
-     var days : Result<List<WeatherDataPerDay>> = Result.failure(Exception("Initialize"))
+     var currentWeather : Result<WeatherData> = failure(Exception("Initialize"))
+     var days : Result<List<WeatherDataPerDay>> = failure(Exception("Initialize"))
 }
 
 class WeatherDataInteractorImpl @Inject constructor (
     val locationTracker: LocationTracker,
-   @Named("AccuWeather" ) val  weatherRepository: WeatherRepository
+   @Named("OpenMeteo" ) val  weatherRepository: WeatherRepository
     ) : WeatherDataInteractor {
 
     override suspend fun getWeatherData(): Result<WeatherData> {
@@ -34,7 +34,7 @@ class WeatherDataInteractorImpl @Inject constructor (
             var result: Result<WeatherData> = failure(Exception("Error on interactor"))
             location.onSuccess {
                 val l = it?.latitude
-                if(l == null) return Result.failure(Exception("Error on location provider."))
+                if(l == null) return failure(Exception("Error on location provider."))
                 val r = weatherRepository.getCurrentWeatherData(it.latitude, it.longitude)
 
                 r.onSuccess { itt ->
@@ -59,7 +59,7 @@ class WeatherDataInteractorImpl @Inject constructor (
 
         location.onSuccess {
             val l = it?.latitude
-            if(l == null) return Result.failure(Exception("Error on location provider."))
+            if(l == null) return failure(Exception("Error on location provider."))
             val r = weatherRepository.getCurrentWeatherData(it.latitude, it.longitude)
             r.onSuccess {  itt ->
                 result = Result.success(itt.weatherDataPerDay)
@@ -75,7 +75,7 @@ class WeatherDataInteractorImpl @Inject constructor (
 
     }
 
-    suspend fun getWeatherDataMock(): Result<WeatherData> {
+    fun getWeatherDataMock(): Result<WeatherData> {
 
         val time = LocalDateTime.now()
         val currentWeather = WeatherData(
@@ -90,7 +90,7 @@ class WeatherDataInteractorImpl @Inject constructor (
         return Result.success(currentWeather)
     }
 
-    suspend fun getWeatherDataPerDayMock(days: Int): Result<List<WeatherDataPerDay>> {
+   fun getWeatherDataPerDayMock(): Result<List<WeatherDataPerDay>> {
 
         val time = LocalDateTime.now()
         val weatherDay = listOf(

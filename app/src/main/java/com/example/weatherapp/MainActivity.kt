@@ -27,17 +27,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.weatherapp.data.remote.accuWeather.AccuWeatherApi
-import com.example.weatherapp.data.remote.accuWeather.RetrofitHelperAccuWeather
-import com.example.weatherapp.data.remote.accuWeather.repository.AccuWeatherRepositoryImpl
+import com.example.weatherapp.domain.weather.WeatherData
+import com.example.weatherapp.domain.weather.WeatherDataPerDay
+import com.example.weatherapp.domain.weather.WeatherInfo
+import com.example.weatherapp.domain.weather.WeatherType
 import com.example.weatherapp.ui.mainScreen.WeatherCard
 import com.example.weatherapp.ui.mainScreen.WeatherForecast
 import com.example.weatherapp.ui.states.WeatherState
-import com.example.weatherapp.ui.viewModels.WeatherViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.viewModels.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -48,58 +48,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val weatherApi = RetrofitHelperAccuWeather.getInstance().create(AccuWeatherApi::class.java)
-        val repository = AccuWeatherRepositoryImpl(api =weatherApi )
-
-        GlobalScope.launch {
-
-            val r  = repository.getHourlyWeatherData(0.0,0.0)
-            r.onSuccess {
-                Log.d("AccuWeather",it.weatherDataPerDay.size.toString())
-            }
-
-        }
-
-
-//        val visualCrossingApi = RetrofitHelperVisual_Crossing.getInstance().create(VisualCrossingApi::class.java)
-//        val repository = VisualCrossingRepositoryImpl(visualCrossingApi)
-//        GlobalScope.launch{
-////            val r = visualCrossingApi.getW
-//            val result = repository.getWeatherData(45.189818, 22.351459).onSuccess { it ->
-//                Log.d("VisualCrossing",it.weatherDataPerDay.toString())
-//            }
-////
-//                    Log.d("VisualCrossing", result.toString())
-//        }
-
-//        val weatherApi = RetrofitHelper.getInstance().create(WeatherApi::class.java)
-//        val interactor = WeatherDataInteractorImpl()
-//        val viewModel = WeatherViewModel(
-//            interactor = interactor,
-//        )
-
-
-//        Ok
-
-//       GlobalScope.launch {
-//           val result = viewModel.repository.getWeatherData(45.7537, 21.2257);
-//           result.onSuccess {
-//               Log.d("Retrofit", it.currentWeatherData?.time.toString())
-//           }
-//        }
-
-
-
-
-//        GlobalScope.launch {
-//           val result =  viewModel.locationTracker.getCurrentLocation()
-//            Log.d("LocationTracker", result.toString())
-////            val toast = Toast.makeText(this, result.toString(), Toast.LENGTH_LONG) // in Activity
-////            toast.show()
-////            println("CEVA")
-//
-//        }
 
 
         permissionLauncher = registerForActivityResult(
@@ -180,12 +128,159 @@ fun WeatherApp(
 @Composable
 fun AppPreview(){
 
-//    val interactor = WeatherDataInteractorImpl()
-//   // val viewModel = WeatherViewModel(interactor = interactor, repository = , locationTracker = )
-//        // val state = viewModel.state.collectAsState()
-//    WeatherAppTheme {
-//        WeatherApp(state = state.value )
-//    }
+
+    val state = WeatherState(
+        cityName = "Timisoara",
+        weatherInfo = WeatherInfo(
+            currentWeatherData = WeatherData(
+                time = LocalDateTime.now(),
+                temperatureCelsius = 25.2,
+                pressure = 1000.0,
+                humidity = 56.0,
+                weatherType = WeatherType.fromWMO(0),
+                windSpeed = 12.0
+            ),
+            weatherDataPerDay = listOf(
+                WeatherDataPerDay(
+                    day =0,
+                    listOf(
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(0),
+                            windSpeed = 12.0
+                        ),
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.12,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(1),
+                            windSpeed = 12.0
+                        ),
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.12,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(56),
+                            windSpeed = 12.0
+                        ),
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.12,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(75),
+                            windSpeed = 12.0
+                        ),
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.12,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(45),
+                            windSpeed = 12.0
+                        )
+
+                    )
+                ),
+                WeatherDataPerDay(
+                    day =1,
+                    listOf(
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(2),
+                            windSpeed = 12.0
+                        ),
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(3),
+                            windSpeed = 12.0
+                        )
+
+                    )
+                ),
+                WeatherDataPerDay(
+                    day =2,
+                    listOf(
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(45),
+                            windSpeed = 12.0
+                        ),
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(0),
+                            windSpeed = 12.0
+                        )
+
+                    )
+                ),
+                WeatherDataPerDay(
+                    day =3,
+                    listOf(
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(0),
+                            windSpeed = 12.0
+                        ),
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(0),
+                            windSpeed = 12.0
+                        )
+
+                    )
+                ),
+                WeatherDataPerDay(
+                    day =4,
+                    listOf(
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(0),
+                            windSpeed = 12.0
+                        ),
+                        WeatherData(
+                            time = LocalDateTime.now(),
+                            temperatureCelsius = 25.2,
+                            pressure = 1000.0,
+                            humidity = 56.0,
+                            weatherType = WeatherType.fromWMO(0),
+                            windSpeed = 12.0
+                        )
+
+                    )
+                ),
+            )
+        )
+    )
+    WeatherAppTheme {
+        WeatherApp(state = state)
+    }
 
 }
 
