@@ -24,14 +24,19 @@ private object weatherState{
 
 class WeatherDataInteractorImpl @Inject constructor (
     val locationTracker: LocationTracker,
-   @Named("OpenMeteo" ) val  weatherRepository: WeatherRepository
+    // sa am o lista de repository
+   // val averageCalculator: AverageCalculator,
+   @Named("OpenMeteo" ) val  weatherRepository: WeatherRepository,
+
+   // val weatherRepositories : Set<WeatherRepository>
+
     ) : WeatherDataInteractor {
 
     override suspend fun getWeatherData(): Result<WeatherData> {
         Log.d("Interactor",weatherRepository::class.java.simpleName.toString().takeLast(50))
         if(weatherState.currentWeather.isFailure) {
             val location = locationTracker.getCurrentLocation()
-            var result: Result<WeatherData> = failure(Exception("Error on interactor"))
+            var result: Result<WeatherData> = failure(Exception("Error on interactor( time-out )"))
             location.onSuccess {
                 val l = it?.latitude
                 if(l == null) return failure(Exception("Error on location provider."))
@@ -40,7 +45,6 @@ class WeatherDataInteractorImpl @Inject constructor (
                 r.onSuccess { itt ->
                     result = Result.success(itt.currentWeatherData) as Result<WeatherData>
                     weatherState.currentWeather = result
-                    Log.d("Interactor",itt.weatherDataPerDay.toString())
                     weatherState.days = Result.success(itt.weatherDataPerDay)
 //                    weatherState.days = re
                 }
@@ -53,7 +57,6 @@ class WeatherDataInteractorImpl @Inject constructor (
     }
     override suspend fun getWeatherDataPerDay(days: Int): Result<List<WeatherDataPerDay>> {
         if(weatherState.days.isFailure){
-            Log.d("WeatherForecast","AICI")
         val location = locationTracker.getCurrentLocation()
         var result: Result<List<WeatherDataPerDay>> = failure(Exception("Error on interactor"))
 
@@ -63,7 +66,6 @@ class WeatherDataInteractorImpl @Inject constructor (
             val r = weatherRepository.getCurrentWeatherData(it.latitude, it.longitude)
             r.onSuccess {  itt ->
                 result = Result.success(itt.weatherDataPerDay)
-                Log.d("WeatherForecast",itt.weatherDataPerDay.get(0).toString())
 
             }
         }

@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">WeatherApp</string>
+    <string name="partial_result_error">Eroare surse</string>
+    <string name="main">Current</string>
+    <string name="hourly">Hourly</string>
+    <string name="daily">Daily</string>
+    <string name="profile">Profile</string>
+    <string name="search"></string>
 </resources>
