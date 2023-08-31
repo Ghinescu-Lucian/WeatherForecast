@@ -1,0 +1,85 @@
+package com.example.weatherapp.ui.menu
+
+import android.util.Log
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import com.example.weatherapp.ui.DailyForecasts.DailyScreen
+import com.example.weatherapp.ui.Profile.ProfileScreen
+import com.example.weatherapp.ui.SearchScreen.SearchScreen
+import com.example.weatherapp.ui.hourlyForecasts.HourlyScreen
+import com.example.weatherapp.ui.mainScreen.MainScreen
+import com.example.weatherapp.ui.viewModels.WeatherViewModel
+
+
+
+
+@Composable
+fun WeatherNavHost(
+    navController: NavHostController,
+    modifier: Modifier
+){
+    val viewModel : WeatherViewModel
+    viewModel = hiltViewModel()
+    val state by viewModel.state.collectAsState()
+    NavHost(
+        navController = navController,
+        startDestination = Main.route,
+        modifier = modifier
+
+    ){
+        composable(route =  Main.route){
+            MainScreen(modifier = Modifier , state = state,
+                onClickSeeHourly = {
+//                    navController.navigateSingleTopTo(HourlyScreen.route)
+                    navController.navigateSingleTopTo(route = HourlyScreen.route)
+
+                }
+            )
+        }
+        composable(route =  HourlyScreen.route){
+            Log.d("Navigation","Hourly icon pressed")
+            HourlyScreen(modifier = Modifier , state = state,
+                onClickSeeCurrent = {
+//                    navController.navigateSingleTopTo(HourlyScreen.route)
+                    navController.navigateSingleTopTo(route = Main.route)
+
+                }
+            )
+        }
+        composable(route = DailyScreen.route){
+            Log.d("Navigation", "Daily icon pressed")
+            DailyScreen(modifier = Modifier, state = state,
+                )
+        }
+        composable(route = ProfileScreen.route){
+            Log.d("Navigation", "Daily icon pressed")
+            ProfileScreen(modifier = Modifier, state = state,
+            )
+        }
+        composable(route = Search.route){
+            Log.d("Navigation", "Daily icon pressed")
+            SearchScreen(modifier = Modifier, state = state,
+            )
+        }
+
+
+    }
+}
+
+fun NavHostController.navigateSingleTopTo(route: String) =
+    this.navigate(route){
+        popUpTo(
+            this@navigateSingleTopTo.graph.findStartDestination().id
+        ){
+            saveState = true
+        }
+        launchSingleTop = true
+        restoreState = true
+    }

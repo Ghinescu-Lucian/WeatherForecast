@@ -15,7 +15,8 @@ import java.time.LocalDateTime
 @Composable
 fun HourlyScreen(
     modifier : Modifier = Modifier,
-    state: WeatherState
+    state: WeatherState,
+    onClickSeeCurrent: () ->Unit ={},
 ){
     Column(
         modifier = modifier
