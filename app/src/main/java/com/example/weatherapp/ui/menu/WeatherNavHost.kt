@@ -1,6 +1,9 @@
 package com.example.weatherapp.ui.menu
 
 import android.util.Log
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -10,7 +13,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.weatherapp.ui.DailyForecasts.DailyScreen
+import com.example.weatherapp.ui.dailyForecasts.DailyScreen
 import com.example.weatherapp.ui.Profile.ProfileScreen
 import com.example.weatherapp.ui.SearchScreen.SearchScreen
 import com.example.weatherapp.ui.hourlyForecasts.HourlyScreen
@@ -33,8 +36,16 @@ fun WeatherNavHost(
         startDestination = Main.route,
         modifier = modifier
 
+
     ){
-        composable(route =  Main.route){
+        composable(route =  Main.route,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
+            ){
             MainScreen(modifier = Modifier , state = state,
                 onClickSeeHourly = {
 //                    navController.navigateSingleTopTo(HourlyScreen.route)
@@ -43,7 +54,14 @@ fun WeatherNavHost(
                 }
             )
         }
-        composable(route =  HourlyScreen.route){
+        composable(route =  HourlyScreen.route,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
+        ){
             Log.d("Navigation","Hourly icon pressed")
             HourlyScreen(modifier = Modifier , state = state,
                 onClickSeeCurrent = {
@@ -53,17 +71,38 @@ fun WeatherNavHost(
                 }
             )
         }
-        composable(route = DailyScreen.route){
+        composable(route = DailyScreen.route,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
+        ){
             Log.d("Navigation", "Daily icon pressed")
             DailyScreen(modifier = Modifier, state = state,
                 )
         }
-        composable(route = ProfileScreen.route){
+        composable(route = ProfileScreen.route,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
+        ){
             Log.d("Navigation", "Daily icon pressed")
             ProfileScreen(modifier = Modifier, state = state,
             )
         }
-        composable(route = Search.route){
+        composable(route = Search.route,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
+        ){
             Log.d("Navigation", "Daily icon pressed")
             SearchScreen(modifier = Modifier, state = state,
             )

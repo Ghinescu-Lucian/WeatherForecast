@@ -35,6 +35,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
@@ -97,9 +98,11 @@ fun WeatherApp(
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
     }
-    var currentScreen: WeatherDestination by remember {mutableStateOf(Main)}
+//    var currentScreen: WeatherDestination by remember {mutableStateOf(Main)}
     val navController = rememberNavController()
-
+    val currentBackStack  by navController.currentBackStackEntryAsState()
+    val currentDestination = currentBackStack?.destination
+    val curentScreen = menuItems.find{it.route == currentDestination?.route} ?: Main
 
 
     WeatherAppTheme {

@@ -33,7 +33,7 @@ class WeatherDataInteractorImpl @Inject constructor (
     ) : WeatherDataInteractor {
 
     override suspend fun getWeatherData(): Result<WeatherData> {
-        Log.d("Interactor",weatherRepository::class.java.simpleName.toString().takeLast(50))
+        Log.d("Interactor2",weatherRepository::class.java.simpleName.toString().takeLast(50))
         if(weatherState.currentWeather.isFailure) {
             val location = locationTracker.getCurrentLocation()
             var result: Result<WeatherData> = failure(Exception("Error on interactor( time-out )"))
