@@ -3,10 +3,7 @@ package com.example.weatherapp.ui.dailyForecasts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,14 +16,10 @@ import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
-import com.example.weatherapp.ui.hourlyForecasts.CurrentHour
-import com.example.weatherapp.ui.hourlyForecasts.Hourly12Weather
-import com.example.weatherapp.ui.hourlyForecasts.RowElement
 import com.example.weatherapp.ui.hourlyForecasts.Title
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import java.time.LocalDateTime
-
 
 
 @Composable
@@ -58,10 +51,10 @@ fun DailyScreen(
 //        )
         val points = listOf(
             listOf(0f,20f),
-            listOf(1f, 23f),
-            listOf(2f, 24f),
-            listOf(3f, 22f),
-            listOf(4f, 23f)
+            listOf(1f, 30f),
+            listOf(2f, 20f),
+            listOf(3f, 30f),
+            listOf(4f, 35f)
 
             )
         DailyGraph(data = points)

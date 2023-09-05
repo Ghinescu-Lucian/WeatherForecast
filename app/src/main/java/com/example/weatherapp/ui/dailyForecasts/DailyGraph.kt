@@ -4,16 +4,13 @@ import android.graphics.PointF
 import android.util.Log
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,11 +25,12 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,21 +44,59 @@ fun DailyGraph(modifier : Modifier = Modifier,
     val animationProgress = remember{
         Animatable(0f)
     }
+    val textMeasurer = rememberTextMeasurer()
+
     LaunchedEffect(key1 = data, block = {
         animationProgress.animateTo(1f, tween(3000 ))
     })
 
     Box(
         modifier = modifier
-            .flipped()
             .background(MaterialTheme.colorScheme.primary)
             .fillMaxSize()
      ) {
 
 
+
+        Canvas(
+            modifier = Modifier
+
+                               .aspectRatio(3 / 2f)
+                .align(Alignment.Center)
+//                .horizontalScroll(rememberScrollState())
+//                .fillMaxHeight()
+//                .width(600.dp)
+                .fillMaxSize()
+        ){
+             val verticalLines = 5
+            val verticalSize = size.width / (verticalLines + 1)
+
+            repeat(verticalLines) { i ->
+                val startX = verticalSize * (i + 1)
+                drawText(
+                    textMeasurer,
+                          "05.09",
+                                topLeft = Offset(startX-50, 650f)
+                )
+            }
+
+            val horizontalLines = 5
+            val sectionSize = size.height / (horizontalLines + 1)
+            repeat(horizontalLines) { i ->
+                val startY = sectionSize * (i + 1)
+                drawText(
+                    textMeasurer,
+                    "26 ºC",
+                    topLeft = Offset(30f, startY-15)
+                )
+
+            }
+        }
+
         Spacer(
             modifier = Modifier
-                .padding(start = 25.dp, end = 25.dp)
+                .flipped()
+                .padding(start = 50.dp, end = 50.dp)
                 .aspectRatio(3 / 2f)
                 .align(Alignment.Center)
 //                .horizontalScroll(rememberScrollState())
@@ -84,6 +120,7 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
 //                    Draw grid
 
+
                         val verticalLines = 3
                         val verticalSize = size.width / (verticalLines + 1)
 
@@ -95,20 +132,20 @@ fun DailyGraph(modifier : Modifier = Modifier,
                                 end = Offset(startX, size.height),
                                 strokeWidth = barWidthPx
                             )
-
                         }
-
-                        val horizontalLines = 5
-                        val sectionSize = size.height / (horizontalLines + 1)
-                        repeat(horizontalLines) { i ->
-                            val startY = sectionSize * (i + 1)
-                            drawLine(
-                                Color.Cyan,
-                                start = Offset(0f, startY),
-                                end = Offset(size.width, startY),
-                                strokeWidth = barWidthPx
-                            )
-                        }
+//
+//
+//                        val horizontalLines = 5
+//                        val sectionSize = size.height / (horizontalLines + 1)
+//                        repeat(horizontalLines) { i ->
+//                            val startY = sectionSize * (i + 1)
+//                            drawLine(
+//                                Color.Cyan,
+//                                start = Offset(0f, startY),
+//                                end = Offset(size.width, startY),
+//                                strokeWidth = barWidthPx
+//                            )
+//                        }
 
 //
                         val minimum = data.minWith(Comparator.comparing { it[1] })
@@ -117,17 +154,8 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
                         val unitY = size.height / diff
                         val unitX = size.width / (data.size - 1)
-//                        val newData = mutableListOf<List<Float>>()
-//
-//                        //    Resize the temperatures interval( squeeze by  16.7 % )
-//
-//                        for(i in data){
-//                            val temperature = minimum[1]*1.167f + ( (0.834f * maximum[1] - 1.167f * minimum[1]) / (maximum[1] - minimum[1]) ) * ( i[1] - minimum[1])
-//                            val item = listOf(i[0], temperature )
-//                            newData.add(item)
-//                            Log.d("Graph", "${item[0]} - ${item[1]}\n Dif = ${i[1]/item[1]}")
-//                        }
 
+                        val newData = squeezeDimension(data)
 
                         val path = generatePath(size, data)
                         val filledPath = Path()
@@ -136,6 +164,7 @@ fun DailyGraph(modifier : Modifier = Modifier,
                         filledPath.lineTo(size.width, 0f)
                         filledPath.close()
 
+                        clipRect( right = size.width*animationProgress.value) {
 //                        Draw path
                         drawPath(
                             path, Color.Green,
@@ -151,7 +180,7 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
                         )
 //                        Draw points
-                        for (i in data) {
+                        for (i in newData) {
                             drawCircle(
                                 brush = Brush.verticalGradient(
                                     colors = listOf(
@@ -165,7 +194,7 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
                                 )
                         }
-                        for (i in data) {
+                        for (i in newData) {
                             drawCircle(
                                 brush = Brush.verticalGradient(
                                     colors = listOf(
@@ -179,6 +208,7 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
                             )
                         }
+                    }
                     }
                 }
         )
@@ -196,6 +226,7 @@ fun generatePath( size: Size, data : List<List<Float>>): Path {
     val unitY  = size.height / diff
     val unitX = size.width / (data.size-1)
 
+
 // Control points
 
 //    val controlPoints1 = mutableListOf<PointF>(PointF(data[0][0]*unitX,data[0][1]*unitY))
@@ -206,8 +237,9 @@ fun generatePath( size: Size, data : List<List<Float>>): Path {
 //
 //    }
 
+    val newData = squeezeDimension(data)
 
-    data.forEachIndexed { i, item ->
+    newData.forEachIndexed { i, item ->
         val x = item[0]*unitX
         val y = (item[1]- minimum[1])*unitY
 
@@ -219,8 +251,26 @@ fun generatePath( size: Size, data : List<List<Float>>): Path {
             controlPoint2.x, controlPoint2.y,
             x, y
         )
+       // path.quadraticBezierTo(x,y)
     }
     return path
+}
+
+fun squeezeDimension( data: List<List<Float>>):List<List<Float>>{
+
+    val minimum = data.minWith(Comparator.comparing { it[1] })
+    val maximum = data.maxWith(Comparator.comparing { it[1] })
+
+    val newData = mutableListOf<List<Float>>()
+    for(i in data){
+        val temperature = minimum[1]*1.1f + ( (0.9f * maximum[1] - 1.1f * minimum[1]) / (maximum[1] - minimum[1]) ) * ( i[1] - minimum[1])
+        val item = listOf(i[0], temperature )
+        newData.add(item)
+        Log.d("Graph", "${item[0]} - ${item[1]}\n Dif = ${i[1]/item[1]}")
+    }
+
+    return newData
+
 }
 
 class FlippedModifier : DrawModifier {
@@ -241,7 +291,7 @@ fun DailyGraphPreview(){
         listOf(1f, 23f),
         listOf(2f, 24f),
         listOf(3f, 25f),
-        listOf(4f, 23f)
+        listOf(4f, 29f)
         )
     WeatherAppTheme {
         DailyGraph(data = points)
