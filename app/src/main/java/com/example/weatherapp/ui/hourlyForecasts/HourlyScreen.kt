@@ -43,7 +43,7 @@ val state = WeatherState(
     weatherInfo = WeatherInfo(
         currentWeatherData = WeatherData(
             time = LocalDateTime.now(),
-            temperatureCelsius = 25.2,
+            temperature = 25.2,
             pressure = 1000.0,
             humidity = 56.0,
             weatherType = WeatherType.fromWMO(0),
@@ -52,10 +52,10 @@ val state = WeatherState(
     weatherDataPerDay = listOf(
         WeatherDataPerDay(
             day =0,
-            listOf(
+            forecasts = listOf(
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(0),
@@ -63,7 +63,7 @@ val state = WeatherState(
                 ),
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.12,
+                    temperature = 25.12,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(1),
@@ -71,7 +71,7 @@ val state = WeatherState(
                 ),
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.12,
+                    temperature = 25.12,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(2),
@@ -79,7 +79,7 @@ val state = WeatherState(
                 ),
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.12,
+                    temperature = 25.12,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(3),
@@ -87,7 +87,7 @@ val state = WeatherState(
                 ),
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.12,
+                    temperature = 25.12,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(45),
@@ -98,10 +98,10 @@ val state = WeatherState(
         ),
         WeatherDataPerDay(
             day =1,
-            listOf(
+           forecasts =  listOf(
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(2),
@@ -109,7 +109,7 @@ val state = WeatherState(
                 ),
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(3),
@@ -120,10 +120,10 @@ val state = WeatherState(
         ),
         WeatherDataPerDay(
             day =2,
-            listOf(
+          forecasts =   listOf(
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(45),
@@ -131,7 +131,7 @@ val state = WeatherState(
                 ),
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(0),
@@ -142,10 +142,10 @@ val state = WeatherState(
         ),
         WeatherDataPerDay(
             day =3,
-            listOf(
+           forecasts = listOf(
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(0),
@@ -153,7 +153,7 @@ val state = WeatherState(
                 ),
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(0),
@@ -164,10 +164,10 @@ val state = WeatherState(
         ),
         WeatherDataPerDay(
             day =4,
-            listOf(
+           forecasts =  listOf(
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(0),
@@ -175,7 +175,7 @@ val state = WeatherState(
                 ),
                 WeatherData(
                     time = LocalDateTime.now(),
-                    temperatureCelsius = 25.2,
+                    temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
                     weatherType = WeatherType.fromWMO(0),

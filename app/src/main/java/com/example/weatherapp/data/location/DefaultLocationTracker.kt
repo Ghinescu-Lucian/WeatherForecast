@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.example.weatherapp.domain.location.LocationTracker
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -58,6 +59,7 @@ class DefaultLocationTracker @Inject constructor (
                         if(isComplete){
                             if(isSuccessful) {
                                 cont.resume(Result.success(result))
+                                Log.d("[Location]", result.toString())
                             }
                             else {
                                 cont.resume(Result.failure(Exception("Location tracker job failed.")))

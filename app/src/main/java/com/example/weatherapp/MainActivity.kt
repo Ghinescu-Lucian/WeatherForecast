@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -44,7 +43,6 @@ import com.example.weatherapp.domain.weather.WeatherType
 import com.example.weatherapp.ui.menu.Main
 import com.example.weatherapp.ui.menu.MenuItem
 import com.example.weatherapp.ui.menu.Search
-import com.example.weatherapp.ui.menu.WeatherDestination
 import com.example.weatherapp.ui.menu.WeatherNavHost
 import com.example.weatherapp.ui.menu.menuItems
 import com.example.weatherapp.ui.menu.navigateSingleTopTo
@@ -191,7 +189,7 @@ fun AppPreview(){
         weatherInfo = WeatherInfo(
             currentWeatherData = WeatherData(
                 time = LocalDateTime.now(),
-                temperatureCelsius = 25.2,
+                temperature = 25.2,
                 pressure = 1000.0,
                 humidity = 56.0,
                 weatherType = WeatherType.fromWMO(0),
@@ -200,10 +198,10 @@ fun AppPreview(){
             weatherDataPerDay = listOf(
                 WeatherDataPerDay(
                     day =0,
-                    listOf(
+                    forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -211,7 +209,7 @@ fun AppPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.12,
+                            temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(1),
@@ -219,7 +217,7 @@ fun AppPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.12,
+                            temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(56),
@@ -227,7 +225,7 @@ fun AppPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.12,
+                            temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(75),
@@ -235,7 +233,7 @@ fun AppPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.12,
+                            temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(45),
@@ -246,10 +244,10 @@ fun AppPreview(){
                 ),
                 WeatherDataPerDay(
                     day =1,
-                    listOf(
+                   forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(2),
@@ -257,7 +255,7 @@ fun AppPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(3),
@@ -268,10 +266,10 @@ fun AppPreview(){
                 ),
                 WeatherDataPerDay(
                     day =2,
-                    listOf(
+                   forecasts =  listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(45),
@@ -279,7 +277,7 @@ fun AppPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -290,10 +288,10 @@ fun AppPreview(){
                 ),
                 WeatherDataPerDay(
                     day =3,
-                    listOf(
+                    forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -301,7 +299,7 @@ fun AppPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -312,10 +310,10 @@ fun AppPreview(){
                 ),
                 WeatherDataPerDay(
                     day =4,
-                    listOf(
+                  forecasts =   listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -323,7 +321,7 @@ fun AppPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),

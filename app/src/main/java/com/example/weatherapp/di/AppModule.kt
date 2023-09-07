@@ -3,15 +3,21 @@ package com.example.weatherapp.di
 import android.app.Application
 import com.example.weatherapp.data.remote.accuWeather.AccuWeatherApi
 import com.example.weatherapp.data.remote.accuWeather.RetrofitHelperAccuWeather
+import com.example.weatherapp.data.remote.accuWeather.repository.AccuWeatherRepositoryImpl
 import com.example.weatherapp.data.remote.openMeteo.OpenMeteoApi
+import com.example.weatherapp.data.remote.openMeteo.repository.WeatherRepositoryOpenMeteoImpl
 import com.example.weatherapp.data.remote.visualCrossing.RetrofitHelperVisual_Crossing
 import com.example.weatherapp.data.remote.visualCrossing.VisualCrossingApi
+import com.example.weatherapp.data.remote.visualCrossing.repository.VisualCrossingRepositoryImpl
+import com.example.weatherapp.domain.repository.WeatherRepository
+import com.example.weatherapp.domain.weather.Interactors.AverageCalculator
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.ElementsIntoSet
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
@@ -47,6 +53,20 @@ object AppModule{
     @Singleton
     fun provideFusedLocationProviderClient(app: Application): FusedLocationProviderClient{
         return LocationServices.getFusedLocationProviderClient(app)
+    }
+
+    @Provides @ElementsIntoSet
+    fun provideRepositories(): Set<WeatherRepository>{
+        return  setOf(
+            WeatherRepositoryOpenMeteoImpl(provideWeatherApi()),
+            VisualCrossingRepositoryImpl(provideVisualCrossingApi()),
+            AccuWeatherRepositoryImpl(provideAccuWeatherApi())
+        )
+    }
+
+    @Provides
+    fun provideAverageCalculator(): AverageCalculator{
+        return AverageCalculator(weatherRepositories = provideRepositories(), weights = listOf(25.0, 50.0, 25.0))
     }
 
     // sa pun bind pentru ClockInterface

@@ -1,4 +1,4 @@
-package com.example.weatherapp.data.remote.visualCrossing.dto
+package com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto
 
 import com.squareup.moshi.Json
 

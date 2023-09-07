@@ -25,28 +25,32 @@ private object weatherState{
 class WeatherDataInteractorImpl @Inject constructor (
     val locationTracker: LocationTracker,
     // sa am o lista de repository
-   // val averageCalculator: AverageCalculator,
-   @Named("OpenMeteo" ) val  weatherRepository: WeatherRepository,
-
-   // val weatherRepositories : Set<WeatherRepository>
+    val averageCalculator: AverageCalculator,
+   @Named("VisualCrossing" ) val  weatherRepository: WeatherRepository,
 
     ) : WeatherDataInteractor {
 
     override suspend fun getWeatherData(): Result<WeatherData> {
-        Log.d("Interactor2",weatherRepository::class.java.simpleName.toString().takeLast(50))
+
         if(weatherState.currentWeather.isFailure) {
             val location = locationTracker.getCurrentLocation()
             var result: Result<WeatherData> = failure(Exception("Error on interactor( time-out )"))
+
             location.onSuccess {
                 val l = it?.latitude
                 if(l == null) return failure(Exception("Error on location provider."))
+                Log.d("[Interactor Weather] Location", it.toString())
                 val r = weatherRepository.getCurrentWeatherData(it.latitude, it.longitude)
-
-                r.onSuccess { itt ->
+                val r2 = weatherRepository.getDailyWeatherData(it.latitude, it.longitude)
+                Log.d("DailyWeather", r2.toString())
+               // weatherRepository.getDailyWeatherData(it.latitude, it.longitude)
+                Log.d("WeatherInteractor", weatherRepository.getDailyWeatherData(it.latitude, it.longitude).toString())
+               // averageCalculator.calculateAverage(45.774459,21.212155)
+                 r.onSuccess { itt ->
                     result = Result.success(itt.currentWeatherData) as Result<WeatherData>
                     weatherState.currentWeather = result
                     weatherState.days = Result.success(itt.weatherDataPerDay)
-//                    weatherState.days = re
+
                 }
             }
 
@@ -54,6 +58,8 @@ class WeatherDataInteractorImpl @Inject constructor (
         } else {
             return weatherState.currentWeather
         }
+
+
     }
     override suspend fun getWeatherDataPerDay(days: Int): Result<List<WeatherDataPerDay>> {
         if(weatherState.days.isFailure){
@@ -82,7 +88,7 @@ class WeatherDataInteractorImpl @Inject constructor (
         val time = LocalDateTime.now()
         val currentWeather = WeatherData(
             time = time,
-            temperatureCelsius = 27.0,
+            temperature = 27.0,
             pressure = 180.0,
             windSpeed = 11.0,
             humidity = 30.0,
@@ -98,10 +104,10 @@ class WeatherDataInteractorImpl @Inject constructor (
         val weatherDay = listOf(
             WeatherDataPerDay(
                 day = 1,
-                listOf(
+                forecasts = listOf(
                     WeatherData(
                         time = time,
-                        temperatureCelsius = 27.0,
+                        temperature = 27.0,
                         pressure = 180.0,
                         windSpeed = 11.0,
                         humidity = 30.0,
@@ -109,14 +115,14 @@ class WeatherDataInteractorImpl @Inject constructor (
 
                     ),WeatherData(
                         time = time,
-                        temperatureCelsius = 27.0,
+                        temperature = 27.0,
                         pressure = 180.0,
                         windSpeed = 11.0,
                         humidity = 30.0,
                         weatherType = WeatherType.DenseDrizzle
                     ), WeatherData(
                         time = time,
-                        temperatureCelsius = 27.0,
+                        temperature = 27.0,
                         pressure = 180.0,
                         windSpeed = 11.0,
                         humidity = 30.0,
@@ -128,10 +134,10 @@ class WeatherDataInteractorImpl @Inject constructor (
             ),
             WeatherDataPerDay(
                 day = 2,
-                listOf(
+               forecasts =  listOf(
                     WeatherData(
                         time = time,
-                        temperatureCelsius = 27.0,
+                        temperature = 27.0,
                         pressure = 180.0,
                         windSpeed = 11.0,
                         humidity = 30.0,
@@ -139,14 +145,14 @@ class WeatherDataInteractorImpl @Inject constructor (
 
                     ),WeatherData(
                         time = time,
-                        temperatureCelsius = 27.0,
+                        temperature = 27.0,
                         pressure = 180.0,
                         windSpeed = 11.0,
                         humidity = 30.0,
                         weatherType = WeatherType.HeavySnowFall
                     ), WeatherData(
                         time = time,
-                        temperatureCelsius = 27.0,
+                        temperature = 27.0,
                         pressure = 180.0,
                         windSpeed = 11.0,
                         humidity = 30.0,

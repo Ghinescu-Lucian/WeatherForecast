@@ -1,6 +1,7 @@
 package com.example.weatherapp.data.remote.accuWeather
 
 import com.example.weatherapp.data.remote.accuWeather.dto.currentWeather.CurrentWeatherDto
+import com.example.weatherapp.data.remote.accuWeather.dto.dailyWeather.DailyWeatherDto
 import com.example.weatherapp.data.remote.accuWeather.dto.hourlyWeather.HourlyWeatherDto
 import com.example.weatherapp.data.remote.accuWeather.dto.locationKey.LocationKeyDto
 import retrofit2.http.GET
@@ -41,4 +42,12 @@ interface AccuWeatherApi {
         @Query("metric") metric: Boolean= true,
         @Query("apikey") apikey: String = api_key
     ):List<HourlyWeatherDto>
+
+    @GET("forecasts/v1/daily/5day/{locationKey}")
+    suspend fun getDailyForecasts(
+        @Path("locationKey") locationKey: String,
+        @Query("details") details: Boolean = true,
+        @Query("metric") metric: Boolean= true,
+        @Query("apikey") apikey: String = api_key
+    ):DailyWeatherDto
 }

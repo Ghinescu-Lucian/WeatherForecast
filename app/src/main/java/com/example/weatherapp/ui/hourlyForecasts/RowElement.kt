@@ -76,7 +76,7 @@ fun RowElement(
         }
         
         Text(modifier = Modifier,
-            text = "${weatherData.temperatureCelsius}ºC",
+            text = "${weatherData.temperature}ºC",
             fontSize = MaterialTheme.typography.titleLarge.fontSize,
             fontWeight = MaterialTheme.typography.titleLarge.fontWeight
         )
@@ -98,7 +98,7 @@ fun RowElementPreview(){
     WeatherAppTheme {
         val data = WeatherData(
             time = LocalDateTime.now(),
-            temperatureCelsius = 25.2,
+            temperature = 25.2,
             pressure = 1000.0,
             humidity = 56.0,
             weatherType = WeatherType.fromWMO(0),

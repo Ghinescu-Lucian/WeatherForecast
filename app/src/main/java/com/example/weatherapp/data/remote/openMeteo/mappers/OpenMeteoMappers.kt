@@ -1,7 +1,8 @@
 package com.example.weatherapp.data.remote.openMeteo.mappers
 
-import com.example.weatherapp.data.remote.openMeteo.dto.WeatherDataDto
-import com.example.weatherapp.data.remote.openMeteo.dto.WeatherDto
+import com.example.weatherapp.data.remote.openMeteo.dto.curentHourlyWeather.WeatherDataDto
+import com.example.weatherapp.data.remote.openMeteo.dto.curentHourlyWeather.WeatherDto
+import com.example.weatherapp.data.remote.openMeteo.dto.dailyWeather.OpenMeteoDailyDto
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
@@ -22,7 +23,7 @@ fun WeatherDataDto.toWeatherDataPerDay() : List<WeatherDataPerDay>{
         val listWeatherData = List(24){
             WeatherData(
                 time = LocalDateTime.parse(time[it+i*24], DateTimeFormatter.ISO_DATE_TIME),
-                temperatureCelsius = temperatures[it+i*24],
+                temperature = temperatures[it+i*24],
                 pressure = pressures[it+i*24],
                 windSpeed = windSpeeds[it+i*24],
                 humidity =  humidities[it+i*24],
@@ -31,7 +32,7 @@ fun WeatherDataDto.toWeatherDataPerDay() : List<WeatherDataPerDay>{
             )
         }
 
-        list.add(WeatherDataPerDay(i, listWeatherData))
+        list.add(WeatherDataPerDay(i, forecasts = listWeatherData))
 
 //        Log.d("Mapper1",listWeatherData.toString())
 
@@ -77,4 +78,24 @@ fun WeatherDto.toWeatherInfo(): WeatherInfo {
         currentWeatherData =  currentWeatherData
     )
 
+}
+
+fun OpenMeteoDailyDto.toWeatherInfo(): WeatherInfo{
+    val list = mutableListOf<WeatherDataPerDay>()
+
+    for(index in 0..4)
+        list.add(
+            WeatherDataPerDay(
+                day = index,
+                minTemperature =  days.temperaturesMin[index],
+                maxTemperature =  days.temperaturesMax[index],
+                sunRise =   days.sunrises[index],
+                sunSet =  days.sunsets[index],
+                moonRise = "",
+                moonSet = "",
+                weatherTypeDay = WeatherType.fromWMO( days.weatherCodes[index]),
+                forecasts = listOf()
+            )
+        )
+    return WeatherInfo(weatherDataPerDay = list, currentWeatherData = null)
 }

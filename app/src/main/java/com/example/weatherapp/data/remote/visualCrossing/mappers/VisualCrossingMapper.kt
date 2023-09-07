@@ -1,8 +1,10 @@
 package com.example.weatherapp.data.remote.visualCrossing.mappers
 
-import com.example.weatherapp.data.remote.visualCrossing.dto.VisualCrossingDaysDataDto
-import com.example.weatherapp.data.remote.visualCrossing.dto.VisualCrossingDto
-import com.example.weatherapp.data.remote.visualCrossing.dto.VisualCrossingHourDataDto
+
+import com.example.weatherapp.data.remote.visualCrossing.dto.DailyDto.VisualCrossingDailyDto
+import com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto.VisualCrossingDaysDataDto
+import com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto.VisualCrossingDto
+import com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto.VisualCrossingHourDataDto
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
@@ -17,7 +19,7 @@ fun VisualCrossingHourDataDto.toWeatherData():WeatherData {
     return WeatherData(
         // nu se poate mock-ui time
                 time = LocalTime.parse(time).atDate(LocalDate.now()),
-                temperatureCelsius = temperature,
+                temperature = temperature,
                 pressure = pressure,
                 windSpeed = windSpeed,
                 humidity = humidity,
@@ -32,7 +34,7 @@ fun VisualCrossingDaysDataDto.toWeatherDataPerDay():List<WeatherDataPerDay> {
     for(hour in hours) {
         list2.add(hour.toWeatherData())
     }
-    list.add(WeatherDataPerDay(0, list2))
+    list.add(WeatherDataPerDay(0, forecasts = list2))
 
 //    for (i in 0..6) {
 //
@@ -65,5 +67,26 @@ fun VisualCrossingDto.toWeatherInfo(): WeatherInfo {
         weatherDataPerDay = weatherDataPerDay,
         currentWeatherData =  currentWeatherData
     )
+}
 
+fun VisualCrossingDailyDto.toWeatherInfo(): WeatherInfo {
+    val weatherDataPerDays = mutableListOf<WeatherDataPerDay>()
+    days.forEachIndexed { index, dto ->
+
+           weatherDataPerDays.add( WeatherDataPerDay(
+                day = index,
+                minTemperature = dto.temperatureMin,
+                maxTemperature = dto.temperatureMax,
+                sunRise = dto.sunrise,
+                sunSet = dto.sunset,
+                moonRise = "",
+                moonSet = "",
+                weatherTypeDay = WeatherType.fromVisualCrossing(dto.weatherCode),
+                forecasts = listOf()
+            )
+           )
+
+
+    }
+    return WeatherInfo(weatherDataPerDay = weatherDataPerDays, currentWeatherData = null)
 }

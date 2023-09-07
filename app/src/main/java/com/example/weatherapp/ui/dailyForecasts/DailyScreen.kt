@@ -72,7 +72,7 @@ fun DailyWeatherPreview(){
         weatherInfo = WeatherInfo(
             currentWeatherData = WeatherData(
                 time = LocalDateTime.now(),
-                temperatureCelsius = 25.2,
+                temperature = 25.2,
                 pressure = 1000.0,
                 humidity = 56.0,
                 weatherType = WeatherType.fromWMO(0),
@@ -81,10 +81,10 @@ fun DailyWeatherPreview(){
             weatherDataPerDay = listOf(
                 WeatherDataPerDay(
                     day =0,
-                    listOf(
+                    forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -92,7 +92,7 @@ fun DailyWeatherPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.12,
+                            temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(1),
@@ -100,7 +100,7 @@ fun DailyWeatherPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.12,
+                            temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(56),
@@ -108,7 +108,7 @@ fun DailyWeatherPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.12,
+                            temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(75),
@@ -116,7 +116,7 @@ fun DailyWeatherPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.12,
+                            temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(45),
@@ -127,10 +127,10 @@ fun DailyWeatherPreview(){
                 ),
                 WeatherDataPerDay(
                     day =1,
-                    listOf(
+                   forecasts =  listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(2),
@@ -138,7 +138,7 @@ fun DailyWeatherPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(3),
@@ -149,10 +149,10 @@ fun DailyWeatherPreview(){
                 ),
                 WeatherDataPerDay(
                     day =2,
-                    listOf(
+                   forecasts =  listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(45),
@@ -160,7 +160,7 @@ fun DailyWeatherPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -171,10 +171,10 @@ fun DailyWeatherPreview(){
                 ),
                 WeatherDataPerDay(
                     day =3,
-                    listOf(
+                   forecasts =  listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -182,7 +182,7 @@ fun DailyWeatherPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -193,10 +193,10 @@ fun DailyWeatherPreview(){
                 ),
                 WeatherDataPerDay(
                     day =4,
-                    listOf(
+                   forecasts =  listOf(
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),
@@ -204,7 +204,7 @@ fun DailyWeatherPreview(){
                         ),
                         WeatherData(
                             time = LocalDateTime.now(),
-                            temperatureCelsius = 25.2,
+                            temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
                             weatherType = WeatherType.fromWMO(0),

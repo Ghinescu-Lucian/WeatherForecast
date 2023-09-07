@@ -31,4 +31,6 @@ abstract class RepositoryModule {
     @Singleton
     @Named("AccuWeather")
     abstract fun bindAccuWeatherRepository(accuWeatherRepositoryImpl: AccuWeatherRepositoryImpl) : WeatherRepository
+
+
 }

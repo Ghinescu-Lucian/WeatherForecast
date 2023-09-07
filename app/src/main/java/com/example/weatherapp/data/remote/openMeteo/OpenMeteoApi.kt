@@ -1,6 +1,7 @@
 package com.example.weatherapp.data.remote.openMeteo
 
-import com.example.weatherapp.data.remote.openMeteo.dto.WeatherDto
+import com.example.weatherapp.data.remote.openMeteo.dto.curentHourlyWeather.WeatherDto
+import com.example.weatherapp.data.remote.openMeteo.dto.dailyWeather.OpenMeteoDailyDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,4 +13,9 @@ interface OpenMeteoApi {
         @Query("longitude") long: Double
     ): WeatherDto
 
+    @GET("v1/forecast?hourly=&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Europe%2FMoscow")
+    suspend fun getDailyWeatherData(
+        @Query("latitude") lat: Double,
+        @Query("longitude") long: Double
+    ): OpenMeteoDailyDto
 }

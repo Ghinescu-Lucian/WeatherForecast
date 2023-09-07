@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 data class WeatherData(
 //    interfata Clock ce are now() -> long
     val time: LocalDateTime, // sa fie String
-    val temperatureCelsius: Double,
+    val temperature: Double,
     val pressure: Double,
     val windSpeed: Double,
     val humidity: Double,

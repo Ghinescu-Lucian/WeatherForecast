@@ -39,10 +39,10 @@ fun Hourly12Weather(
 fun Hourly12WeatherPreview(){
     val data =  WeatherDataPerDay(
         day =0,
-        listOf(
+        forecasts = listOf(
             WeatherData(
                 time = LocalDateTime.now(),
-                temperatureCelsius = 25.2,
+                temperature = 25.2,
                 pressure = 1000.0,
                 humidity = 56.0,
                 weatherType = WeatherType.fromWMO(0),
@@ -50,7 +50,7 @@ fun Hourly12WeatherPreview(){
             ),
             WeatherData(
                 time = LocalDateTime.now(),
-                temperatureCelsius = 25.12,
+                temperature = 25.12,
                 pressure = 1000.0,
                 humidity = 56.0,
                 weatherType = WeatherType.fromWMO(1),
@@ -58,7 +58,7 @@ fun Hourly12WeatherPreview(){
             ),
             WeatherData(
                 time = LocalDateTime.now(),
-                temperatureCelsius = 25.12,
+                temperature = 25.12,
                 pressure = 1000.0,
                 humidity = 56.0,
                 weatherType = WeatherType.fromWMO(2),
@@ -66,7 +66,7 @@ fun Hourly12WeatherPreview(){
             ),
             WeatherData(
                 time = LocalDateTime.now(),
-                temperatureCelsius = 25.12,
+                temperature = 25.12,
                 pressure = 1000.0,
                 humidity = 56.0,
                 weatherType = WeatherType.fromWMO(3),
@@ -74,7 +74,7 @@ fun Hourly12WeatherPreview(){
             ),
             WeatherData(
                 time = LocalDateTime.now(),
-                temperatureCelsius = 25.12,
+                temperature = 25.12,
                 pressure = 1000.0,
                 humidity = 56.0,
                 weatherType = WeatherType.fromWMO(45),

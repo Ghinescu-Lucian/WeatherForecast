@@ -89,7 +89,7 @@ fun WeatherCard(
                 )
 
                 Text(
-                    text = "${data.temperatureCelsius} °C", // sa vina de pe viewModel
+                    text = "${data.temperature} °C", // sa vina de pe viewModel
                     fontSize = 44.sp,
                     color = Color.Gray
                 )
@@ -136,7 +136,7 @@ fun WeatherCard(
 fun WeatherCardPreview(){
     val data = WeatherData(
         time = LocalDateTime.now(),
-        temperatureCelsius = 25.2,
+        temperature = 25.2,
         pressure = 1000.0,
         humidity = 56.0,
         weatherType = WeatherType.fromWMO(0),

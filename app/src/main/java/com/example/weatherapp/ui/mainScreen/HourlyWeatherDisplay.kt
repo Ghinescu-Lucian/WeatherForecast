@@ -52,7 +52,7 @@ fun HourlyWeatherDisplay(
             modifier = Modifier.width(40.dp)
         )
         Text(
-            text = "${weatherData.temperatureCelsius}°C",
+            text = "${weatherData.temperature}°C",
             color = textColor,
             fontWeight = FontWeight.Bold
         )
@@ -66,7 +66,7 @@ fun HourlyPreview(){
        
         val data = WeatherData(
             time = LocalDateTime.now(),
-            temperatureCelsius = 25.2,
+            temperature = 25.2,
             pressure = 1000.0,
             humidity = 56.0,
             weatherType = WeatherType.fromWMO(0),

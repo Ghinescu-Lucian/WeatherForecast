@@ -5,4 +5,6 @@ import androidx.annotation.StringRes
 data class WeatherInfoUI (
     @StringRes
     val partialResultErrorMessage: Int?
+
+
 )
