@@ -66,7 +66,7 @@ class WeatherViewModel @Inject constructor (
             }
              interactor.getWeatherDataPerDay().onSuccess{ dataPerDay ->
 
-                Log.d("ViewModel", dataPerDay.get(0).day.toString())
+                Log.d("ViewModel", dataPerDay[0].day.toString())
                 _state.update{
                     it.copy(
                         weatherInfo = it.weatherInfo?.copy(weatherDataPerDay = dataPerDay)

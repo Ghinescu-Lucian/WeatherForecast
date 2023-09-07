@@ -10,77 +10,83 @@ import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import javax.inject.Inject
 
-class AccuWeatherRepositoryImpl @Inject constructor (private val api: AccuWeatherApi, ): WeatherRepository {
+class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeatherApi) :
+    WeatherRepository {
 
-    private var locationKey: String = "278159"
-//    private var locationKey: String =""
+    //    private var locationKey: String = "278159"
+    private var locationKey: String = ""
     override suspend fun getCurrentWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
 
-          if(locationKey.isEmpty()) {
-           val r=   getLocationKey(lat, long).onSuccess {
-                 locationKey = it
-             }
-              if(r.isFailure)
-                  return Result.failure(Exception("[AccuWeather] Error on location key."))
-             }
+        if (locationKey.isEmpty()) {
+            val r = getLocationKey(lat, long).onSuccess {
+                locationKey = it
+            }
+            Log.d("LocationKey","Ceva" + r.toString() + "\n"+locationKey)
+            if (r.isFailure)
+                return Result.failure(Exception("[AccuWeather] Error on location key."))
+        }
 
-              val r = api.getCurrentForecast(locationKey = locationKey)
-              Log.d("AccuWeather", r.toString())
-              val hours = getHourlyWeatherData(lat,long)
-              var hourlyForecasts : List<WeatherDataPerDay> = listOf(WeatherDataPerDay(
-                  day = 0,
-                  forecasts = listOf()
-              ))
-              hours.onSuccess {
-                  hourlyForecasts = it.weatherDataPerDay
-              }
-              val d = r[0].toWeatherData()
-              val result = WeatherInfo(
+        val r = api.getCurrentForecast(locationKey = locationKey)
+        Log.d("AccuWeather", r.toString())
+        val hours = getHourlyWeatherData(lat, long)
+        var hourlyForecasts: List<WeatherDataPerDay> = listOf(
+            WeatherDataPerDay(
+                day = 0,
+                forecasts = listOf()
+            )
+        )
+        hours.onSuccess {
+            hourlyForecasts = it.weatherDataPerDay
+        }
+        val d = r[0].toWeatherData()
+        val result = WeatherInfo(
 
-                  weatherDataPerDay = hourlyForecasts,
-                  currentWeatherData = d
-              )
-              return Result.success(result)
+            weatherDataPerDay = hourlyForecasts,
+            currentWeatherData = d
+        )
+        return Result.success(result)
 
 
     }
 
-   override  suspend fun getHourlyWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
-        if( locationKey.isEmpty() ) {
-            val res=   getLocationKey(lat, long).onSuccess {
+    override suspend fun getHourlyWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
+        if (locationKey.isEmpty()) {
+            val res = getLocationKey(lat, long).onSuccess {
                 locationKey = it
             }
-            if(res.isFailure)
+            if (res.isFailure)
                 return Result.failure(Exception("[AccuWeather] Error on location key."))
 
         }
-            val r = api.getHourlyForecasts(locationKey = locationKey)
-            Log.d("AccuWeather Hourly", r.toString())
-            val list = mutableListOf<WeatherData>()
+        val r = api.getHourlyForecasts(locationKey = locationKey)
+        Log.d("AccuWeather Hourly", r.toString())
+        val list = mutableListOf<WeatherData>()
 
-            for (i in 0..11){
-                list.add(
-                    r[i].toWeatherData()
-                )
-            }
+        for (i in 0..11) {
+            list.add(
+                r[i].toWeatherData()
+            )
+        }
 
-            return Result.success(
-                WeatherInfo(
-                    currentWeatherData = list[0],
-                    weatherDataPerDay = listOf(WeatherDataPerDay(
+        return Result.success(
+            WeatherInfo(
+                currentWeatherData = list[0],
+                weatherDataPerDay = listOf(
+                    WeatherDataPerDay(
                         day = 0,
                         forecasts = list
-                    ))
+                    )
                 )
             )
+        )
 
 
 
         return Result.failure(Exception("[AccuWeather] Hourly forecasts error (empty location key)."))
     }
 
-    override suspend fun getDailyWeatherData(lat: Double, long: Double):Result<WeatherInfo>{
-        if(locationKey.isEmpty()) {
+    override suspend fun getDailyWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
+        if (locationKey.isEmpty()) {
             val r = getLocationKey(lat, long).onSuccess {
                 locationKey = it
             }
@@ -88,10 +94,9 @@ class AccuWeatherRepositoryImpl @Inject constructor (private val api: AccuWeathe
                 return Result.failure(Exception("[AccuWeather] Error on location key."))
         }
         val result = api.getDailyForecasts(locationKey = locationKey)
-        Log.d("Daily",result.toString())
+        Log.d("Daily", result.toString())
         val list = mutableListOf<WeatherDataPerDay>()
-        result.dailyForecasts.forEachIndexed{
-            index, dailyDto ->
+        result.dailyForecasts.forEachIndexed { index, dailyDto ->
 
             var aju = dailyDto.toWeatherDataPerDay()
 //                index, dailyWeatherDto ->
@@ -100,17 +105,21 @@ class AccuWeatherRepositoryImpl @Inject constructor (private val api: AccuWeathe
 //            aju.day = index
 //            list.add(aju)
         }
-        return Result.success(WeatherInfo(
-            currentWeatherData = null,
-            weatherDataPerDay = listOf()
-        ))
+        return Result.success(
+            WeatherInfo(
+                currentWeatherData = null,
+                weatherDataPerDay = listOf()
+            )
+        )
 
     }
-  suspend fun getLocationKey(lat: Double, long: Double): Result<String>{
+
+    suspend fun getLocationKey(lat: Double, long: Double): Result<String> {
         val s = "$lat,$long"
-        var result = api.getLocationKey(s,true)
+        var result = api.getLocationKey(s, true)
         locationKey = result.locationKey
-        return Result.success(result.toString())
+        Log.d("LocationKey", result.locationKey)
+        return Result.success(result.locationKey)
 //        else return Result.failure(Exception("[AccuWeather] Error on getting location key"))
     }
 }

@@ -10,12 +10,14 @@ interface OpenMeteoApi {
     @GET("v1/forecast?hourly=temperature_2m,weathercode,relativehumidity_2m,windspeed_10m,pressure_msl")
     suspend fun getWeatherData(
         @Query("latitude") lat : Double,
-        @Query("longitude") long: Double
+        @Query("longitude") long: Double,
+        @Query("timezone") timezone: String,
     ): WeatherDto
 
     @GET("v1/forecast?hourly=&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Europe%2FMoscow")
     suspend fun getDailyWeatherData(
         @Query("latitude") lat: Double,
-        @Query("longitude") long: Double
+        @Query("longitude") long: Double,
+        @Query("timezone") timezone: String,
     ): OpenMeteoDailyDto
 }

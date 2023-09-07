@@ -4,6 +4,7 @@ import com.example.weatherapp.data.remote.openMeteo.OpenMeteoApi
 import com.example.weatherapp.data.remote.openMeteo.mappers.toWeatherInfo
 import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.domain.weather.WeatherInfo
+import java.util.TimeZone
 import javax.inject.Inject
 
 //import javax.inject.Inject
@@ -12,13 +13,15 @@ class WeatherRepositoryOpenMeteoImpl @Inject constructor(
         private val api: OpenMeteoApi
 ) : WeatherRepository {
         override suspend fun getCurrentWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
-                return try{
+            val timezone = TimeZone.getDefault()
+            return try{
                         //val r = api.getWeatherData(lat = lat, long = long)
 //                        Log.d("Location","$lat + $long")
                         Result.success(
                                  api.getWeatherData(
                                         lat = lat,
-                                        long = long
+                                        long = long,
+                                        timezone = timezone.id
                                 ).toWeatherInfo()
 
                         )
@@ -36,7 +39,8 @@ class WeatherRepositoryOpenMeteoImpl @Inject constructor(
             Result.success(
                 api.getWeatherData(
                     lat = lat,
-                    long = long
+                    long = long,
+                    timezone = TimeZone.getDefault().id
                 ).toWeatherInfo()
 
             )
@@ -53,7 +57,8 @@ class WeatherRepositoryOpenMeteoImpl @Inject constructor(
             Result.success(
                 api.getDailyWeatherData(
                     lat = lat,
-                    long = long
+                    long = long,
+                    timezone = TimeZone.getDefault().id
                 ).toWeatherInfo()
 
             )

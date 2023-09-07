@@ -2,71 +2,81 @@ package com.example.weatherapp.data.remote.visualCrossing.mappers
 
 
 import com.example.weatherapp.data.remote.visualCrossing.dto.DailyDto.VisualCrossingDailyDto
-import com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto.VisualCrossingDaysDataDto
-import com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto.VisualCrossingDto
-import com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto.VisualCrossingHourDataDto
+import com.example.weatherapp.data.remote.visualCrossing.dto.current.VisualCrossingCurrentDto
+import com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto.VisualCrossingHourlyDto
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-fun VisualCrossingHourDataDto.toWeatherData():WeatherData {
+fun VisualCrossingCurrentDto.toWeatherInfo(): WeatherInfo{
 
+    val date = this.day[0].date
+    val dto = this.currentConditions
+    var isDay = true
+    val time = LocalTime.parse(dto.time)
+    if( time.hour < 8 || time.hour > 20) isDay = false
 
-    return WeatherData(
-        // nu se poate mock-ui time
-                time = LocalTime.parse(time).atDate(LocalDate.now()),
-                temperature = temperature,
-                pressure = pressure,
-                windSpeed = windSpeed,
-                humidity = humidity,
-                weatherType = WeatherType.fromVisualCrossing(weatherCode)
-
-            )
-}
-fun VisualCrossingDaysDataDto.toWeatherDataPerDay():List<WeatherDataPerDay> {
-    val list = mutableListOf<WeatherDataPerDay>()
-
-    val list2 = mutableListOf<WeatherData>()
-    for(hour in hours) {
-        list2.add(hour.toWeatherData())
-    }
-    list.add(WeatherDataPerDay(0, forecasts = list2))
-
-//    for (i in 0..6) {
-//
-////        val listWeatherData = List(24) {
-////            WeatherData(
-////                time = LocalDate.parse(time, DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay(),//, DateTimeFormatter.ISO_LOCAL_DATE),
-////                temperatureCelsius = temperatureMax,
-////                pressure = pressure,
-////                windSpeed = windSpeed,
-////                humidity = humidity,
-////                weatherType = WeatherType.fromVisualCrossing(weatherCode)
-////
-////            )
-//        }
-
-
-    return list
-}
-
-fun VisualCrossingDto.toWeatherInfo(): WeatherInfo {
-    val weatherDataPerDay = weatherData[0].toWeatherDataPerDay()
-    val now = LocalDateTime.now()
-
-    val index = if(now.minute < 30) now.hour else now.hour+1
-
-    val currentWeatherData = weatherDataPerDay[0].forecasts[index]
-
+   val current = WeatherData(
+       time = LocalDateTime.parse("${date}T${dto.time}"),
+       temperature = dto.temperature,
+       pressure = dto.pressure,
+       humidity = dto.humidity,
+       description = dto.description,
+       isDay = isDay,
+       windSpeed = dto.windspeed,
+       weatherType = WeatherType.fromVisualCrossing(dto.weatherCode)
+   )
 
     return WeatherInfo(
-        weatherDataPerDay = weatherDataPerDay,
-        currentWeatherData =  currentWeatherData
+        currentWeatherData = current,
+        weatherDataPerDay = listOf()
     )
+
+
+}
+
+fun VisualCrossingHourlyDto.toWeatherInfo():WeatherInfo{
+    val list = mutableListOf<WeatherDataPerDay>()
+    val list2 = mutableListOf<WeatherData>()
+
+    val date = this.days[0].date
+
+    this.days[0].hours.forEachIndexed { index, dto ->
+
+        var isDay = true
+        val time = LocalTime.parse(dto.hour)
+        if( time.hour < 8 || time.hour > 20) isDay = false
+
+
+        list2.add(
+            WeatherData(
+                time = LocalDateTime.parse("${date}T${dto.hour}"),
+                temperature = dto.temperature,
+                pressure = dto.pressure,
+                windSpeed = dto.windSpeed,
+                humidity = dto.humidity,
+                isDay = isDay,
+                weatherType = WeatherType.fromVisualCrossing(dto.weatherCode)
+
+            )
+        )
+        list.add(
+            WeatherDataPerDay(
+                day = 0,
+                forecasts = list2
+            )
+        )
+    }
+
+    return WeatherInfo(
+        currentWeatherData = null,
+        weatherDataPerDay = list
+    )
+
+
 }
 
 fun VisualCrossingDailyDto.toWeatherInfo(): WeatherInfo {
