@@ -6,11 +6,9 @@ import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import java.time.LocalDateTime
 import javax.inject.Inject
+
 // @Inject constructor
 class AverageCalculator @Inject constructor(
 
@@ -23,178 +21,87 @@ class AverageCalculator @Inject constructor(
     suspend fun calculateAverage(lat: Double, long: Double): WeatherInfo = coroutineScope{
 
 
+//      CURRENT CONDITIONS
 
-       val allDeferred= weatherRepositories.map{
-            async {
-                it.getCurrentWeatherData(lat, long)
-            }
-        }.toTypedArray()
-        val allResults = awaitAll(*allDeferred)
+//       val allDeferred= weatherRepositories.map{
+//            async {
+//                it.getCurrentWeatherData(lat, long)
+//            }
+//        }.toTypedArray()
+//        val allResults = awaitAll(*allDeferred)
+
+        val allResults = AverageCalculatorMockData().getData()
+
+       val resultCurrent = calculateCurrentConditions(allResults, weights = weights)
+       Log.d("AverageCalculator Current",resultCurrent.toString())
 
 
-       val result = calculateCurrentConditions(allResults, weights = weights)
-       Log.d("AverageCalculator",result.toString())
-       calculateWeatherCode(allResults, weights = weights)
-        for(i in allResults ){
-            i.onSuccess { it ->
-//                Log.d("AverageCalculator",
-//                    it.currentWeatherData?.temperature.toString()
-//                    )
-            }
-        }
+
+//      HOURLY FORECASTS
+
+//        val allDeferredHourly = weatherRepositories.map{
+//            async{
+//                it.getHourlyWeatherData(lat,long)
+//            }
+//        }.toTypedArray()
+//        val allResultsHourly = awaitAll(*allDeferredHourly)
+
+    val allResultsHourly = allResults
+
+        val resultHourly = calculateHourly(allResultsHourly, weights = weights)
+        Log.d("AverageCalculator Hourly", resultHourly.toString())
+
+
+
 //        Log.d("AverageCalculator" , allResults[1].isSuccess.toString())
         val isPartialResult = allResults.any{
             it.isFailure
         }
 
-    val weatherInfo = WeatherInfo(
-        currentWeatherData = WeatherData(
-            time = LocalDateTime.now(),
-            temperature = 25.2,
-            pressure = 1000.0,
-            humidity = 56.0,
-            weatherType = WeatherType.fromWMO(0),
-            windSpeed = 12.0
-        ),
-        weatherDataPerDay = listOf(
-            WeatherDataPerDay(
-                day =0,
-               forecasts =  listOf(
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(0),
-                        windSpeed = 12.0
-                    ),
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.12,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(1),
-                        windSpeed = 12.0
-                    ),
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.12,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(2),
-                        windSpeed = 12.0
-                    ),
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.12,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(3),
-                        windSpeed = 12.0
-                    ),
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.12,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(45),
-                        windSpeed = 12.0
-                    )
 
-                )
-            ),
-            WeatherDataPerDay(
-                day =1,
-               forecasts =  listOf(
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(2),
-                        windSpeed = 12.0
-                    ),
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(3),
-                        windSpeed = 12.0
-                    )
+//    DAILY FORECASTS
 
-                )
-            ),
-            WeatherDataPerDay(
-                day =2,
-              forecasts =   listOf(
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(45),
-                        windSpeed = 12.0
-                    ),
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(0),
-                        windSpeed = 12.0
-                    )
+//    val allDeferedDaily = weatherRepositories.map{
+//        async{
+//            it.getDailyWeatherData(lat,long)
+//        }
+//    }.toTypedArray()
+//    val allResultDaily = awaitAll(*allDeferedDaily)
 
-                )
-            ),
-            WeatherDataPerDay(
-                day =3,
-               forecasts =  listOf(
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(0),
-                        windSpeed = 12.0
-                    ),
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(0),
-                        windSpeed = 12.0
-                    )
+    val allResultDaily = allResults
+    val resultDaily = calculateDaily(data = allResultDaily, weights = weights)
+    Log.d("AverageCalculator Daily",resultDaily.toString())
 
-                )
-            ),
-            WeatherDataPerDay(
-                day =4,
-              forecasts =   listOf(
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(0),
-                        windSpeed = 12.0
-                    ),
-                    WeatherData(
-                        time = LocalDateTime.now(),
-                        temperature = 25.2,
-                        pressure = 1000.0,
-                        humidity = 56.0,
-                        weatherType = WeatherType.fromWMO(0),
-                        windSpeed = 12.0
-                    )
+    val resultDailyHourly = mutableListOf<WeatherDataPerDay>()
 
+    resultDaily.forEachIndexed{index, data ->
+        if(index == 0)
+            resultDailyHourly.add(
+                WeatherDataPerDay(
+                    day = data.day,
+                    minTemperature = data.minTemperature,
+                    maxTemperature = data.maxTemperature,
+                    sunRise = data.sunRise,
+                    sunSet = data.sunSet,
+                    moonRise = data.moonRise,
+                    moonSet = data.moonSet,
+                    weatherTypeDay = data.weatherTypeDay,
+                    weatherTypeNight = data.weatherTypeNight,
+                    forecasts = resultHourly.forecasts
                 )
-            ),
-        )
+            )
+        else resultDailyHourly.add(data)
+    }
+
+
+    val finalResult = WeatherInfo(
+        currentWeatherData = resultCurrent,
+        partialResult = isPartialResult,
+        weatherDataPerDays = resultDailyHourly
+
     )
 
-    return@coroutineScope weatherInfo
+    return@coroutineScope finalResult
 
     }
 
@@ -203,25 +110,146 @@ class AverageCalculator @Inject constructor(
 
 fun calculateCurrentConditions(data: List<Result<WeatherInfo>>, weights: List<Double>) : WeatherData{
 
-    val weightsSum = weights.sum()
-    var temperature : Double = 0.0
-    var humidity: Double = 0.0
-    var pressure: Double = 0.0
-    var windSpeed: Double = 0.0
-
-    var time : LocalDateTime = LocalDateTime.now()
-
-    data[0].onSuccess {
-        time = it.currentWeatherData!!.time
-    }
+    val successData = mutableListOf<WeatherData>()
+    val successWeights = mutableListOf<Double>()
 
     data.forEachIndexed { index, result ->
         result.onSuccess {
-            temperature = temperature + it.currentWeatherData!!.temperature * weights[index]
-            humidity = humidity + it.currentWeatherData.humidity * weights[index]
-            pressure = pressure + it.currentWeatherData.pressure * weights[index]
-            windSpeed = windSpeed + it.currentWeatherData.windSpeed * weights[index]
+            successData.add(it.currentWeatherData!!)
+            successWeights.add(weights[index])
         }
+    }
+
+    return calculateParams(data = successData, weights = successWeights)
+
+}
+
+
+fun calculateHourly(data: List<Result<WeatherInfo>>, weights: List<Double>) : WeatherDataPerDay{
+
+    val successData = mutableListOf<WeatherDataPerDay>()
+    val successWeights = mutableListOf<Double>()
+
+    data.forEachIndexed { index, result ->
+        result.onSuccess {
+            successData.add(it.weatherDataPerDays[0])
+            successWeights.add(weights[index])
+
+        }
+    }
+    val res = mutableListOf<WeatherData>()
+    var minimumSize = successData[0].forecasts.size
+    successData.forEach{
+        if( it.forecasts.size < minimumSize){
+            minimumSize = it.forecasts.size
+        }
+    }
+
+    val successForecasts = mutableListOf<WeatherData>()
+
+
+    for(i in 0..(minimumSize -1)){
+        successData.forEach{
+            successForecasts.add(it.forecasts[i])
+        }
+        res.add(
+            calculateParams(data = successForecasts,
+                weights = successWeights
+            )
+        )
+        successForecasts.clear()
+    }
+
+    return  WeatherDataPerDay(
+        day = successData[0].day,
+        sunRise = successData[0].sunRise,
+        sunSet = successData[0].sunSet,
+        weatherTypeDay = successData[0].weatherTypeDay,
+        forecasts = res
+    )
+}
+fun calculateDaily(data: List<Result<WeatherInfo>>, weights: List<Double>) : List<WeatherDataPerDay>{
+    val successData = mutableListOf<List<WeatherDataPerDay>>()
+    val successWeights = mutableListOf<Double>()
+
+
+    data.forEachIndexed { index, result ->
+        result.onSuccess {
+            successData.add(it.weatherDataPerDays)
+            successWeights.add(weights[index])
+        }
+    }
+
+    var minimumSize = successData[0].size
+    successData.forEach{
+        if( it.size < minimumSize){
+            minimumSize = it.size
+        }
+    }
+   // Log.d("Average Daily",minimumSize.toString())
+    val sumWeights = successWeights.sum()
+
+    val res = mutableListOf<WeatherDataPerDay>()
+    var minTemperature = 0.0
+    var maxTemperature = 0.0
+
+
+    var dayCodes = mutableListOf<WeatherType>()
+    var nightCodes = mutableListOf<WeatherType>()
+
+    for(i in 0..(minimumSize-1)){
+        minTemperature = 0.0
+        maxTemperature = 0.0
+        successData.forEachIndexed { index, data ->
+            minTemperature += data[i].minTemperature * successWeights[index]
+            maxTemperature += data[i].maxTemperature * successWeights[index]
+            dayCodes.add(data[i].weatherTypeDay)
+            nightCodes.add(data[i].weatherTypeNight)
+        }
+//        Log.d("Average Daily",minTemperature.toString()+ " \n "+maxTemperature.toString())
+
+        minTemperature /= sumWeights
+        maxTemperature /= sumWeights
+//        Log.d("Average Daily",minTemperature.toString()+ " \n "+maxTemperature.toString())
+
+        res.add(
+            WeatherDataPerDay(
+                day = successData[0][i].day,
+                minTemperature = minTemperature,
+                maxTemperature = maxTemperature,
+                sunRise = successData[0][i].sunRise,
+                sunSet = successData[0][i].sunSet,
+                moonRise = successData[0][i].moonRise,
+                moonSet = successData[0][i].moonSet,
+                weatherTypeDay = calculateWeatherCode(dayCodes, successWeights),
+                weatherTypeNight = calculateWeatherCode(nightCodes, successWeights),
+                forecasts = listOf()
+            )
+        )
+        dayCodes.clear()
+        nightCodes.clear()
+    }
+
+
+
+    return res
+
+}
+
+fun calculateParams(data: List<WeatherData>, weights: List<Double>): WeatherData{
+    val weightsSum = weights.sum()
+    var temperature  = 0.0
+    var humidity = 0.0
+    var pressure = 0.0
+    var windSpeed = 0.0
+    var time = data[0].time
+    var description = data[0].description
+
+    data.forEachIndexed{ index, it ->
+        temperature += it.temperature*weights[index]
+        humidity += it.humidity*weights[index]
+        pressure +=it.pressure*weights[index]
+        windSpeed += it.windSpeed*weights[index]
     }
 
     temperature /= weightsSum
@@ -229,20 +257,27 @@ fun calculateCurrentConditions(data: List<Result<WeatherInfo>>, weights: List<Do
     pressure /= weightsSum
     windSpeed /= weightsSum
 
-    val weatherType = calculateWeatherCode(data, weights = weights)
+    val weatherCodes = mutableListOf<WeatherType>()
+    for(i in data)
+        weatherCodes.add(i.weatherType)
+
+    val weatherType = calculateWeatherCode(
+        data = weatherCodes,
+        weights =  weights
+    )
 
     return WeatherData(
         time = time,
         temperature = temperature,
-        humidity =  humidity,
-        pressure =  pressure,
+        humidity = humidity,
+        pressure = pressure,
         windSpeed = windSpeed,
-        weatherType = weatherType
+        weatherType = weatherType,
+        description = description
     )
-
 }
 
-fun calculateWeatherCode(data: List<Result<WeatherInfo>>, weights: List<Double>): WeatherType{
+fun calculateWeatherCode(data: List<WeatherType>, weights: List<Double>): WeatherType{
     var pool = mutableMapOf(
         WeatherType.ClearSky to 0.0,
         WeatherType.MainlyClear to 0.0,
@@ -274,9 +309,9 @@ fun calculateWeatherCode(data: List<Result<WeatherInfo>>, weights: List<Double>)
     )
 
     data.forEachIndexed { index, result ->
-        result.onSuccess {
-            pool[it.currentWeatherData!!.weatherType] = weights[index]+ pool[it.currentWeatherData!!.weatherType]!!
-        }
+
+            pool[result] = weights[index]+ pool[result]!!
+
     }
 
     var weatherType : WeatherType = WeatherType.ClearSky
@@ -292,3 +327,5 @@ fun calculateWeatherCode(data: List<Result<WeatherInfo>>, weights: List<Double>)
     return weatherType
 
 }
+
+

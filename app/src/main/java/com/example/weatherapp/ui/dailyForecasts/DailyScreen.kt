@@ -78,7 +78,7 @@ fun DailyWeatherPreview(){
                 weatherType = WeatherType.fromWMO(0),
                 windSpeed = 12.0
             ),
-            weatherDataPerDay = listOf(
+            weatherDataPerDays = listOf(
                 WeatherDataPerDay(
                     day =0,
                     forecasts = listOf(

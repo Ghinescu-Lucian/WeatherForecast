@@ -66,7 +66,7 @@ object AppModule{
 
     @Provides
     fun provideAverageCalculator(): AverageCalculator{
-        return AverageCalculator(weatherRepositories = provideRepositories(), weights = listOf(25.0, 50.0, 25.0))
+        return AverageCalculator(weatherRepositories = provideRepositories(), weights = listOf(25.0, 25.0, 25.0))
     }
 
     // sa pun bind pentru ClockInterface

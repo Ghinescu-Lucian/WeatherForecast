@@ -31,7 +31,7 @@ fun WeatherForecast(
     Log.d("State", state.toString())
 //    if(state.weatherInfo?.weatherDataPerDay!!.size == 0) return
 //    if(state.weatherInfo?.weatherDataPerDay!!.isEmpty() == true) return
-    state.weatherInfo?.weatherDataPerDay?.get(0)?.let {data ->
+    state.weatherInfo?.weatherDataPerDays?.get(0)?.let { data ->
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -86,7 +86,7 @@ fun WeatherForecastPrieview(){
                 weatherType = WeatherType.fromWMO(0),
                 windSpeed = 12.0
             ),
-            weatherDataPerDay = listOf(
+            weatherDataPerDays = listOf(
                 WeatherDataPerDay(
                     day =0,
                     forecasts = listOf(

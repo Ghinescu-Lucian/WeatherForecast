@@ -74,7 +74,7 @@ fun WeatherDto.toWeatherInfo(): WeatherInfo {
 
 
     return WeatherInfo(
-        weatherDataPerDay = weatherDataPerDay,
+        weatherDataPerDays = weatherDataPerDay,
         currentWeatherData =  currentWeatherData
     )
 
@@ -97,5 +97,5 @@ fun OpenMeteoDailyDto.toWeatherInfo(): WeatherInfo{
                 forecasts = listOf()
             )
         )
-    return WeatherInfo(weatherDataPerDay = list, currentWeatherData = null)
+    return WeatherInfo(weatherDataPerDays = list, currentWeatherData = null)
 }

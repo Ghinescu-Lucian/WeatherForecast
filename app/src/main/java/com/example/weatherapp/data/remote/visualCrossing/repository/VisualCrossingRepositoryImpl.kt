@@ -30,7 +30,7 @@ class VisualCrossingRepositoryImpl @Inject constructor (val api: VisualCrossingA
             )
         )
         hourly.onSuccess {
-            data = it.weatherDataPerDay[0]
+            data = it.weatherDataPerDays[0]
             Log.d("VisualCrossing",data.toString())
         }
 
@@ -41,7 +41,7 @@ class VisualCrossingRepositoryImpl @Inject constructor (val api: VisualCrossingA
             var aju = r.toWeatherInfo()
             var aju2 = WeatherInfo(
                 currentWeatherData = aju.currentWeatherData,
-                weatherDataPerDay = listOf(data)
+                weatherDataPerDays = listOf(data)
             )
             Log.d("VisualCrossing2", aju2.toString())
 

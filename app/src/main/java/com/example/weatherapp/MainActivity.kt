@@ -51,7 +51,6 @@ import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.ui.viewModels.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
-import java.util.TimeZone
 
 @AndroidEntryPoint
 @OptIn(ExperimentalMaterial3Api::class)
@@ -195,7 +194,7 @@ fun AppPreview(){
                 weatherType = WeatherType.fromWMO(0),
                 windSpeed = 12.0
             ),
-            weatherDataPerDay = listOf(
+            weatherDataPerDays = listOf(
                 WeatherDataPerDay(
                     day =0,
                     forecasts = listOf(

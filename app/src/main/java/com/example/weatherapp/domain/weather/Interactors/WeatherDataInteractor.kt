@@ -3,13 +3,11 @@ package com.example.weatherapp.domain.weather.Interactors
 //import androidx.compose.ui.tooling.data.EmptyGroup.location
 import android.util.Log
 import com.example.weatherapp.domain.location.LocationTracker
-import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherType
 import java.time.LocalDateTime
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.Result.Companion.failure
 import kotlin.Result.Companion.success
 
@@ -29,7 +27,7 @@ class WeatherDataInteractorImpl @Inject constructor (
     val locationTracker: LocationTracker,
     // sa am o lista de repository
     val averageCalculator: AverageCalculator,
-   @Named("VisualCrossing" ) val  weatherRepository: WeatherRepository,
+//   @Named("OpenMeteo") val  weatherRepository: WeatherRepository,
 
     ) : WeatherDataInteractor {
 
@@ -43,15 +41,15 @@ class WeatherDataInteractorImpl @Inject constructor (
                 val l = it?.latitude
                 if(l == null) return failure(Exception("Error on location provider."))
              //   Log.d("[Interactor Weather] Location", it.toString())
-                val r = weatherRepository.getCurrentWeatherData(it.latitude, it.longitude)
+                val r = averageCalculator.calculateAverage(it.latitude, it.longitude)
 //                val r2 = weatherRepository.getDailyWeatherData(it.latitude, it.longitude)
                Log.d("CurrentWeather", r.toString())
-                r.onSuccess { itt ->
-                    result = Result.success(itt.currentWeatherData) as Result<WeatherData>
-                    weatherState.currentWeather = result
-                    weatherState.days = Result.success(itt.weatherDataPerDay)
 
-                }
+                    result = Result.success(r.currentWeatherData) as Result<WeatherData>
+                    weatherState.currentWeather = result
+                    weatherState.days = Result.success(r.weatherDataPerDays)
+
+
             }
 
             return result
@@ -70,11 +68,11 @@ class WeatherDataInteractorImpl @Inject constructor (
         location.onSuccess {
             val l = it?.latitude
             if(l == null) return failure(Exception("Error on location provider."))
-            val r = weatherRepository.getCurrentWeatherData(it.latitude, it.longitude)
-            r.onSuccess {  itt ->
-                result = Result.success(itt.weatherDataPerDay)
+            val r = averageCalculator.calculateAverage(it.latitude, it.longitude)
 
-            }
+                result = Result.success(r.weatherDataPerDays)
+
+
         }
 
         return result
@@ -92,11 +90,9 @@ class WeatherDataInteractorImpl @Inject constructor (
             location.onSuccess {
                 val l = it?.latitude
                 if(l == null) return failure(Exception("Error on location provider."))
-                val r = weatherRepository.getHourlyWeatherData(it.latitude, it.longitude)
-                r.onSuccess {  itt ->
-                    result = Result.success(itt.weatherDataPerDay[0])
+                val r = averageCalculator.calculateAverage(it.latitude, it.longitude)
+                result = Result.success(r.weatherDataPerDays[0])
 
-                }
             }
 
             return result

@@ -27,7 +27,7 @@ fun HourlyScreen(
             modifier = Modifier
         )
         Hourly12Weather(
-            data = state.weatherInfo!!.weatherDataPerDay[0].forecasts
+            data = state.weatherInfo!!.weatherDataPerDays[0].forecasts
         )
 
     }
@@ -49,7 +49,7 @@ val state = WeatherState(
             weatherType = WeatherType.fromWMO(0),
             windSpeed = 12.0
         ),
-    weatherDataPerDay = listOf(
+    weatherDataPerDays = listOf(
         WeatherDataPerDay(
             day =0,
             forecasts = listOf(

@@ -32,7 +32,7 @@ fun VisualCrossingCurrentDto.toWeatherInfo(): WeatherInfo{
 
     return WeatherInfo(
         currentWeatherData = current,
-        weatherDataPerDay = listOf()
+        weatherDataPerDays = listOf()
     )
 
 
@@ -73,7 +73,7 @@ fun VisualCrossingHourlyDto.toWeatherInfo():WeatherInfo{
 
     return WeatherInfo(
         currentWeatherData = null,
-        weatherDataPerDay = list
+        weatherDataPerDays = list
     )
 
 
@@ -98,5 +98,5 @@ fun VisualCrossingDailyDto.toWeatherInfo(): WeatherInfo {
 
 
     }
-    return WeatherInfo(weatherDataPerDay = weatherDataPerDays, currentWeatherData = null)
+    return WeatherInfo(weatherDataPerDays = weatherDataPerDays, currentWeatherData = null)
 }

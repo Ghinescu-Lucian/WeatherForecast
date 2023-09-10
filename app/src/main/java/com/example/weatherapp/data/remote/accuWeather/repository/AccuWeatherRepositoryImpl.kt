@@ -36,12 +36,12 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
             )
         )
         hours.onSuccess {
-            hourlyForecasts = it.weatherDataPerDay
+            hourlyForecasts = it.weatherDataPerDays
         }
         val d = r[0].toWeatherData()
         val result = WeatherInfo(
 
-            weatherDataPerDay = hourlyForecasts,
+            weatherDataPerDays = hourlyForecasts,
             currentWeatherData = d
         )
         return Result.success(result)
@@ -71,7 +71,7 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
         return Result.success(
             WeatherInfo(
                 currentWeatherData = list[0],
-                weatherDataPerDay = listOf(
+                weatherDataPerDays = listOf(
                     WeatherDataPerDay(
                         day = 0,
                         forecasts = list
@@ -108,7 +108,7 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
         return Result.success(
             WeatherInfo(
                 currentWeatherData = null,
-                weatherDataPerDay = listOf()
+                weatherDataPerDays = listOf()
             )
         )
 

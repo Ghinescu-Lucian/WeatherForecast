@@ -57,7 +57,7 @@ class WeatherViewModel @Inject constructor (
                     it.copy(
                         weatherInfo = WeatherInfo(
                             currentWeatherData = data,
-                            weatherDataPerDay =listOf()
+                            weatherDataPerDays =listOf()
                         ),
                         isLoading = false
                     )
@@ -69,10 +69,10 @@ class WeatherViewModel @Inject constructor (
                 Log.d("ViewModel", dataPerDay[0].day.toString())
                 _state.update{
                     it.copy(
-                        weatherInfo = it.weatherInfo?.copy(weatherDataPerDay = dataPerDay)
+                        weatherInfo = it.weatherInfo?.copy(weatherDataPerDays = dataPerDay)
                     )
                 }
-                Log.d("ViewModel", _state.value.weatherInfo?.weatherDataPerDay.toString())
+                Log.d("ViewModel", _state.value.weatherInfo?.weatherDataPerDays.toString())
             }
 
 
