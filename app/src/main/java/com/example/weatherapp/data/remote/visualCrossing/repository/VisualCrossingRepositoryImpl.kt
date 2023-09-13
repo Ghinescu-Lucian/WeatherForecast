@@ -14,6 +14,7 @@ import javax.inject.Inject
 class VisualCrossingRepositoryImpl @Inject constructor (val api: VisualCrossingApi) : WeatherRepository {
     override suspend fun getCurrentWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
 
+//        sa salvez intr-un camp datele
 
         val hourly = getHourlyWeatherData(lat, long)
         var data =  WeatherDataPerDay(

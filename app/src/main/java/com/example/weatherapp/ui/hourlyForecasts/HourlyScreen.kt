@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.hourlyForecasts
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,8 +27,10 @@ fun HourlyScreen(
             city = state.cityName,
             modifier = Modifier
         )
+        Log.d("State2", state.weatherInfo?.weatherDataPerDays.toString())
+
         Hourly12Weather(
-            data = state.weatherInfo!!.weatherDataPerDays[0].forecasts
+                 data = state.weatherInfo!!.weatherDataPerDays.getOrNull(0)!!.forecasts
         )
 
     }

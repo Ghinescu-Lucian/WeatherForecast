@@ -13,10 +13,10 @@ data class LocationKeyDto (
     val city: String,
 
     @SerializedName("Country")
-    val cuntry: NameDto,
+    val cuntry: NameDto? = NameDto(""),
 
     @SerializedName("AdministrativeArea")
-    val administrative: NameDto
+    val administrative: NameDto? = NameDto("")
 
 
 )

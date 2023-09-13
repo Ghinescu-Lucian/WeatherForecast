@@ -2,6 +2,7 @@ package com.example.weatherapp.data.remote.accuWeather.repository
 
 import android.util.Log
 import com.example.weatherapp.data.remote.accuWeather.AccuWeatherApi
+import com.example.weatherapp.data.remote.accuWeather.dto.locationKey.LocationKeyDto
 import com.example.weatherapp.data.remote.accuWeather.mappers.toWeatherData
 import com.example.weatherapp.data.remote.accuWeather.mappers.toWeatherDataPerDay
 import com.example.weatherapp.domain.repository.WeatherRepository
@@ -21,7 +22,7 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
             val r = getLocationKey(lat, long).onSuccess {
                 locationKey = it
             }
-            Log.d("LocationKey","Ceva" + r.toString() + "\n"+locationKey)
+           // Log.d("LocationKey","Ceva" + r.toString() + "\n"+locationKey)
             if (r.isFailure)
                 return Result.failure(Exception("[AccuWeather] Error on location key."))
         }
@@ -116,10 +117,14 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
 
     suspend fun getLocationKey(lat: Double, long: Double): Result<String> {
         val s = "$lat,$long"
-        var result = api.getLocationKey(s, true)
+        var result=  LocationKeyDto("", "")
+        try {
+            var result = api.getLocationKey(s, true)
+        } catch( e: Exception){
+            return Result.failure(Exception("[Accuweather] Location key"))
+        }
         locationKey = result.locationKey
         Log.d("LocationKey", result.locationKey)
         return Result.success(result.locationKey)
-//        else return Result.failure(Exception("[AccuWeather] Error on getting location key"))
     }
 }

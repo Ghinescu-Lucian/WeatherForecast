@@ -16,23 +16,27 @@ class AverageCalculator @Inject constructor(
     val weights: List<Double>
 
 
+
+
 ){
 //  : Result<WeatherInfo>
     suspend fun calculateAverage(lat: Double, long: Double): WeatherInfo = coroutineScope{
+
+
 
 
 //      CURRENT CONDITIONS
 
 //       val allDeferred= weatherRepositories.map{
 //            async {
-//                it.getCurrentWeatherData(lat, long)
+//                    it.getCurrentWeatherData(lat, long)
 //            }
 //        }.toTypedArray()
-//        val allResults = awaitAll(*allDeferred)
+//        val allResultsCurrent = awaitAll(*allDeferred)
 
-        val allResults = AverageCalculatorMockData().getData()
+        val allResultsMock = AverageCalculatorMockData().getData()
 
-       val resultCurrent = calculateCurrentConditions(allResults, weights = weights)
+       val resultCurrent = calculateCurrentConditions(allResultsMock, weights = weights)
        Log.d("AverageCalculator Current",resultCurrent.toString())
 
 
@@ -46,15 +50,15 @@ class AverageCalculator @Inject constructor(
 //        }.toTypedArray()
 //        val allResultsHourly = awaitAll(*allDeferredHourly)
 
-    val allResultsHourly = allResults
+    val allResultsHourly = allResultsMock
 
         val resultHourly = calculateHourly(allResultsHourly, weights = weights)
-        Log.d("AverageCalculator Hourly", resultHourly.toString())
+        Log.d("AverageCalculator Hourly", resultHourly.forecasts.toString())
 
 
 
 //        Log.d("AverageCalculator" , allResults[1].isSuccess.toString())
-        val isPartialResult = allResults.any{
+        val isPartialResult = allResultsMock.any{
             it.isFailure
         }
 
@@ -68,7 +72,7 @@ class AverageCalculator @Inject constructor(
 //    }.toTypedArray()
 //    val allResultDaily = awaitAll(*allDeferedDaily)
 
-    val allResultDaily = allResults
+    val allResultDaily = allResultsMock
     val resultDaily = calculateDaily(data = allResultDaily, weights = weights)
     Log.d("AverageCalculator Daily",resultDaily.toString())
 
@@ -100,6 +104,8 @@ class AverageCalculator @Inject constructor(
         weatherDataPerDays = resultDailyHourly
 
     )
+
+    Log.d("FinalResult", finalResult.toString())
 
     return@coroutineScope finalResult
 
@@ -147,7 +153,7 @@ fun calculateHourly(data: List<Result<WeatherInfo>>, weights: List<Double>) : We
 
     val successForecasts = mutableListOf<WeatherData>()
 
-
+//    minimumSize = 24
     for(i in 0..(minimumSize -1)){
         successData.forEach{
             successForecasts.add(it.forecasts[i])
@@ -210,6 +216,9 @@ fun calculateDaily(data: List<Result<WeatherInfo>>, weights: List<Double>) : Lis
 
         minTemperature /= sumWeights
         maxTemperature /= sumWeights
+
+        minTemperature = String.format("%.1f", minTemperature).toDouble()
+        maxTemperature = String.format("%.1f", maxTemperature).toDouble()
 //        Log.d("Average Daily",minTemperature.toString()+ " \n "+maxTemperature.toString())
 
         res.add(
@@ -256,6 +265,11 @@ fun calculateParams(data: List<WeatherData>, weights: List<Double>): WeatherData
     humidity /= weightsSum
     pressure /= weightsSum
     windSpeed /= weightsSum
+
+    temperature = String.format("%.1f", temperature).toDouble()
+    humidity = String.format("%.1f", humidity).toDouble()
+    pressure = String.format("%.1f", pressure).toDouble()
+    windSpeed = String.format("%.1f", windSpeed).toDouble()
 
     val weatherCodes = mutableListOf<WeatherType>()
     for(i in data)

@@ -31,7 +31,7 @@ fun WeatherForecast(
     Log.d("State", state.toString())
 //    if(state.weatherInfo?.weatherDataPerDay!!.size == 0) return
 //    if(state.weatherInfo?.weatherDataPerDay!!.isEmpty() == true) return
-    state.weatherInfo?.weatherDataPerDays?.get(0)?.let { data ->
+    state.weatherInfo?.weatherDataPerDays?.getOrNull(0)?.let { data ->
         Column(
             modifier = modifier
                 .fillMaxWidth()
