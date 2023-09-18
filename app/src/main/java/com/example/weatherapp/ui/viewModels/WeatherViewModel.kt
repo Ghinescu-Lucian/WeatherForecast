@@ -18,7 +18,6 @@ import javax.inject.Inject
 //import javax.inject.Inject
 
 // interfata pentru a lua si a transforma din C in F
-// mai am de lucru la dagger si la hilt + sa fac private locationTracker si repository
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor (

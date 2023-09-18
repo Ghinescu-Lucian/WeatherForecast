@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.Profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,9 +15,17 @@ import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
+import com.example.weatherapp.ui.maps.Map
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 import java.time.LocalDateTime
+import kotlin.collections.Map as Map1
 
 @Composable
 fun ProfileScreen(
@@ -26,11 +35,12 @@ fun ProfileScreen(
     Column(verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Under construction Profile screen")
-        Image(
-            painter = painterResource(id = R.drawable.ic_under_construction),
-            contentDescription = "Under construction"
-        )
-        }
+        Map()
+
+
+           }
+
+
     }
 @Composable
 @Preview

@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "weight_table")
+@Entity(tableName = "weights")
 data class Weights (
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "OpenMeteo") val omWeight: Double,

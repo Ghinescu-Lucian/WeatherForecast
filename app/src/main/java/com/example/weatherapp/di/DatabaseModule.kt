@@ -22,7 +22,7 @@ class DatabaseModule {
             WeightsDB::class.java,
             "weights_database"
         )
-            .createFromAsset("database/weights.db")
+            .createFromAsset("database/sqlite.db")
             .build()
     }
 

@@ -24,8 +24,10 @@ public abstract class WeightsDB : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     WeightsDB::class.java,
-                    "weights_database"
-                ).build()
+                    "weightsDB"
+                )
+                    .createFromAsset("database/weightsDB.db")
+                    .build()
                 INSTANCE = instance
                 instance
             }

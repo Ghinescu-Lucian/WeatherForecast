@@ -5,6 +5,7 @@ import android.util.Log
 import com.example.weatherapp.data.local.weights.WeightRepository
 import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.data.local.weights.WeightsDB
+import com.example.weatherapp.data.location.geocoder.CitySearch
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,29 +21,30 @@ class WeatherApp: Application()
     @Inject
     lateinit var repository: WeightRepository
 
-    override fun onCreate() {
+//    val database by lazy { WeightsDB.getDatabase(this) }
+//    val repository by lazy { WeightRepository(database.weightsDao())}
+
+        override fun onCreate() {
         super.onCreate()
-//        //
-////        db = WeightsDB.getDatabase(this)
-//       // repository = WeightRepository(db.weightsDao())
+
+            val citySearch = CitySearch()
+            val response = citySearch.retrieveCoordinates("Novigrad",this)
+            Log.d("CitySearch", response.toString())
+
+            GlobalScope.launch {
 //
-//        Log.d("Database", repository.allWeights.toString()
 
-        GlobalScope.launch {
-            val weight1 =Weights(2, 1.0,1.0,1.0,45.0, 21.212555)
-            var r = listOf<Weights>()
+                repository.allWeights.collect{ it ->
+                    Log.d("Database", it.size.toString())
+                    it.forEach{itt ->
+                        Log.d("Database", itt.toString())
+                    }
 
-//            repository.insert(weight1)
-            repository.delete(weight1)
-
-            repository.allWeights.collect{ it ->
-                it.forEach{itt ->
-                    Log.d("Database", itt.toString())
                 }
+
 
             }
 
-        }
 
 
     }
