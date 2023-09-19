@@ -19,9 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WeatherApp"
         tools:targetApi="31">
+<!--        <meta-data-->
+<!--            android:name="com.google.android.geo.API_KEY"-->
+<!--            android:value="@{GOOGLE_MAPS_API_KEY}" />-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAtrMxyhNxFhI7gLxOve6n50qABjotiSbM" />
+            android:value="${googleMapsApiKey}" />
 
         <activity
             android:name=".MainActivity"
