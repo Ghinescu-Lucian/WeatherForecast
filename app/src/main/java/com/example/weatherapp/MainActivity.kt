@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
@@ -48,6 +49,7 @@ import com.example.weatherapp.ui.menu.menuItems
 import com.example.weatherapp.ui.menu.navigateSingleTopTo
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.viewModels.PointsViewModel
 import com.example.weatherapp.ui.viewModels.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
@@ -76,9 +78,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             viewModel = hiltViewModel()
+            val points : PointsViewModel = hiltViewModel()
+            val st by points.statePoints.collectAsState()
+
+//            points.addPoint(Weights(2, 1.0, 1.0, 1.0, 23.0, 23.0))
+            points.deletePoint(Weights(2, 1.0, 1.0, 1.0, 23.0, 26.0))
             val state by viewModel.state.collectAsState()
             Log.d("State", state.weatherInfo.toString())
             WeatherApp(state = state, this )
+            Log.d("Points State", st.toString())
         }
     }
 

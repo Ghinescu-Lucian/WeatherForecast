@@ -25,7 +25,7 @@ class WeightRepository  (private val weightsDao: WeightsDao) {
 
     @WorkerThread
     suspend fun delete(weights: Weights) {
-        weightsDao.deleteById(weight_id = weights.id)
+        weights.id?.let { weightsDao.deleteById(weight_id = it) }
     }
 
 }

@@ -13,4 +13,6 @@ data class Weights (
     @ColumnInfo(name =  "VisualCrossing") val vcWeight: Double,
     @ColumnInfo(name = "latitude") val latitude: Double,
     @ColumnInfo(name = "longitude") val longitude: Double
-)
+){
+
+}

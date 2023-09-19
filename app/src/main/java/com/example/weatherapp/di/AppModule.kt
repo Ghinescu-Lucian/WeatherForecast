@@ -1,6 +1,7 @@
 package com.example.weatherapp.di
 
 import android.app.Application
+import com.example.weatherapp.data.location.geocoder.CitySearch
 import com.example.weatherapp.data.remote.accuWeather.AccuWeatherApi
 import com.example.weatherapp.data.remote.accuWeather.RetrofitHelperAccuWeather
 import com.example.weatherapp.data.remote.accuWeather.repository.AccuWeatherRepositoryImpl
@@ -9,6 +10,7 @@ import com.example.weatherapp.data.remote.openMeteo.repository.WeatherRepository
 import com.example.weatherapp.data.remote.visualCrossing.RetrofitHelperVisual_Crossing
 import com.example.weatherapp.data.remote.visualCrossing.VisualCrossingApi
 import com.example.weatherapp.data.remote.visualCrossing.repository.VisualCrossingRepositoryImpl
+import com.example.weatherapp.domain.location.SearchInteractor
 import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.domain.weather.Interactors.AverageCalculator
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -67,6 +69,15 @@ object AppModule{
     @Provides
     fun provideAverageCalculator(): AverageCalculator{
         return AverageCalculator(weatherRepositories = provideRepositories(), weights = listOf(25.0, 25.0, 25.0))
+    }
+
+    @Provides
+    fun provideCitySearch(): CitySearch {
+        return CitySearch()
+    }
+    @Provides
+    fun provideSearchInteractor(): SearchInteractor{
+        return SearchInteractor()
     }
 
     // sa pun bind pentru ClockInterface

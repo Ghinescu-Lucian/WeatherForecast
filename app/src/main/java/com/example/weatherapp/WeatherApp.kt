@@ -34,6 +34,7 @@ class WeatherApp: Application()
             GlobalScope.launch {
 //
 
+
                 repository.allWeights.collect{ it ->
                     Log.d("Database", it.size.toString())
                     it.forEach{itt ->
@@ -41,11 +42,7 @@ class WeatherApp: Application()
                     }
 
                 }
-
-
             }
-
-
 
     }
 }
