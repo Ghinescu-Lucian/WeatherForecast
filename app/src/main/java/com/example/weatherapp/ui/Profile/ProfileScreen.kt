@@ -35,7 +35,7 @@ fun ProfileScreen(
     Column(verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Under construction Profile screen")
-        Map()
+        Map(points = listOf())
 
 
            }

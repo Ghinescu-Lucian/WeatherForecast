@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -52,7 +53,13 @@ fun WeatherCard(
 
         Card(
             shape = RoundedCornerShape(10.dp),
-            modifier = modifier.padding(16.dp)
+            modifier = modifier.padding(16.dp),
+//            colors = CardDefaults.cardColors(containerColor = radialGradient(
+//                MaterialTheme.colorScheme.primary,
+//                MaterialTheme.colorScheme.onPrimary
+//            )
+//            )
+
 
         ){
             Column(
@@ -91,7 +98,7 @@ fun WeatherCard(
                 Text(
                     text = "${data.temperature} °C", // sa vina de pe viewModel
                     fontSize = 44.sp,
-                    color = Color.Gray
+                    color = Color.White
                 )
                 Spacer(
                     modifier = Modifier.height(32.dp)

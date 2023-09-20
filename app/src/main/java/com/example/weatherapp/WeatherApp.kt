@@ -2,6 +2,7 @@ package com.example.weatherapp
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.ui.text.font.FontSynthesis.Companion.Weight
 import com.example.weatherapp.data.local.weights.WeightRepository
 import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.data.local.weights.WeightsDB
@@ -31,10 +32,11 @@ class WeatherApp: Application()
             val response = citySearch.retrieveCoordinates("Novigrad",this)
             Log.d("CitySearch", response.toString())
 
+            val wg = Weights(id = 2, "Munich",1.0, 1.0, 1.0, 48.142286, 11.579616)
+
             GlobalScope.launch {
 //
-
-
+//                repository.insert(wg)
                 repository.allWeights.collect{ it ->
                     Log.d("Database", it.size.toString())
                     it.forEach{itt ->
@@ -42,7 +44,14 @@ class WeatherApp: Application()
                     }
 
                 }
+
+
+
+
+
             }
+
+
 
     }
 }

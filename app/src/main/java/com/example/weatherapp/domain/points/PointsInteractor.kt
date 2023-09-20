@@ -23,7 +23,7 @@ class PointsInteractor @Inject constructor(
         val result = locationTracker.getCurrentLocation()
 //        Log.d( "Current point", result.toString())
 
-        var point = Weights(id = 0, omWeight = 1.0, accWeight = 1.0, vcWeight = 1.0, 0.0, 0.0)
+        var point = Weights(id = 0,"",  omWeight = 1.0, accWeight = 1.0, vcWeight = 1.0, 0.0, 0.0, )
         result.onSuccess{
 
             point = point.copy(latitude = it!!.latitude, longitude = it.longitude)

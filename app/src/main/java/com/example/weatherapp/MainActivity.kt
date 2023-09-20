@@ -81,8 +81,7 @@ class MainActivity : ComponentActivity() {
             val points : PointsViewModel = hiltViewModel()
             val st by points.statePoints.collectAsState()
 
-//            points.addPoint(Weights(2, 1.0, 1.0, 1.0, 23.0, 23.0))
-            points.deletePoint(Weights(2, 1.0, 1.0, 1.0, 23.0, 26.0))
+
             val state by viewModel.state.collectAsState()
             Log.d("State", state.weatherInfo.toString())
             WeatherApp(state = state, this )

@@ -3,6 +3,7 @@ package com.example.weatherapp.ui.menu
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.weatherapp.R
+import com.example.weatherapp.ui.SearchScreen.SearchScreen
 
 interface WeatherDestination{
     val icon: Int
@@ -60,5 +61,7 @@ object ProfileScreen : WeatherDestination{
 }
 
 val menuItems = listOf(
-    Main, HourlyScreen,DailyScreen, ProfileScreen
+    Main, HourlyScreen,
+//    Search,
+    DailyScreen, ProfileScreen,
 )

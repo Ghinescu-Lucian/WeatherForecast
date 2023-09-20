@@ -5,29 +5,36 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
-import androidx.core.graphics.alpha
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.ui.maps.clusters.ZoneClusterItem
-import com.example.weatherapp.ui.maps.clusters.ZoneClusterManager
-import com.google.android.gms.maps.CameraUpdateFactory
+import com.example.weatherapp.ui.viewModels.ProfileViewModel
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.maps.android.compose.CameraPositionState
 import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.MapEffect
+import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.ktx.model.cameraPosition
 import com.google.maps.android.ktx.model.polygonOptions
-import kotlin.math.round
-import android.graphics.drawable.Icon as Icon1
 
 
 val fill_color = ColorUtils.setAlphaComponent(Color.RED, 150)
@@ -62,56 +69,110 @@ val clusterItems = listOf(
 
 
 @Composable
-fun Map(modifier: Modifier = Modifier){
+ fun Map(modifier: Modifier = Modifier,
+                points: List<Weights>,
+                viewModel: ProfileViewModel = hiltViewModel()
+        ){
 
-    val timisoara = LatLng(45.774489, 21.212534)
-    val cameraPositionState = rememberCameraPositionState()
-//    {
-//        position = CameraPosition.fromLatLngZoom(timisoara, 10f)
+    var markers by remember { mutableStateOf(listOf<LatLng>()) }
+
+
+
+    var state  = viewModel.state.collectAsState()
+    var alreadyPoints = state.value.points
+//     val timisoara = LatLng(45.774489, 21.212534)
+
+//    Calculate camera view
+    var firstPoint = Weights(0, "",1.0, 1.0, 1.0, 49.774489, 21.212534)
+    val cameraPositionState = rememberCameraPositionState(){
+        Log.d("Points cevawq ", firstPoint.latitude.toString())
+        position = CameraPosition.fromLatLngZoom(LatLng(firstPoint.latitude, firstPoint.longitude), 5f)
+    }
+    alreadyPoints?.forEachIndexed{ index, it ->
+        Log.d("Points ceva","ceva"+ index+ " "+it.latitude)
+        if(index == 0) {
+            val center = alreadyPoints?.let { calculateZoneLatLngBounds(it) }?.center
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(center!!.latitude, center.longitude), 4f )
+//         cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(it.latitude, it.longitude), 5f)
+        }
+    }
+
+    Log.d("Points ceva ", firstPoint.latitude.toString())
+
+
+
+    var mapUiSettings by remember {
+        mutableStateOf(
+            MapUiSettings(mapToolbarEnabled = false, compassEnabled = true, rotationGesturesEnabled = true, myLocationButtonEnabled = true)
+        )
+    }
+
+
+//    LaunchedEffect(Unit) {
+//        alreadyPoints = viewModel.getAllPoints()
+//        Log.d("points1", alreadyPoints.toString())
+////        if (clusterItems.isNotEmpty()) {
+////            cameraPositionState.animate(
+////                update = CameraUpdateFactory.newLatLngBounds(
+////                    calculateZoneLatLngBounds(),
+////                    0
+////                )
+////            )
+////        }
 //    }
-
 
     GoogleMap(
         modifier = Modifier.fillMaxSize(),
-        cameraPositionState = cameraPositionState
+        cameraPositionState = cameraPositionState,
+        uiSettings = mapUiSettings,
+        onMapClick = {
+//            markers.add(it)
+           markers = markers + it
+            Log.d("Map", ""+it.latitude+" , "+it.longitude)
+        }
     ) {
 
-        val context = LocalContext.current
-//        MapEffect(clusterItems) { map ->
-////            val clusterManager = ZoneClusterManager(context,map)
-////            clusterManager.addItems(clusterItems)
-////            map.setOnCameraIdleListener ( clusterManager )
-////            map.setOnMarkerClickListener(clusterManager)
-//            clusterItems.forEach { clusterItem ->
-//                map.addPolygon(clusterItem.polygonOptions)
-//            }
-//        }
 
-        Marker(
-            state = MarkerState(position = timisoara),
-            title = "Timisoara",
-            snippet = "Timisoara",
-            icon = setCustomMapIcon("Timisoara")
-        )
 
-        LaunchedEffect(Unit) {
-            if (clusterItems.isNotEmpty()) {
-                cameraPositionState.animate(
-                    update = CameraUpdateFactory.newLatLngBounds(
-                        calculateZoneLatLngBounds(),
-                        0
-                    )
-                )
-            }
+
+        markers.forEach{
+            Marker(
+                state = MarkerState(position = it),
+                onClick = { itt ->
+                    markers = markers.minus(it)
+                     true
+                }
+            )
         }
+
+//        Log.d("pointss", alreadyPoints?.size.toString())
+//
+        alreadyPoints?.forEach {
+//            Log.d("Points", "from db"+ it.latitude+ " "+ it.longitude)
+            Marker(
+                state = MarkerState(position = LatLng(it.latitude, it.longitude)),
+                icon = setCustomMapIcon(it.city),
+                title = it.city
+                )
+        }
+
+
+
+
+
     }
 }
 
-fun calculateZoneLatLngBounds(): LatLngBounds {
-    // Get all the points from all the polygons and calculate the camera view that will show them all.
-    val latLngs = clusterItems.map { it.polygonOptions }
-        .map { it.points.map { LatLng(it.latitude, it.longitude) } }.flatten()
-    return latLngs.calculateCameraViewPoints().getCenterOfPolygon()
+fun calculateZoneLatLngBounds(points: List<Weights>): LatLngBounds {
+
+    var listLatLong = mutableListOf<LatLng>()
+
+    points.forEach{
+        val latLng = LatLng(it.latitude, it.longitude)
+        listLatLong += latLng
+    }
+    return listLatLong.calculateCameraViewPoints().getCenterOfPolygon()
+
 }
 private fun setCustomMapIcon(message: String): BitmapDescriptor {
 

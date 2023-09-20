@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,7 +85,7 @@ fun SearchScreen(
                         viewModel.updateCityName(it, context = context)
 
                     },
-                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                    keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done),
                     label = { Text(text = "City search") },
                     placeholder = { Text(text = "Search by city name") },
                     leadingIcon = {

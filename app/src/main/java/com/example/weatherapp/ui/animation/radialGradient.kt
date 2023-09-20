@@ -16,7 +16,7 @@ class radialGradient(val colorStart: Color,
        // val biggerDimension = kotlin.math.abs(size.height * dimenssionFactor)
         val biggerDimension = maxOf(size.height, size.width)
         return RadialGradientShader(
-            colors = listOf( colorEnd, colorStart),
+            colors = listOf( colorEnd.copy(0.8f), colorStart.copy(alpha = 0.8f)),
             center = size.center,
             radius = biggerDimension.toFloat() / 2f,
             colorStops = listOf(0f, 0.95f)
