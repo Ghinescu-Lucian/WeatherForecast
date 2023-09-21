@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.maps
+package com.example.weatherapp.ui.Profile.maps
 
 /**
  * A set of utility functions for centering the camera given some [LatLng] points.

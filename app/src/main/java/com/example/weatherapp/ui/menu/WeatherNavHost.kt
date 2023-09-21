@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.menu
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -31,11 +32,13 @@ import com.example.weatherapp.ui.viewModels.WeatherViewModel
 @Composable
 fun WeatherNavHost(
     navController: NavHostController,
-    modifier: Modifier
+    modifier: Modifier,
+    context: Context
 ){
     val viewModel : WeatherViewModel
     viewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
+
     NavHost(
         navController = navController,
         startDestination = Main.route,
@@ -97,8 +100,7 @@ fun WeatherNavHost(
             }
         ){
             Log.d("Navigation", "Daily icon pressed")
-            ProfileScreen(modifier = Modifier, state = state,
-            )
+            ProfileScreen(modifier = Modifier, state = state, context = context)
         }
         composable(route = Search.route,
             enterTransition = {

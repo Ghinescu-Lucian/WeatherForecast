@@ -70,7 +70,7 @@ fun SearchScreen(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-            Text(text = "Under construction Search screen")
+            //Text(text = "Under construction Search screen")
             Image(
                 modifier = Modifier.size(100.dp),
                 painter = painterResource(id = R.drawable.ic_search_map),

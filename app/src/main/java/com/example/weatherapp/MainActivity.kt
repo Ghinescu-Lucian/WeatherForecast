@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -97,7 +98,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WeatherApp(
     state: WeatherState,
-    context: Context?
+    context: Context
 ){
 
 
@@ -177,7 +178,8 @@ fun WeatherApp(
                     innerPadding ->
 //                    MainScreen(modifier = Modifier.padding(it), state = state )
                     WeatherNavHost(navController = navController,
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        context = context
                         )
 
             }
@@ -341,9 +343,11 @@ fun AppPreview(){
             )
         )
     )
+    val application =  WeatherApp()// Replace MyApplication with your Application class
+    val appContext: Context = application.applicationContext
     WeatherAppTheme {
         val x = Resources.getSystem()
-        WeatherApp(state = state, context = null)
+        WeatherApp(state = state, context = appContext )
     }
 
 }

@@ -1,7 +1,7 @@
-package com.example.weatherapp.ui.maps.clusters
+package com.example.weatherapp.ui.Profile.maps.clusters
 
 
-import com.example.weatherapp.ui.maps.getCenterOfPolygon
+import com.example.weatherapp.ui.Profile.maps.getCenterOfPolygon
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.maps.android.clustering.ClusterItem
 

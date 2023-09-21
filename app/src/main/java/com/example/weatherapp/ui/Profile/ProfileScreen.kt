@@ -1,47 +1,36 @@
 package com.example.weatherapp.ui.Profile
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import android.content.Context
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.weatherapp.R
+import com.example.weatherapp.WeatherApp
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
-import com.example.weatherapp.ui.maps.Map
+import com.example.weatherapp.ui.Profile.maps.profileActions
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
 import java.time.LocalDateTime
-import kotlin.collections.Map as Map1
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    state : WeatherState
+    state : WeatherState,
+    context: Context
 ){
-    Column(verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Under construction Profile screen")
-        Map(points = listOf())
 
-
-           }
-
+    Box (contentAlignment = Alignment.Center){
+        CategorizedLazyColumn(
+            actions = profileActions, context = context, modifier = Modifier.align(Alignment.Center)
+            )
 
     }
+//    MapScreen()
+}
 @Composable
 @Preview
 fun PreviewProfileScreen(){
@@ -196,7 +185,9 @@ fun PreviewProfileScreen(){
         )
     )
 
+    val application =  WeatherApp()// Replace MyApplication with your Application class
+    val appContext: Context = application.applicationContext
     WeatherAppTheme {
-        ProfileScreen( state = state)
+        ProfileScreen( state = state, context =appContext )
     }
 }
