@@ -1,13 +1,14 @@
 package com.example.weatherapp.ui.Profile
 
 import android.content.Context
-import android.util.Log
+import android.widget.EditText
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,36 +17,48 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.weatherapp.R
+import com.example.weatherapp.ui.Profile.actions.AddNewPoint
+import com.example.weatherapp.ui.Profile.actions.DeletePoint
+import com.example.weatherapp.ui.Profile.actions.UpdatePoint
+import com.example.weatherapp.ui.Profile.actions.YourPoints
 import com.example.weatherapp.ui.viewModels.PointsViewModel
 
 
@@ -79,14 +92,14 @@ fun ExpandableContainerView(text: String, onClickItem:()->Unit, expanded: Boolea
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            HeaderView(text = text , onClickItem= onClickItem )
+            HeaderView(text = text , onClickItem= onClickItem, expanded = expanded )
             ExpandableView(text = text, isExpanded = expanded, viewModel = viewModel, index = index)
 
         }
     }
 }
 @Composable
-fun HeaderView(text: String, onClickItem: () -> Unit) {
+fun HeaderView(text: String, onClickItem: () -> Unit, expanded: Boolean) {
 
     Box(
         modifier = Modifier
@@ -104,12 +117,19 @@ fun HeaderView(text: String, onClickItem: () -> Unit) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
+           if(expanded)
             Icon(
                imageVector = Icons.Default.KeyboardArrowDown,
                 tint = MaterialTheme.colorScheme.onSurface,
                 contentDescription="",
                 modifier = Modifier.padding(start = 8.dp)
             )
+            else Icon(
+               imageVector = Icons.Default.KeyboardArrowRight,
+               tint = MaterialTheme.colorScheme.onSurface,
+               contentDescription="",
+               modifier = Modifier.padding(start = 8.dp)
+           )
 
             Text(
 
@@ -127,6 +147,7 @@ fun HeaderView(text: String, onClickItem: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpandableView(text: String, isExpanded: Boolean, viewModel: PointsViewModel, index: Int) {
     // Opening Animation
@@ -156,17 +177,18 @@ fun ExpandableView(text: String, isExpanded: Boolean, viewModel: PointsViewModel
     ) {
         Box(modifier = Modifier.padding(15.dp)) {
             Column {
-                Text(
-                    text = text + ":",
-                    fontSize = 32.sp,
-                    color = Color.White,
-                    modifier = Modifier
-                        .padding(30.dp)
-                        .fillMaxWidth()
-                )
+
                 Column {
                     if (index == 0) {
+                       YourPoints(viewModel = viewModel, text = text )
+                    }
 
+                    if(index == 1){
+                      AddNewPoint()
+                    }
+
+                    if(index == 2){
+                        UpdatePoint()
                         val list = viewModel.statePoints.collectAsState()
 
                         list.value.points?.forEachIndexed {index, it ->
@@ -176,7 +198,6 @@ fun ExpandableView(text: String, isExpanded: Boolean, viewModel: PointsViewModel
                             else text += ""+it.latitude + " ; "+ it.longitude
 
                             val listStrings = mutableListOf<String>()
-//                            listStrings.add(text)
                             listStrings.add("AccuWeather:    "+it.accWeight.toString())
                             listStrings.add("OpenMeteo:      "+it.omWeight.toString())
                             listStrings.add("VisualCrossing: "+it.vcWeight.toString())
@@ -192,16 +213,91 @@ fun ExpandableView(text: String, isExpanded: Boolean, viewModel: PointsViewModel
                                     modifier = Modifier.padding(4.dp)
                                 ){
                                     itemsIndexed(listStrings){ index,item ->
-                                        Text(
-                                            modifier = Modifier.width(128.dp),
-                                            text = item,
-                                            fontSize = 16.sp
+                                        OutlinedTextField(
+                                            value = item,
+                                            onValueChange = { it: String ->
 
+                                                text = it
+                                                // viewModel.updateCityName(it, context = context)
+
+                                            },
+                                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal),
+                                            label = { Text(text = "AccuWeather",color = MaterialTheme.colorScheme.onPrimary) },
+                                            placeholder = { Text(text = "Search by city name") },
+                                            leadingIcon = {
+                                                Image(
+                                                    painterResource(id = R.drawable.accuweather),
+                                                    modifier = Modifier
+                                                        .padding(8.dp)
+                                                        .clip(RoundedCornerShape(8.dp))
+                                                        .width(48.dp)
+                                                        .height(48.dp)
+                                                        .background(MaterialTheme.colorScheme.onSurface),
+                                                    contentDescription = "Search icon"
+                                                )
+
+                                            },
+                                            modifier = Modifier
+                                                .padding(8.dp)
+                                                .height(64.dp)
+                                            ,
+                                            //  isError = state.errors.isNotEmpty()
                                         )
                                     }
                                 }
                             }
 
+                        }
+                    }
+                    if(index == 3){
+                        Column {
+                            DeletePoint()
+                            val list = viewModel.statePoints.collectAsState()
+
+                            list.value.points?.forEachIndexed { index, it ->
+
+                                var text = "${index + 1}. "
+                                if (it.city.isNotEmpty()) text += it.city
+                                else text += "" + it.latitude + " ; " + it.longitude
+
+                                val listStrings = mutableListOf<String>()
+//                            listStrings.add(text)
+                                listStrings.add("AccuWeather:    " + it.accWeight.toString())
+                                listStrings.add("OpenMeteo:      " + it.omWeight.toString())
+                                listStrings.add("VisualCrossing: " + it.vcWeight.toString())
+                                val checked = remember { mutableStateOf(false) }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+
+                                    Checkbox(
+                                        checked = checked.value,
+                                        onCheckedChange = { isChecked -> checked.value = isChecked }
+                                    )
+
+                                    Text(
+                                        modifier = Modifier.width(128.dp),
+                                        text = "$text",
+                                        fontSize = 18.sp
+
+                                    )
+
+                                    LazyRow(
+                                        modifier = Modifier.padding(4.dp)
+                                    ) {
+                                        itemsIndexed(listStrings) { index, item ->
+                                            Text(
+                                                modifier = Modifier.width(128.dp),
+                                                text = item,
+                                                fontSize = 16.sp
+
+                                            )
+                                        }
+                                    }
+                                }
+
+                            }
+                            Button(onClick = { }) {
+                                Text("Delete")
+                            }
                         }
                     }
 
@@ -215,7 +311,7 @@ fun ExpandableView(text: String, isExpanded: Boolean, viewModel: PointsViewModel
 @Preview
 @Composable
 fun HeaderViewPreview() {
-    HeaderView("Question ceva") {}
+    HeaderView("Question ceva", {}, true)
 }
 
 @Preview(showBackground = true)
