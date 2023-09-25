@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.Profile
+package com.example.weatherapp.ui.profile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,24 +15,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.weatherapp.ui.Profile.maps.Map
+import com.example.weatherapp.ui.profile.maps.Map
+import com.example.weatherapp.ui.viewModels.PointsViewModel
 
 @Composable
-fun MapScreen(modifier : Modifier = Modifier){
+fun MapScreen(modifier : Modifier = Modifier, navigateBack: () -> Unit = {}, pointsViewModel: PointsViewModel ){
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier= Modifier.height(16.dp))
         Text(text = "Place a point on the map")
-        Button(onClick = { }, modifier = Modifier.padding(vertical = 8.dp)) {
+        Button(onClick = {navigateBack()}, modifier = Modifier.padding(vertical = 8.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(imageVector = Icons.Default.Done, contentDescription = "done")
                 Text(text = " Done")
             }
         }
-        Map(points = listOf())
+        Map( viewModelPoints = pointsViewModel)
     }
 
 }

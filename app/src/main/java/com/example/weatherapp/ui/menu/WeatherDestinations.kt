@@ -3,7 +3,6 @@ package com.example.weatherapp.ui.menu
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.example.weatherapp.R
-import com.example.weatherapp.ui.SearchScreen.SearchScreen
 
 interface WeatherDestination{
     val icon: Int
@@ -58,6 +57,15 @@ object ProfileScreen : WeatherDestination{
     override val selectedIcon = R.drawable.ic_profile_filled
     @StringRes
     override val name = R.string.profile
+}
+object Map : WeatherDestination{
+    override val route = "Map"
+    @DrawableRes
+    override val icon = R.drawable.baseline_place_24
+    @DrawableRes
+    override val selectedIcon = R.drawable.baseline_place_24
+    @StringRes
+    override val name = R.string.map
 }
 
 val menuItems = listOf(

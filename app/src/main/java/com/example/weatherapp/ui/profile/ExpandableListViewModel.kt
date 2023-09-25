@@ -1,8 +1,8 @@
-package com.example.weatherapp.ui.Profile
+package com.example.weatherapp.ui.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.ui.Profile.maps.profileActions
+import com.example.weatherapp.ui.profile.maps.profileActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ExpandableListViewModel @Inject constructor(): ViewModel() {
     private val itemsList = MutableStateFlow(listOf<Int>())
-    val items: StateFlow<List<Int>> get() = itemsList
+   // val items: StateFlow<List<Int>> get() = itemsList
     private val itemIdsList = MutableStateFlow(listOf<Int>())
     val itemIds: StateFlow<List<Int>> get() = itemIdsList
 

@@ -2,7 +2,6 @@ package com.example.weatherapp.data.local.weights
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +12,7 @@ interface WeightsDao{
     @Query("SELECT * FROM weights")
     fun getAllPoints(): Flow<List<Weights>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert()
     suspend fun insert(weights: Weights)
     @Update//(onConflict =  OnConflictStrategy.REPLACE)
     suspend fun update(weights: Weights)

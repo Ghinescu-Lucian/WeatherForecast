@@ -3,9 +3,7 @@ package com.example.weatherapp.ui.viewModels
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.weatherapp.data.location.geocoder.CitySearch
-import com.example.weatherapp.domain.location.SearchInteractor
-import com.example.weatherapp.ui.states.PointsState
+import com.example.weatherapp.Services.geocoder.CitySearch
 import com.example.weatherapp.ui.states.SearchState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,9 +14,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    val searchInteractor: SearchInteractor,
+
+//    val searchInteractor: SearchInteractor,
     val citySearch: CitySearch
+
 ): ViewModel(){
+
     private val _stateSearch= MutableStateFlow( SearchState())
     val stateSearch : StateFlow<SearchState> = _stateSearch.asStateFlow()
 

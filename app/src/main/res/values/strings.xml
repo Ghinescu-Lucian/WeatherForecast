@@ -5,11 +5,22 @@
     <string name="hourly">Hourly</string>
     <string name="daily">Daily</string>
     <string name="profile">Profile</string>
-    <string name="search"></string>
+    <string name="map">Map</string>
+    <string name="search"> </string>
     <string name="ProfilePoints">Your points</string>
     <string name="ProfileAdd">Add new point</string>
     <string name="ProfileUpdate">Update point</string>
     <string name="ProfileDelete">Delete point</string>
+    <string name="MapMessage">Already placed a point</string>
+    <string name="PointInsSucces">Point added</string>
+    <string name="PointInsFailure">Error encountered</string>
+    <string name="UpdatePointSuccess">Changes applied</string>
+    <string name="UpdatePointFailure">Error encountered</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    <string name="DeleteAlert">Are you sure you want to delete?</string>
+    <string name="DeletePointSucces">Point(s) deleted</string>
+    <string name="DeletePointFailure">Error on deleting</string>
 
 
 </resources>

@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.Profile.maps
+package com.example.weatherapp.ui.profile.maps
 
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -14,11 +15,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.weatherapp.R
+import com.example.weatherapp.Services.geocoder.CitySearch
 import com.example.weatherapp.data.local.weights.Weights
-import com.example.weatherapp.ui.Profile.maps.clusters.ZoneClusterItem
+import com.example.weatherapp.ui.profile.maps.clusters.ZoneClusterItem
+import com.example.weatherapp.ui.viewModels.PointsViewModel
 import com.example.weatherapp.ui.viewModels.ProfileViewModel
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -69,20 +74,23 @@ val clusterItems = listOf(
 
 @Composable
  fun Map(modifier: Modifier = Modifier,
-                points: List<Weights>,
-                viewModel: ProfileViewModel = hiltViewModel()
+                viewModel: ProfileViewModel = hiltViewModel(),
+                viewModelPoints : PointsViewModel
         ){
+
+    val context = LocalContext.current
+
 
     var markers by remember { mutableStateOf(listOf<LatLng>()) }
 
 
 
-    var state  = viewModel.state.collectAsState()
-    var alreadyPoints = state.value.points
+    val state  = viewModel.state.collectAsState()
+    val alreadyPoints = state.value.points
 //     val timisoara = LatLng(45.774489, 21.212534)
 
 //    Calculate camera view
-    var firstPoint = Weights(0, "",1.0, 1.0, 1.0, 49.774489, 21.212534)
+    val firstPoint = Weights(0, "",1.0, 1.0, 1.0, 49.774489, 21.212534)
     val cameraPositionState = rememberCameraPositionState(){
         Log.d("Points cevawq ", firstPoint.latitude.toString())
         position = CameraPosition.fromLatLngZoom(LatLng(firstPoint.latitude, firstPoint.longitude), 5f)
@@ -90,9 +98,9 @@ val clusterItems = listOf(
     alreadyPoints?.forEachIndexed{ index, it ->
         Log.d("Points ceva","ceva"+ index+ " "+it.latitude)
         if(index == 0) {
-            val center = alreadyPoints?.let { calculateZoneLatLngBounds(it) }?.center
+            val center = alreadyPoints.let { calculateZoneLatLngBounds(it) }.center
             val zoom = calculateZoom(alreadyPoints)
-            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(center!!.latitude, center.longitude), zoom )
+            cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(center.latitude, center.longitude), zoom )
 //         cameraPositionState.position = CameraPosition.fromLatLngZoom(LatLng(it.latitude, it.longitude), 5f)
         }
 
@@ -102,25 +110,13 @@ val clusterItems = listOf(
 
 
 
-    var mapUiSettings by remember {
+    val mapUiSettings by remember {
         mutableStateOf(
             MapUiSettings(mapToolbarEnabled = false, compassEnabled = true, rotationGesturesEnabled = true, myLocationButtonEnabled = true)
         )
     }
 
 
-//    LaunchedEffect(Unit) {
-//        alreadyPoints = viewModel.getAllPoints()
-//        Log.d("points1", alreadyPoints.toString())
-////        if (clusterItems.isNotEmpty()) {
-////            cameraPositionState.animate(
-////                update = CameraUpdateFactory.newLatLngBounds(
-////                    calculateZoneLatLngBounds(),
-////                    0
-////                )
-////            )
-////        }
-//    }
 Column() {
     GoogleMap(
         //modifier = Modifier.fillMaxSize(),
@@ -131,6 +127,19 @@ Column() {
 //            markers.add(it)
             if(markers.size == 0) {
                 markers = markers + it
+                val citySearch = CitySearch()
+                val name = citySearch.getCityName(context = context, latitude = it.latitude, longitude = it.longitude)
+                Log.d("Point J: ", name)
+                viewModelPoints.setNewPoint(Weights(0, name, 1.0, 1.0, 1.0, it.latitude, it.longitude ))
+                val statef = viewModel.state.value.curentPoint
+                Log.d("Point J", statef.toString())
+                viewModelPoints.point.setCity(name)
+                viewModelPoints.point.setLatitutde(it.latitude)
+                viewModelPoints.point.setLongitude(it.longitude)
+
+            }
+            else{
+                Toast.makeText( context, context.getText(R.string.MapMessage), Toast.LENGTH_SHORT).show()
             }
             Log.d("Map", "" + it.latitude + " , " + it.longitude)
         }
@@ -166,7 +175,7 @@ Column() {
 
 fun calculateZoneLatLngBounds(points: List<Weights>): LatLngBounds {
 
-    var listLatLong = mutableListOf<LatLng>()
+    val listLatLong = mutableListOf<LatLng>()
 
     points.forEach{
         val latLng = LatLng(it.latitude, it.longitude)
@@ -187,9 +196,9 @@ fun calculateZoom(points: List<Weights>): Float{
                 var y1=0.0
                 var y2 =0.0
                 val dist1 = sqrt(Math.pow(point.latitude - pnt.latitude, 2.0) + Math.pow(point.longitude - pnt.longitude, 2.0))
-                if(point.longitude > 0)
+                if(point.longitude > 0) {
                     y1 = 180-point.longitude
-                else y1 = -180 - point.longitude
+                } else y1 = -180 - point.longitude
                 if(pnt.longitude > 0)
                     y2 = 180 - pnt.longitude
                 else y2 = -180 - pnt.longitude
@@ -216,7 +225,7 @@ fun calculateZoom(points: List<Weights>): Float{
         zoom = 6f
      else if(d_max <= 10f)
         zoom = 5f
-    else if (d_max >= 90f)
+    else if (d_max >= 50f)
         zoom = 0f
     Log.d("Calculate zoom: ", zoom.toString() + " " + d_max)
     return zoom

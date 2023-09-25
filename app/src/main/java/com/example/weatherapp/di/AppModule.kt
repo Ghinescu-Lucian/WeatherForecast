@@ -1,7 +1,7 @@
 package com.example.weatherapp.di
 
 import android.app.Application
-import com.example.weatherapp.data.location.geocoder.CitySearch
+import com.example.weatherapp.Services.geocoder.CitySearch
 import com.example.weatherapp.data.remote.accuWeather.AccuWeatherApi
 import com.example.weatherapp.data.remote.accuWeather.RetrofitHelperAccuWeather
 import com.example.weatherapp.data.remote.accuWeather.repository.AccuWeatherRepositoryImpl

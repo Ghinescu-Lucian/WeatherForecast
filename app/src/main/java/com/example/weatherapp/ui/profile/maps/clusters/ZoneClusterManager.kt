@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.Profile.maps.clusters
+package com.example.weatherapp.ui.profile.maps.clusters
 
 import android.content.Context
 import com.google.android.gms.maps.GoogleMap

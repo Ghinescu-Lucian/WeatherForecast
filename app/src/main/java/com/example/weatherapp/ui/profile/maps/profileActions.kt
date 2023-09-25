@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.Profile.maps
+package com.example.weatherapp.ui.profile.maps
 
 import com.example.weatherapp.R
 

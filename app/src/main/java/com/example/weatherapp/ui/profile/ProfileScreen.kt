@@ -1,4 +1,4 @@
-package com.example.weatherapp.ui.Profile
+package com.example.weatherapp.ui.profile
 
 import android.content.Context
 import androidx.compose.foundation.layout.Box
@@ -6,26 +6,31 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.WeatherApp
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
-import com.example.weatherapp.ui.Profile.maps.profileActions
+import com.example.weatherapp.ui.profile.maps.profileActions
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.viewModels.PointsViewModel
 import java.time.LocalDateTime
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     state : WeatherState,
-    context: Context
+    context: Context,
+    navigate: () -> Unit = {},
+    viewModel : PointsViewModel = hiltViewModel()
 ){
 
     Box (contentAlignment = Alignment.Center){
         CategorizedLazyColumn(
-            actions = profileActions, context = context, modifier = Modifier.align(Alignment.Center)
+            actions = profileActions, context = context, modifier = Modifier.align(Alignment.Center),
+            navigate = navigate, viewModelPoints = viewModel
             )
 
     }

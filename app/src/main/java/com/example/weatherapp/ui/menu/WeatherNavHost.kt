@@ -15,18 +15,16 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.weatherapp.data.location.geocoder.CitySearch
-import com.example.weatherapp.domain.location.SearchInteractor
+import com.example.weatherapp.data.local.weights.Weights
+import com.example.weatherapp.ui.profile.MapScreen
+import com.example.weatherapp.ui.profile.ProfileScreen
+import com.example.weatherapp.ui.searchScreen.SearchScreen
 import com.example.weatherapp.ui.dailyForecasts.DailyScreen
-import com.example.weatherapp.ui.Profile.ProfileScreen
-import com.example.weatherapp.ui.SearchScreen.SearchScreen
 import com.example.weatherapp.ui.hourlyForecasts.HourlyScreen
 import com.example.weatherapp.ui.mainScreen.MainScreen
-import com.example.weatherapp.ui.states.SearchState
+import com.example.weatherapp.ui.viewModels.PointsViewModel
 import com.example.weatherapp.ui.viewModels.SearchViewModel
 import com.example.weatherapp.ui.viewModels.WeatherViewModel
-
-
 
 
 @Composable
@@ -35,8 +33,7 @@ fun WeatherNavHost(
     modifier: Modifier,
     context: Context
 ){
-    val viewModel : WeatherViewModel
-    viewModel = hiltViewModel()
+    val viewModel : WeatherViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
     NavHost(
@@ -99,8 +96,12 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
         ){
-            Log.d("Navigation", "Daily icon pressed")
-            ProfileScreen(modifier = Modifier, state = state, context = context)
+            Log.d("Navigation", "Profile icon pressed")
+            ProfileScreen(modifier = Modifier, state = state, context = context,
+                navigate = {
+                    navController.navigateSingleTopTo(route = Map.route)
+                }
+            )
         }
         composable(route = Search.route,
             enterTransition = {
@@ -110,13 +111,36 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
         ){
-            val viewModel: SearchViewModel = hiltViewModel()
-            Log.d("Navigation", "Daily icon pressed")
-            SearchScreen(modifier = Modifier.fillMaxSize(), viewModel = viewModel,
+            val viewModelS: SearchViewModel = hiltViewModel()
+            Log.d("Navigation", "Search icon pressed")
+            SearchScreen(modifier = Modifier.fillMaxSize(), viewModel = viewModelS,
                 onClickSearch = {
                     navController.navigateSingleTopTo(route = Main.route)
                 }
             )
+        }
+
+        composable(
+            route  = Map.route,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
+
+        ){
+
+            val pointsViewModel: PointsViewModel = hiltViewModel()
+            val navigateBack = {
+                navController.navigateSingleTopTo(route = ProfileScreen.route)
+//                navController.previousBackStackEntry
+//                    ?.savedStateHandle
+//                    ?.set("point", point)
+//                navController.popBackStack()
+            }
+            //val point = Weights(1 ,"",1.0,1.0,1.0,1.0,1.0)
+            MapScreen(navigateBack = navigateBack, pointsViewModel = pointsViewModel)
         }
 
 
