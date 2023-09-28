@@ -1,9 +1,11 @@
 package com.example.weatherapp.domain.weather
 
-import android.view.Display.Mode
 import androidx.annotation.DrawableRes
 import com.example.weatherapp.R
+import kotlinx.serialization.Serializable
+
 //import com.plcoding.weatherapp.R
+
 
 sealed class WeatherType(
     val weatherDesc: String,

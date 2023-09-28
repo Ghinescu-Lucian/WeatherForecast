@@ -44,7 +44,7 @@ fun PreviewProfileScreen(){
         cityName = "Timisoara",
         weatherInfo = WeatherInfo(
             currentWeatherData = WeatherData(
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().toString(),
                 temperature = 25.2,
                 pressure = 1000.0,
                 humidity = 56.0,
@@ -56,7 +56,7 @@ fun PreviewProfileScreen(){
                     day =0,
                     forecasts = listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -64,7 +64,7 @@ fun PreviewProfileScreen(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -72,7 +72,7 @@ fun PreviewProfileScreen(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -80,7 +80,7 @@ fun PreviewProfileScreen(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -88,7 +88,7 @@ fun PreviewProfileScreen(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -102,7 +102,7 @@ fun PreviewProfileScreen(){
                     day =1,
                  forecasts =    listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -110,7 +110,7 @@ fun PreviewProfileScreen(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -124,7 +124,7 @@ fun PreviewProfileScreen(){
                     day =2,
                    forecasts =  listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -132,7 +132,7 @@ fun PreviewProfileScreen(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -146,7 +146,7 @@ fun PreviewProfileScreen(){
                     day =3,
                    forecasts =  listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -154,7 +154,7 @@ fun PreviewProfileScreen(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -168,7 +168,7 @@ fun PreviewProfileScreen(){
                     day =4,
                    forecasts =  listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -176,7 +176,7 @@ fun PreviewProfileScreen(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,

@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp.Services.geocoder.CitySearch
 import com.example.weatherapp.ui.states.SearchState
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,8 +30,9 @@ class SearchViewModel @Inject constructor(
      ) }
     }
 
-    fun getLatLong(context: Context){
+    fun getLatLong(context: Context): LatLng {
         val response = citySearch.retrieveCoordinates(_stateSearch.value.cityName, context)
+        var result = LatLng(0.0, 0.0)
         if(response.isEmpty()) {
             _stateSearch.value.errors.clear()
             val error = "Couldn't find this city."
@@ -38,7 +40,8 @@ class SearchViewModel @Inject constructor(
             Log.d("Search", "Error")
         }
         else {
-            Log.d("Search", " "+ response[0].latitude + " "+ response[0].longitude)
+            Log.d("Search latLong", " "+ response[0].latitude + " "+ response[0].longitude)
+            result  = LatLng(response[0].latitude, response[0].longitude)
             _stateSearch.value.errors.clear()
             _stateSearch.update {
                 it.copy(
@@ -48,5 +51,6 @@ class SearchViewModel @Inject constructor(
             }
         }
 
+        return result
     }
 }

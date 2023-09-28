@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.remote.openMeteo.repository
 
+import android.util.Log
 import com.example.weatherapp.data.remote.openMeteo.OpenMeteoApi
 import com.example.weatherapp.data.remote.openMeteo.mappers.toWeatherInfo
 import com.example.weatherapp.domain.repository.WeatherRepository
@@ -52,21 +53,26 @@ class WeatherRepositoryOpenMeteoImpl @Inject constructor(
     }
 
     override suspend fun getDailyWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
-        return try{
+        var res: Result<WeatherInfo>
+        try{
 
-            Result.success(
+
+            res = Result.success(
                 api.getDailyWeatherData(
                     lat = lat,
                     long = long,
                     timezone = TimeZone.getDefault().id
                 ).toWeatherInfo()
-
             )
+
 
         }catch(e: Exception){
             e.printStackTrace()
-            Result.failure(e)
+            res = Result.failure(e)
         }
+        Log.d("OpenMeteo Daily:", res.toString())
+        return res
     }
+
 
 }

@@ -14,7 +14,7 @@ interface OpenMeteoApi {
         @Query("timezone") timezone: String,
     ): WeatherDto
 
-    @GET("v1/forecast?hourly=&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=Europe%2FMoscow")
+    @GET("v1/forecast?hourly=&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset")
     suspend fun getDailyWeatherData(
         @Query("latitude") lat: Double,
         @Query("longitude") long: Double,

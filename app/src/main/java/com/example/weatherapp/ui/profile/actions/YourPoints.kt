@@ -43,7 +43,7 @@ fun YourPoints(viewModel: PointsViewModel, text: String){
         Row(verticalAlignment = Alignment.CenterVertically){
             Text(
                 modifier = Modifier.width(128.dp),
-                text = text,
+                text = text1,
                 fontSize = 18.sp
 
             )

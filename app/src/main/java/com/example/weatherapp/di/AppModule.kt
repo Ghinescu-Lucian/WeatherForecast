@@ -62,7 +62,7 @@ object AppModule{
         return  setOf(
             WeatherRepositoryOpenMeteoImpl(provideWeatherApi()),
             VisualCrossingRepositoryImpl(provideVisualCrossingApi()),
-            AccuWeatherRepositoryImpl(provideAccuWeatherApi())
+//            AccuWeatherRepositoryImpl(provideAccuWeatherApi())
         )
     }
 

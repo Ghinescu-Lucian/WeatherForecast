@@ -14,7 +14,7 @@ import javax.inject.Inject
 class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeatherApi) :
     WeatherRepository {
 
-    //    private var locationKey: String = "278159"
+//        private var locationKey: String = "290867"
     private var locationKey: String = ""
     override suspend fun getCurrentWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
 
@@ -22,7 +22,7 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
             val r = getLocationKey(lat, long).onSuccess {
                 locationKey = it
             }
-           // Log.d("LocationKey","Ceva" + r.toString() + "\n"+locationKey)
+            Log.d("LocationKey","Ceva " + r.toString() + "\n"+locationKey)
             if (r.isFailure)
                 return Result.failure(Exception("[AccuWeather] Error on location key."))
         }
@@ -46,6 +46,10 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
             currentWeatherData = d
         )
         return Result.success(result)
+//        return Result.success(WeatherInfo(
+//            weatherDataPerDays = listOf(),
+//            currentWeatherData = null
+//        ))
 
 
     }
@@ -83,7 +87,7 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
 
 
 
-        return Result.failure(Exception("[AccuWeather] Hourly forecasts error (empty location key)."))
+       // return Result.failure(Exception("[AccuWeather] Hourly forecasts error (empty location key)."))
     }
 
     override suspend fun getDailyWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
@@ -96,7 +100,7 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
         }
         val result = api.getDailyForecasts(locationKey = locationKey)
         Log.d("Daily", result.toString())
-        val list = mutableListOf<WeatherDataPerDay>()
+       // val list = mutableListOf<WeatherDataPerDay>()
         result.dailyForecasts.forEachIndexed { index, dailyDto ->
 
             var aju = dailyDto.toWeatherDataPerDay()
@@ -119,7 +123,8 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
         val s = "$lat,$long"
         var result=  LocationKeyDto("", "")
         try {
-            var result = api.getLocationKey(s, true)
+             result = api.getLocationKey(s, true)
+//            Log.d("LocationKey Result:", result.locationKey)
         } catch( e: Exception){
             return Result.failure(Exception("[Accuweather] Location key"))
         }

@@ -33,8 +33,8 @@ fun WeatherNavHost(
     modifier: Modifier,
     context: Context
 ){
-    val viewModel : WeatherViewModel = hiltViewModel()
-    val state by viewModel.state.collectAsState()
+    val viewModelW : WeatherViewModel = hiltViewModel()
+
 
     NavHost(
         navController = navController,
@@ -51,6 +51,9 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
             ){
+            val state by viewModelW.state.collectAsState()
+            Log.d("Main state:", state.toString())
+            Log.d("Main City:", viewModelW.point.cityName)
             MainScreen(modifier = Modifier , state = state,
                 onClickSeeHourly = {
 //                    navController.navigateSingleTopTo(HourlyScreen.route)
@@ -67,6 +70,7 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
         ){
+            val state by viewModelW.state.collectAsState()
             Log.d("Navigation","Hourly icon pressed")
             HourlyScreen(modifier = Modifier , state = state,
                 onClickSeeCurrent = {
@@ -84,6 +88,7 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
         ){
+            val state by viewModelW.state.collectAsState()
             Log.d("Navigation", "Daily icon pressed")
             DailyScreen(modifier = Modifier, state = state,
                 )
@@ -96,6 +101,7 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
         ){
+            val state by viewModelW.state.collectAsState()
             Log.d("Navigation", "Profile icon pressed")
             ProfileScreen(modifier = Modifier, state = state, context = context,
                 navigate = {
@@ -112,8 +118,9 @@ fun WeatherNavHost(
             }
         ){
             val viewModelS: SearchViewModel = hiltViewModel()
+
             Log.d("Navigation", "Search icon pressed")
-            SearchScreen(modifier = Modifier.fillMaxSize(), viewModel = viewModelS,
+            SearchScreen(modifier = Modifier.fillMaxSize(), viewModel = viewModelS, viewModelWeahter = viewModelW,
                 onClickSearch = {
                     navController.navigateSingleTopTo(route = Main.route)
                 }

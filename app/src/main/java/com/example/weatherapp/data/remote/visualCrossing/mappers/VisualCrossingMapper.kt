@@ -20,7 +20,7 @@ fun VisualCrossingCurrentDto.toWeatherInfo(): WeatherInfo{
     if( time.hour < 8 || time.hour > 20) isDay = false
 
    val current = WeatherData(
-       time = LocalDateTime.parse("${date}T${dto.time}"),
+       time = LocalDateTime.parse("${date}T${dto.time}").toString(),
        temperature = dto.temperature,
        pressure = dto.pressure,
        humidity = dto.humidity,
@@ -53,7 +53,7 @@ fun VisualCrossingHourlyDto.toWeatherInfo():WeatherInfo{
 
         list2.add(
             WeatherData(
-                time = LocalDateTime.parse("${date}T${dto.hour}"),
+                time = LocalDateTime.parse("${date}T${dto.hour}").toString(),
                 temperature = dto.temperature,
                 pressure = dto.pressure,
                 windSpeed = dto.windSpeed,

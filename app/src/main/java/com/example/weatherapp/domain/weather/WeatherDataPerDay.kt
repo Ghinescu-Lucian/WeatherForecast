@@ -1,5 +1,8 @@
 package com.example.weatherapp.domain.weather
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class WeatherDataPerDay(
     var day: Int,
     val minTemperature: Double = 0.0,

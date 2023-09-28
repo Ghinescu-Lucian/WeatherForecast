@@ -97,7 +97,7 @@ fun RowElement(
 fun RowElementPreview(){
     WeatherAppTheme {
         val data = WeatherData(
-            time = LocalDateTime.now(),
+            time = LocalDateTime.now().toString().takeLast(5),
             temperature = 25.2,
             pressure = 1000.0,
             humidity = 56.0,

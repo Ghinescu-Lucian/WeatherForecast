@@ -198,7 +198,7 @@ fun AppPreview(){
         cityName = "Timisoara",
         weatherInfo = WeatherInfo(
             currentWeatherData = WeatherData(
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().toString().toString(),
                 temperature = 25.2,
                 pressure = 1000.0,
                 humidity = 56.0,
@@ -210,7 +210,7 @@ fun AppPreview(){
                     day =0,
                     forecasts = listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -218,7 +218,7 @@ fun AppPreview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -226,7 +226,7 @@ fun AppPreview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -234,7 +234,7 @@ fun AppPreview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -242,7 +242,7 @@ fun AppPreview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -256,7 +256,7 @@ fun AppPreview(){
                     day =1,
                    forecasts = listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -264,7 +264,7 @@ fun AppPreview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -278,7 +278,7 @@ fun AppPreview(){
                     day =2,
                    forecasts =  listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -286,7 +286,7 @@ fun AppPreview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -300,7 +300,7 @@ fun AppPreview(){
                     day =3,
                     forecasts = listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -308,7 +308,7 @@ fun AppPreview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -322,7 +322,7 @@ fun AppPreview(){
                     day =4,
                   forecasts =   listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -330,7 +330,7 @@ fun AppPreview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,

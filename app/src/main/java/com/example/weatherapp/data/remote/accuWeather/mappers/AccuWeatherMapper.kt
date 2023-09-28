@@ -15,7 +15,7 @@ class AccuWeatherMapper {
 
 fun CurrentWeatherDto.toWeatherData() : WeatherData{
     return WeatherData(
-        time = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME),
+        time = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME).toString(),
         temperature = temperature.unit.value,
         pressure = pressure.unit.value,
         windSpeed = wind.speed.unit.value,
@@ -27,7 +27,7 @@ fun CurrentWeatherDto.toWeatherData() : WeatherData{
 fun HourlyWeatherDto.toWeatherData(): WeatherData{
 
     return WeatherData(
-        time = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME),
+        time = LocalDateTime.parse(time, DateTimeFormatter.ISO_DATE_TIME).toString(),
         temperature = temperature.value,
         pressure = 0.0,
         windSpeed = wind.speed.value,
@@ -44,10 +44,10 @@ fun DailyDto.toWeatherDataPerDay():WeatherDataPerDay{
         day = 0,
         minTemperature = temperature.temperatureMinimun.value,
         maxTemperature = temperature.temperatureMaximum.value,
-//        sunRise = sun.rise,
-//        sunSet = sun.set,
-//        moonRise = moon.rise ?: "",
-//        moonSet = moon.set ?: "",
+        sunRise = sun.rise,
+        sunSet = sun.set,
+        moonRise = moon.rise ?: "",
+        moonSet = moon.set ?: "",
         weatherTypeDay = WeatherType.fromAccuWeather(day.weatherCode),
         weatherTypeNight = WeatherType.fromAccuWeather(night.weatherCode),
         forecasts = listOf()

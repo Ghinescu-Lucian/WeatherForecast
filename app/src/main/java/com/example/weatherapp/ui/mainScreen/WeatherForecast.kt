@@ -79,7 +79,7 @@ fun WeatherForecastPrieview(){
 
         val weatherInfo = WeatherInfo(
             currentWeatherData = WeatherData(
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().toString(),
                 temperature = 25.2,
                 pressure = 1000.0,
                 humidity = 56.0,
@@ -91,7 +91,7 @@ fun WeatherForecastPrieview(){
                     day =0,
                     forecasts = listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -99,7 +99,7 @@ fun WeatherForecastPrieview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -107,7 +107,7 @@ fun WeatherForecastPrieview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -115,7 +115,7 @@ fun WeatherForecastPrieview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -123,7 +123,7 @@ fun WeatherForecastPrieview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.12,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -137,7 +137,7 @@ fun WeatherForecastPrieview(){
                     day =1,
                   forecasts =   listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -145,7 +145,7 @@ fun WeatherForecastPrieview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -159,7 +159,7 @@ fun WeatherForecastPrieview(){
                     day =2,
                   forecasts =   listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -167,7 +167,7 @@ fun WeatherForecastPrieview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -181,7 +181,7 @@ fun WeatherForecastPrieview(){
                     day =3,
                   forecasts =   listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -189,7 +189,7 @@ fun WeatherForecastPrieview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -203,7 +203,7 @@ fun WeatherForecastPrieview(){
                     day =4,
                  forecasts =    listOf(
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,
@@ -211,7 +211,7 @@ fun WeatherForecastPrieview(){
                             windSpeed = 12.0
                         ),
                         WeatherData(
-                            time = LocalDateTime.now(),
+                            time = LocalDateTime.now().toString(),
                             temperature = 25.2,
                             pressure = 1000.0,
                             humidity = 56.0,

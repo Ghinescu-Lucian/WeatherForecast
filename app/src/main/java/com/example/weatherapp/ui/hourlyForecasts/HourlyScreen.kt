@@ -19,6 +19,8 @@ fun HourlyScreen(
     state: WeatherState,
     onClickSeeCurrent: () ->Unit ={},
 ){
+    Log.d("Hourly state :", state.toString())
+
     Column(
         modifier = modifier
     )
@@ -45,7 +47,7 @@ val state = WeatherState(
     cityName = "Timisoara",
     weatherInfo = WeatherInfo(
         currentWeatherData = WeatherData(
-            time = LocalDateTime.now(),
+            time = LocalDateTime.now().toString(),
             temperature = 25.2,
             pressure = 1000.0,
             humidity = 56.0,
@@ -57,7 +59,7 @@ val state = WeatherState(
             day =0,
             forecasts = listOf(
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -65,7 +67,7 @@ val state = WeatherState(
                     windSpeed = 12.0
                 ),
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.12,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -73,7 +75,7 @@ val state = WeatherState(
                     windSpeed = 12.0
                 ),
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.12,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -81,7 +83,7 @@ val state = WeatherState(
                     windSpeed = 12.0
                 ),
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.12,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -89,7 +91,7 @@ val state = WeatherState(
                     windSpeed = 12.0
                 ),
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.12,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -103,7 +105,7 @@ val state = WeatherState(
             day =1,
            forecasts =  listOf(
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -111,7 +113,7 @@ val state = WeatherState(
                     windSpeed = 12.0
                 ),
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -125,7 +127,7 @@ val state = WeatherState(
             day =2,
           forecasts =   listOf(
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -133,7 +135,7 @@ val state = WeatherState(
                     windSpeed = 12.0
                 ),
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -147,7 +149,7 @@ val state = WeatherState(
             day =3,
            forecasts = listOf(
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -155,7 +157,7 @@ val state = WeatherState(
                     windSpeed = 12.0
                 ),
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -169,7 +171,7 @@ val state = WeatherState(
             day =4,
            forecasts =  listOf(
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,
@@ -177,7 +179,7 @@ val state = WeatherState(
                     windSpeed = 12.0
                 ),
                 WeatherData(
-                    time = LocalDateTime.now(),
+                    time = LocalDateTime.now().toString(),
                     temperature = 25.2,
                     pressure = 1000.0,
                     humidity = 56.0,

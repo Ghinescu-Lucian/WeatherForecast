@@ -108,7 +108,7 @@ fun CurrentHour(
 fun CurrentHourPreview(){
     WeatherAppTheme {
         val data = WeatherData(
-            time = LocalDateTime.now(),
+            time = LocalDateTime.now().toString(),
             temperature = 25.2,
             pressure = 1000.0,
             humidity = 56.0,

@@ -6,7 +6,10 @@ import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 // @Inject constructor
@@ -23,37 +26,40 @@ class AverageCalculator @Inject constructor(
     suspend fun calculateAverage(lat: Double, long: Double): WeatherInfo = coroutineScope{
 
 
-
+Log.d("Avg search", ""+lat+" "+long)
 
 //      CURRENT CONDITIONS
 
-//       val allDeferred= weatherRepositories.map{
-//            async {
-//                    it.getCurrentWeatherData(lat, long)
-//            }
-//        }.toTypedArray()
-//        val allResultsCurrent = awaitAll(*allDeferred)
+       val allDeferred= weatherRepositories.map{
+            async {
+                    it.getCurrentWeatherData(lat, long)
+            }
+        }.toTypedArray()
+        val allResultsCurrent = awaitAll(*allDeferred)
 
         val allResultsMock = AverageCalculatorMockData().getData()
 
-       val resultCurrent = calculateCurrentConditions(allResultsMock, weights = weights)
-       Log.d("AverageCalculator Current",resultCurrent.toString())
+//    val resultCurrent = calculateCurrentConditions(allResultsMock, weights = weights)
+    val resultCurrent = calculateCurrentConditions(allResultsCurrent, weights = weights)
+    Log.d("AverageCalculator Current",resultCurrent.toString())
 
 
 
 //      HOURLY FORECASTS
 
-//        val allDeferredHourly = weatherRepositories.map{
-//            async{
-//                it.getHourlyWeatherData(lat,long)
-//            }
-//        }.toTypedArray()
-//        val allResultsHourly = awaitAll(*allDeferredHourly)
+        val allDeferredHourly = weatherRepositories.map{
+            async{
+                it.getHourlyWeatherData(lat,long)
+            }
+        }.toTypedArray()
+        val allResultsHourly = awaitAll(*allDeferredHourly)
 
-    val allResultsHourly = allResultsMock
+//    val allResultsHourly = allResultsMock
 
         val resultHourly = calculateHourly(allResultsHourly, weights = weights)
-        Log.d("AverageCalculator Hourly", resultHourly.forecasts.toString())
+//    val resultHourly = calculateHourly(allResultsHourly, weights = weights)
+    Log.d("AverageCalculator Hourly2", allResultsHourly.toString())
+    Log.d("AverageCalculator Hourly", resultHourly.forecasts.toString())
 
 
 
@@ -65,16 +71,18 @@ class AverageCalculator @Inject constructor(
 
 //    DAILY FORECASTS
 
-//    val allDeferedDaily = weatherRepositories.map{
-//        async{
-//            it.getDailyWeatherData(lat,long)
-//        }
-//    }.toTypedArray()
-//    val allResultDaily = awaitAll(*allDeferedDaily)
+    val allDeferedDaily = weatherRepositories.map{
+        async{
+            it.getDailyWeatherData(lat,long)
+        }
+    }.toTypedArray()
+    val allResultDaily = awaitAll(*allDeferedDaily)
 
-    val allResultDaily = allResultsMock
+    Log.d("AverageCalculator Daily21",allResultDaily.toString())
+//    val allResultDaily = allResultsMock
     val resultDaily = calculateDaily(data = allResultDaily, weights = weights)
-    Log.d("AverageCalculator Daily",resultDaily.toString())
+//    Log.d("AverageCalculator Daily",resultDaily.toString())
+    Log.d("AverageCalculator Daily2",allResultDaily.toString())
 
     val resultDailyHourly = mutableListOf<WeatherDataPerDay>()
 
@@ -186,6 +194,8 @@ fun calculateDaily(data: List<Result<WeatherInfo>>, weights: List<Double>) : Lis
         }
     }
 
+    Log.d("Daily data:", successData.toString()+"\n"+data)
+
     var minimumSize = successData[0].size
     successData.forEach{
         if( it.size < minimumSize){
@@ -251,7 +261,7 @@ fun calculateParams(data: List<WeatherData>, weights: List<Double>): WeatherData
     var humidity = 0.0
     var pressure = 0.0
     var windSpeed = 0.0
-    var time = data[0].time
+    var time = data[0].time?: LocalDateTime.now()
     var description = data[0].description
 
     data.forEachIndexed{ index, it ->
@@ -281,7 +291,7 @@ fun calculateParams(data: List<WeatherData>, weights: List<Double>): WeatherData
     )
 
     return WeatherData(
-        time = time,
+        time = time.toString(),
         temperature = temperature,
         humidity = humidity,
         pressure = pressure,

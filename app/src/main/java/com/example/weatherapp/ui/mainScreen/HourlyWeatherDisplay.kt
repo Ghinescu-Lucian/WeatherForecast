@@ -53,7 +53,7 @@ fun HourlyWeatherDisplay(
         verticalArrangement = Arrangement.SpaceBetween
     ) {
         Text(
-            text = formattedTime,
+            text = formattedTime.takeLast(5),
             color = MaterialTheme.colorScheme.background
         )
         Image(
@@ -75,7 +75,7 @@ fun HourlyPreview(){
     WeatherAppTheme {
        
         val data = WeatherData(
-            time = LocalDateTime.now(),
+            time = LocalDateTime.now().toString().takeLast(5),
             temperature = 25.2,
             pressure = 1000.0,
             humidity = 56.0,

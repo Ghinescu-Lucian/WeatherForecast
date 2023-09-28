@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,20 +35,43 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.viewModels.DailyViewModel
 
 @Composable
 fun DailyGraph(modifier : Modifier = Modifier,
-                data: List<List<Float>>
+                data: List<List<Float>>,
+               xLabels : List<String>
                ){
 
     val animationProgress = remember{
         Animatable(0f)
     }
-    val textMeasurer = rememberTextMeasurer()
+    val  textMeasurer = rememberTextMeasurer()
+
+
+
+    val minimum = data.minWith(Comparator.comparing { it[1] })
+    val maximum = data.maxWith(Comparator.comparing { it[1] })
+    val diff = maximum[1] - minimum[1]
+
+    val yLabels = mutableListOf<String>()
+    yLabels.add(minimum[1].toString())
+    val step = diff/4
+    for(i in 0..3)
+        yLabels.add(String.format("%.1f",minimum[1] + step *i ))
+    yLabels.add(maximum[1].toString())
+    yLabels.reverse()
+
+//    val xLabels
+
+    var newData = squeezeDimension(data)
+    newData = data
+
 
     LaunchedEffect(key1 = data, block = {
-        animationProgress.animateTo(1f, tween(3000 ))
+        animationProgress.animateTo(1f, tween(5500 ))
     })
 
     Box(
@@ -61,22 +85,24 @@ fun DailyGraph(modifier : Modifier = Modifier,
         Canvas(
             modifier = Modifier
 
-                               .aspectRatio(3 / 2f)
+                .aspectRatio(3 / 2f)
                 .align(Alignment.Center)
 //                .horizontalScroll(rememberScrollState())
 //                .fillMaxHeight()
 //                .width(600.dp)
                 .fillMaxSize()
         ){
-             val verticalLines = 5
+
+
+            val verticalLines = 5
             val verticalSize = size.width / (verticalLines + 1)
 
             repeat(verticalLines) { i ->
                 val startX = verticalSize * (i + 1)
                 drawText(
                     textMeasurer,
-                          "05.09",
-                                topLeft = Offset(startX-50, 650f)
+                          xLabels[i],
+                                topLeft = Offset(startX-60, 520f)
                 )
             }
 
@@ -86,12 +112,15 @@ fun DailyGraph(modifier : Modifier = Modifier,
                 val startY = sectionSize * (i + 1)
                 drawText(
                     textMeasurer,
-                    "26 ºC",
-                    topLeft = Offset(30f, startY-15)
+                    text = yLabels[i]+ "ºC",
+                    topLeft = Offset(15f, startY-35)
                 )
 
             }
         }
+
+
+
 
         Spacer(
             modifier = Modifier
@@ -104,6 +133,9 @@ fun DailyGraph(modifier : Modifier = Modifier,
 //                .width(600.dp)
                 .fillMaxSize()
                 .drawWithCache {
+
+                    val path = generatePath(size, data)
+
 
                     val brush = Brush.verticalGradient(
                         listOf(
@@ -148,17 +180,13 @@ fun DailyGraph(modifier : Modifier = Modifier,
 //                        }
 
 //
-                        val minimum = data.minWith(Comparator.comparing { it[1] })
-                        val maximum = data.maxWith(Comparator.comparing { it[1] })
-                        val diff = maximum[1] - minimum[1]
+
 
                         val unitY = size.height / diff
                         val unitX = size.width / (data.size - 1)
 
-                        val newData = squeezeDimension(data)
 
-                        val path = generatePath(size, data)
-                        val filledPath = Path()
+                         val filledPath = Path()
                         filledPath.addPath(path = path)
                         filledPath.lineTo(size.width, size.height)
                         filledPath.lineTo(size.width, 0f)
@@ -216,8 +244,27 @@ fun DailyGraph(modifier : Modifier = Modifier,
     }
 }
 
+fun squeezeDimension( data: List<List<Float>>):List<List<Float>>{
 
-fun generatePath( size: Size, data : List<List<Float>>): Path {
+    val minimum = data.minWith(Comparator.comparing { it[1] })
+    val maximum = data.maxWith(Comparator.comparing { it[1] })
+
+
+    Log.d("Graph", "max = "+maximum+"\n min = "+minimum)
+    val newData = mutableListOf<List<Float>>()
+    for(i in data){
+        val temperature = minimum[1]*1.1f + ( (0.9f * maximum[1] - 1.1f * minimum[1]) / (maximum[1] - minimum[1]) ) * ( i[1] - minimum[1])
+        val item = listOf(i[0], temperature )
+        newData.add(item)
+//        Log.d("Graph", "${item[0]} - ${item[1]}\n Dif = ${i[1]/item[1]}")
+    }
+
+    return newData
+
+}
+
+
+fun generatePath(size: Size, data : List<List<Float>>): Path {
     val path = Path()
     val minimum = data.minWith(Comparator.comparing { it[1] })
     val maximum = data.maxWith(Comparator.comparing { it[1] })
@@ -237,7 +284,8 @@ fun generatePath( size: Size, data : List<List<Float>>): Path {
 //
 //    }
 
-    val newData = squeezeDimension(data)
+//    val newData = squeezeDimension(data)
+    val newData = data
 
     newData.forEachIndexed { i, item ->
         val x = item[0]*unitX
@@ -251,27 +299,12 @@ fun generatePath( size: Size, data : List<List<Float>>): Path {
             controlPoint2.x, controlPoint2.y,
             x, y
         )
-       // path.quadraticBezierTo(x,y)
+        // path.quadraticBezierTo(x,y)
     }
     return path
 }
 
-fun squeezeDimension( data: List<List<Float>>):List<List<Float>>{
 
-    val minimum = data.minWith(Comparator.comparing { it[1] })
-    val maximum = data.maxWith(Comparator.comparing { it[1] })
-
-    val newData = mutableListOf<List<Float>>()
-    for(i in data){
-        val temperature = minimum[1]*1.1f + ( (0.9f * maximum[1] - 1.1f * minimum[1]) / (maximum[1] - minimum[1]) ) * ( i[1] - minimum[1])
-        val item = listOf(i[0], temperature )
-        newData.add(item)
-        Log.d("Graph", "${item[0]} - ${item[1]}\n Dif = ${i[1]/item[1]}")
-    }
-
-    return newData
-
-}
 
 class FlippedModifier : DrawModifier {
     override fun ContentDrawScope.draw() {
@@ -294,7 +327,7 @@ fun DailyGraphPreview(){
         listOf(4f, 29f)
         )
     WeatherAppTheme {
-        DailyGraph(data = points)
+        DailyGraph(data = points,xLabels = listOf("05 Sep","05 Sep","05 Sep","05 Sep","05 Sep") )
     }
 }
 

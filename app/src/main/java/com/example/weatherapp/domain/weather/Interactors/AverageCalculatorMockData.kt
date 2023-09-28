@@ -11,7 +11,7 @@ class AverageCalculatorMockData {
 
     val weatherInfoOpenMeteo = WeatherInfo(
         currentWeatherData = WeatherData(
-            time = LocalDateTime.now(),
+            time = LocalDateTime.now().toString(),
             temperature = 25.0,
             pressure = 1000.0,
             humidity = 50.0,
@@ -32,7 +32,7 @@ class AverageCalculatorMockData {
 
                 forecasts = listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -40,7 +40,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -48,7 +48,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -56,7 +56,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -64,7 +64,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -86,7 +86,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = WeatherType.Overcast,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -94,7 +94,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -102,7 +102,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -110,7 +110,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -118,7 +118,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -140,7 +140,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = WeatherType.HeavyRain,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -148,7 +148,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -156,7 +156,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -164,7 +164,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -172,7 +172,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -194,7 +194,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -202,7 +202,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -210,7 +210,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -218,7 +218,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -226,7 +226,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -248,7 +248,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky,
                 forecasts =    listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -256,7 +256,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -264,7 +264,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -272,7 +272,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -280,7 +280,7 @@ class AverageCalculatorMockData {
                         windSpeed = 10.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.0,
                         pressure = 1000.0,
                         humidity = 50.0,
@@ -295,7 +295,7 @@ class AverageCalculatorMockData {
 
     val weatherInfoAccuWeather = WeatherInfo(
         currentWeatherData = WeatherData(
-            time = LocalDateTime.now(),
+            time = LocalDateTime.now().toString(),
             temperature = 35.0,
             pressure = 1100.0,
             humidity = 75.0,
@@ -315,7 +315,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky ,
                 forecasts = listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -323,7 +323,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -331,7 +331,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -339,7 +339,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -347,7 +347,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -369,7 +369,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -377,7 +377,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -385,7 +385,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -393,7 +393,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -401,7 +401,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -423,7 +423,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky ,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -431,7 +431,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -439,7 +439,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -447,7 +447,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -455,7 +455,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -477,7 +477,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky ,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -485,7 +485,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -493,7 +493,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -501,7 +501,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -509,7 +509,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -531,7 +531,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky ,
                 forecasts =    listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -539,7 +539,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -547,7 +547,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -555,7 +555,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -563,7 +563,7 @@ class AverageCalculatorMockData {
                         windSpeed = 20.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 35.0,
                         pressure = 1100.0,
                         humidity = 75.0,
@@ -576,7 +576,7 @@ class AverageCalculatorMockData {
     )
     val weatherInfoVisualCrossing = WeatherInfo(
         currentWeatherData = WeatherData(
-            time = LocalDateTime.now(),
+            time = LocalDateTime.now().toString(),
             temperature = 30.0,
             pressure = 1050.0,
             humidity = 100.0,
@@ -596,7 +596,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky,
                 forecasts = listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -604,7 +604,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -612,7 +612,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -620,7 +620,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -628,7 +628,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -650,7 +650,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -658,7 +658,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -666,7 +666,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -674,7 +674,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -682,7 +682,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -704,7 +704,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -712,7 +712,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -720,7 +720,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -728,7 +728,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -736,7 +736,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -758,7 +758,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky,
                 forecasts =   listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -766,7 +766,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -774,7 +774,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -782,7 +782,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -790,7 +790,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -812,7 +812,7 @@ class AverageCalculatorMockData {
                 weatherTypeNight = ClearSky,
                 forecasts =    listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -820,7 +820,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -828,7 +828,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -836,7 +836,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,
@@ -844,7 +844,7 @@ class AverageCalculatorMockData {
                         windSpeed = 30.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 30.0,
                         pressure = 1050.0,
                         humidity = 100.0,

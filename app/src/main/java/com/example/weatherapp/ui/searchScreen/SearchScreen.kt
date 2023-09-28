@@ -1,5 +1,6 @@
 package com.example.weatherapp.ui.searchScreen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,16 +36,19 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.R
 import com.example.weatherapp.Services.geocoder.CitySearch
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.ui.viewModels.SearchViewModel
+import com.example.weatherapp.ui.viewModels.WeatherViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     modifier : Modifier = Modifier,
     viewModel: SearchViewModel,
+    viewModelWeahter: WeatherViewModel,
     onClickSearch: () -> Unit = {}
 
 ){
@@ -104,11 +108,19 @@ fun SearchScreen(
 
             ExtendedFloatingActionButton(
                 onClick = {
-                    viewModel.getLatLong(context= context )
+                   val latLng=  viewModel.getLatLong(context = context)
                     count++
-                    if(state.errors.isEmpty())
+                    Log.d("Search latLng", ""+state.latitude+","+state.longitude)
+                    if (state.errors.isEmpty()) {
+                        viewModelWeahter.refreshContentSearch(
+                            refreshCity = false,
+                            cityName = text,
+                            lat = latLng.latitude,
+                            long = latLng.longitude
+                        )
                         onClickSearch()
-                          },
+                    }
+                },
                 shape = RoundedCornerShape(10.dp),
                 text = {Text(text = "Get forecasts")},
                 icon = {
@@ -137,6 +149,6 @@ fun SearchScreen(
 @Composable
 fun SearchScreenPreview(){
     WeatherAppTheme {
-        SearchScreen(modifier = Modifier, viewModel = SearchViewModel( citySearch = CitySearch()))
+        SearchScreen(modifier = Modifier, viewModel = SearchViewModel( citySearch = CitySearch()), viewModelWeahter = hiltViewModel())
     }
 }

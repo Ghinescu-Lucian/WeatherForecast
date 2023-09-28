@@ -41,7 +41,7 @@ fun Hourly12WeatherPreview(){
         day =0,
         forecasts = listOf(
             WeatherData(
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().toString(),
                 temperature = 25.2,
                 pressure = 1000.0,
                 humidity = 56.0,
@@ -49,7 +49,7 @@ fun Hourly12WeatherPreview(){
                 windSpeed = 12.0
             ),
             WeatherData(
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().toString(),
                 temperature = 25.12,
                 pressure = 1000.0,
                 humidity = 56.0,
@@ -57,7 +57,7 @@ fun Hourly12WeatherPreview(){
                 windSpeed = 12.0
             ),
             WeatherData(
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().toString(),
                 temperature = 25.12,
                 pressure = 1000.0,
                 humidity = 56.0,
@@ -65,7 +65,7 @@ fun Hourly12WeatherPreview(){
                 windSpeed = 12.0
             ),
             WeatherData(
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().toString(),
                 temperature = 25.12,
                 pressure = 1000.0,
                 humidity = 56.0,
@@ -73,7 +73,7 @@ fun Hourly12WeatherPreview(){
                 windSpeed = 12.0
             ),
             WeatherData(
-                time = LocalDateTime.now(),
+                time = LocalDateTime.now().toString(),
                 temperature = 25.12,
                 pressure = 1000.0,
                 humidity = 56.0,

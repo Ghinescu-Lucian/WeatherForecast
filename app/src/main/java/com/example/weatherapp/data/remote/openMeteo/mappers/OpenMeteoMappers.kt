@@ -22,7 +22,7 @@ fun WeatherDataDto.toWeatherDataPerDay() : List<WeatherDataPerDay>{
 
         val listWeatherData = List(24){
             WeatherData(
-                time = LocalDateTime.parse(time[it+i*24], DateTimeFormatter.ISO_DATE_TIME),
+                time = LocalDateTime.parse(time[it+i*24], DateTimeFormatter.ISO_DATE_TIME).toString(),
                 temperature = temperatures[it+i*24],
                 pressure = pressures[it+i*24],
                 windSpeed = windSpeeds[it+i*24],

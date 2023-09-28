@@ -16,12 +16,13 @@ class VisualCrossingRepositoryImpl @Inject constructor (val api: VisualCrossingA
 
 //        sa salvez intr-un camp datele
 
+        Log.d("VisualCrossing search", ""+ lat+" "+long)
         val hourly = getHourlyWeatherData(lat, long)
         var data =  WeatherDataPerDay(
                 day =0,
                 forecasts = listOf(
                     WeatherData(
-                        time = LocalDateTime.now(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 0.0,
                         pressure = 0.0,
                         humidity = 0.0,
