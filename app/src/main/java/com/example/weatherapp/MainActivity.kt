@@ -3,18 +3,30 @@ package com.example.weatherapp
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.res.Resources
+import android.location.LocationManager
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -30,9 +42,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -78,15 +92,85 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            viewModel = hiltViewModel()
-            val points : PointsViewModel = hiltViewModel()
-            val st by points.statePoints.collectAsState()
+            val locationManager =   LocalContext.current.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                if(isOnline(this)) {
+                    viewModel = hiltViewModel()
+                    val points: PointsViewModel = hiltViewModel()
+                    val st by points.statePoints.collectAsState()
 
 
-            val state by viewModel.state.collectAsState()
-            Log.d("State", state.weatherInfo.toString())
-            WeatherApp(state = state, this )
-            Log.d("Points State", st.toString())
+                    val state by viewModel.state.collectAsState()
+                    Log.d("State", state.weatherInfo.toString())
+
+
+
+                    WeatherApp(state = state, this)
+                    Log.d("Points State", st.toString())
+                }
+                else{
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.align(Alignment.Center)
+                        ){
+                            Text("Please check your internet connection", fontSize = 21.sp)
+                            Spacer(Modifier.size(16.dp))
+                            Text("Offline device", fontSize = 21.sp)
+                            Spacer(Modifier.size(16.dp))
+                            Button(onClick ={
+
+                                val intent = Intent(applicationContext, MainActivity::class.java)
+
+                                // Clear the back stack so that the user cannot navigate back to the previous activities
+                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                                // Start the main activity
+                                startActivity(intent)
+
+                                // Finish this activity
+                                finish()
+
+                            }){
+                                Icon(imageVector = Icons.Default.Refresh, contentDescription ="" )
+                            }
+                        }
+
+                    }
+                }
+            }
+            else{Box(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text("Please enable GPS", fontSize = 21.sp)
+                    Spacer(Modifier.size(16.dp))
+                    Text("GPS is not enabled", fontSize = 21.sp)
+                    Spacer(Modifier.size(16.dp))
+                    Button(onClick ={
+
+                        val intent = Intent(applicationContext, MainActivity::class.java)
+
+                        // Clear the back stack so that the user cannot navigate back to the previous activities
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                        // Start the main activity
+                        startActivity(intent)
+
+                        // Finish this activity
+                        finish()
+
+                    }){
+                             Icon(imageVector = Icons.Default.Refresh, contentDescription = "")
+
+
+                    }
+                }
+
+            }
+            }
         }
     }
 
@@ -186,6 +270,28 @@ fun WeatherApp(
 
     }
 
+}
+
+fun isOnline(context: Context): Boolean {
+    val connectivityManager =
+        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    if (connectivityManager != null) {
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+        if (capabilities != null) {
+            if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+                return true
+            } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+                Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+                return true
+            }
+        }
+    }
+    return false
 }
 
 

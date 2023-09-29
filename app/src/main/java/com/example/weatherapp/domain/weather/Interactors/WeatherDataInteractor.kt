@@ -1,14 +1,21 @@
 package com.example.weatherapp.domain.weather.Interactors
 
-//import androidx.compose.ui.tooling.data.EmptyGroup.location
 import android.content.Context
 import android.location.Location
 import android.util.Log
 import com.example.weatherapp.Services.geocoder.CitySearch
+import com.example.weatherapp.data.local.cache.Cache
+import com.example.weatherapp.data.local.cache.CacheRepository
+import com.example.weatherapp.data.local.cache.json.dtos.CacheConverter
+import com.example.weatherapp.data.local.weights.WeightRepository
+import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.domain.location.LocationTracker
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherType
+import com.example.weatherapp.ui.viewModels.Point
+import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.flow.first
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.Result.Companion.failure
@@ -17,15 +24,20 @@ import kotlin.Result.Companion.success
 interface WeatherDataInteractor {
     suspend fun getCityName(context: Context): Result<String>
     suspend fun getCoordinates(): Result<Location?>
-    suspend fun getWeatherData(location: Location?, refresh: Boolean): Result<WeatherData> //
-    suspend fun getWeatherDataPerDay(days: Int = 12, location : Location?, refresh:Boolean ): Result<List<WeatherDataPerDay>>
+    suspend fun getWeatherData(location: Location?, refresh: Boolean, city: String, offline: Boolean): Result<WeatherData> //
+    suspend fun getWeatherDataPerDay(days: Int = 12, location : Location?, refresh:Boolean, city: String, offline: Boolean ): Result<List<WeatherDataPerDay>>
 
     suspend fun getWeatherDataPerHour():Result<WeatherDataPerDay>
+
+    suspend fun getWeights(location:Location?, point: Point): Weights
+
+    fun offline(offline: Boolean)
 }
 
-private object weatherState{
+ object WeatherStateInt{
      var currentWeather : Result<WeatherData> = failure(Exception("Initialize"))
      var days : Result<List<WeatherDataPerDay>> = failure(Exception("Initialize"))
+     var offline : Boolean = false
 }
 
 class WeatherDataInteractorImpl @Inject constructor (
@@ -34,8 +46,12 @@ class WeatherDataInteractorImpl @Inject constructor (
     val averageCalculator: AverageCalculator,
 //   @Named("OpenMeteo") val  weatherRepository: WeatherRepository,
 
+    val cacheRepository: CacheRepository,
+    val weightRepository: WeightRepository
+
     ) : WeatherDataInteractor {
 
+   val state = WeatherStateInt
 
     override suspend fun getCoordinates(): Result<Location?> {
         return   locationTracker.getCurrentLocation()
@@ -56,77 +72,148 @@ class WeatherDataInteractorImpl @Inject constructor (
        return result
 
     }
-    override suspend fun getWeatherData(location: Location?, refresh: Boolean): Result<WeatherData> {
+    override suspend fun getWeatherData(location: Location?, refresh: Boolean, city : String, offline: Boolean): Result<WeatherData> {
+
+//        val cache = cacheRepository.allCaches.collect{
+//            Log.d("Cache: ", it.toString())
+//        }
 
         Log.d("Weather Interactor", location.toString())
-        if(weatherState.currentWeather.isFailure || refresh) {
 
-            val result: Result<WeatherData>
+        Log.d("Weather Interactor8", averageCalculator.weights.toString())
+        if(state.currentWeather.isFailure || refresh) {
 
-            location?.latitude ?: return failure(Exception("Error on location provider."))
+            var result: Result<WeatherData> = failure(Exception("Initialize"))
+
+            if( !offline ) {
+                location?.latitude ?: return failure(Exception("Error on location provider."))
+
 
                 //   Log.d("[Interactor Weather] Location", it.toString())
+                Log.d("Interactor: Weights", averageCalculator.weights.toString())
                 val r = averageCalculator.calculateAverage(location.latitude, location.longitude)
 //                val r2 = weatherRepository.getDailyWeatherData(it.latitude, it.longitude)
-               Log.d("CurrentWeather", r.toString())
+                Log.d("CurrentWeatherfzx", r.toString() + "cit: " + city)
 
-                    result = success(r.currentWeatherData) as Result<WeatherData>
-                    weatherState.currentWeather = result
-                    weatherState.days = success(r.weatherDataPerDays)
+                cacheRepository.allCaches.first{
+                    if(it.size > 0) {
+                        cacheRepository.deleteAll()
+                    }
+                    true
+                }
+
+                cacheRepository.insert(
+                    Cache(
+                        0,
+                        city,
+                        false,
+                        data = CacheConverter().convertToJson(r)
+                    )
+                )
+
+                result = success(r.currentWeatherData) as Result<WeatherData>
+                state.currentWeather = result
+                state.days = success(r.weatherDataPerDays)
 
 
+            }
+            else{
+                var cache: Cache
+                cacheRepository.allCaches.first(){
+                    cache = it.last()
+                    true
+                }
 
 
-            return result
+            }
+
+                return result
+
         } else {
-            return weatherState.currentWeather
+            return state.currentWeather
         }
 
 
     }
 
-    override suspend fun getWeatherDataPerDay(days: Int, location: Location?, refresh: Boolean): Result<List<WeatherDataPerDay>> {
-        if(weatherState.days.isFailure || refresh ){
+    override suspend fun getWeatherDataPerDay(days: Int, location: Location?, refresh: Boolean, city: String, offline: Boolean): Result<List<WeatherDataPerDay>> {
+        if(state.days.isFailure || refresh ){
 
-        var result: Result<List<WeatherDataPerDay>> = failure(Exception("Error on interactor"))
+        val result: Result<List<WeatherDataPerDay>>
 
+        location?.latitude ?: return failure(Exception("Error on location provider."))
 
-            location?.latitude ?: return failure(Exception("Error on location provider."))
             val r = averageCalculator.calculateAverage(location.latitude, location.longitude)
 
-                result = Result.success(r.weatherDataPerDays)
-
-
-
+                result = success(r.weatherDataPerDays)
 
         return result
         } else {
-            return weatherState.days
+            return state.days
         }
 
     }
 
     override suspend fun getWeatherDataPerHour(): Result<WeatherDataPerDay> {
-        if(weatherState.days.isFailure){
+        if(state.days.isFailure){
             val location = locationTracker.getCurrentLocation()
             var result: Result<WeatherDataPerDay> = failure(Exception("Error on interactor"))
 
             location.onSuccess {
                 it?.latitude ?: return failure(Exception("Error on location provider."))
                 val r = averageCalculator.calculateAverage(it.latitude, it.longitude)
-                result = Result.success(r.weatherDataPerDays[0])
+                result = success(r.weatherDataPerDays[0])
 
             }
 
             return result
         } else {
-            weatherState.days.onSuccess {
+            state.days.onSuccess {
                 return success( it[0])
             }
             return failure(Exception("Error on getting hourly data"))
         }
 
     }
+
+    override suspend fun getWeights(location: Location?, point: Point): Weights {
+        var points : List<Weights> = listOf()
+        var closestPoint = Weights(0, "", 1.0, 1.0, 1.0, 1.0, 1.0)
+
+        weightRepository.allWeights.first{
+//            Log.d("Get Weights", it.toString())
+            points = it
+
+
+
+            var currentPositon = LatLng(0.0, 0.0)
+            if (location != null) {
+                currentPositon = LatLng(location.latitude, location.longitude)
+            }
+
+             closestPoint = DistanceCalculator().getClosestPoint(points, currentPositon)
+
+            val weights =
+                listOf(closestPoint.omWeight, closestPoint.vcWeight, closestPoint.accWeight)
+
+            averageCalculator.weights = weights
+            point.point = closestPoint
+            Log.d("Get Weights", closestPoint.toString())
+            true
+
+        }
+
+        return closestPoint
+
+    }
+
+
+
+    override fun offline(offline: Boolean){
+
+    }
+    
+
 
     fun getWeatherDataMock(): Result<WeatherData> {
 
@@ -140,7 +227,7 @@ class WeatherDataInteractorImpl @Inject constructor (
             weatherType = WeatherType.ClearSky
         )
 
-        return Result.success(currentWeather)
+        return success(currentWeather)
     }
 
    fun getWeatherDataPerDayMock(): Result<List<WeatherDataPerDay>> {

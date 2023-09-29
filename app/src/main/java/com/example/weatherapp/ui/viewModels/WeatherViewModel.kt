@@ -7,15 +7,18 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractor
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.ui.states.WeatherState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 //import javax.inject.Inject
@@ -25,6 +28,7 @@ import javax.inject.Inject
 object Point{
     var location: Location = Location("")
     var cityName: String = ""
+    var point =  Weights(1, "", 0.0,0.0,0.0,0.0,0.0)
 }
 
 @HiltViewModel
@@ -45,6 +49,11 @@ class WeatherViewModel @Inject constructor (
         initialize(refresh = true)
         }
 
+    fun refresh(){
+        initialize(refresh = false)
+
+    }
+
     fun refreshContentSearch(refreshCity: Boolean, cityName: String, lat: Double, long: Double) {
             point.cityName = cityName
             point.location.latitude = lat
@@ -60,6 +69,7 @@ class WeatherViewModel @Inject constructor (
 
 
     fun initialize(refresh: Boolean){
+
         viewModelScope.launch {
             // pasez in constructor interactorul meu
             _state.update {
@@ -69,7 +79,7 @@ class WeatherViewModel @Inject constructor (
             }
 
 
-            if(refresh) {
+           if(refresh) {
                 Log.d("Refresh City", "REFRESH CURRENT CITY")
                 interactor.getCityName(context = context).onSuccess { res ->
                     _state.update {
@@ -91,51 +101,59 @@ class WeatherViewModel @Inject constructor (
                 }
 
             }
-            Log.d("Location: ", point.location.toString())
 
-            val result = interactor.getWeatherData(location = point.location, refresh = !refresh)
-            result.onFailure {
-                _state.update { itt ->
-                    itt.copy(
-                        error = it.message,
-                        isLoading = false
-                    )
+//                Log.d("Interactor: Weights1")
+
+
+               interactor.getWeights(point.location, point = point)
+
+
+                val result =
+                    interactor.getWeatherData(location = point.location, refresh = !refresh, city = point.cityName, offline = false)
+                result.onFailure {
+                    _state.update { itt ->
+                        itt.copy(
+                            error = it.message,
+                            isLoading = false
+                        )
+                    }
                 }
-            }
-            result.onSuccess { data ->
+                result.onSuccess { data ->
 //                Log.d("DEBUG1", "CEVA din viewModel $data")
 
-                _state.update {
+                    _state.update {
 //                    Log.d("DEBUG1",data.toString())
-                    it.copy(
-                        weatherInfo = WeatherInfo(
-                            currentWeatherData = data,
-                            weatherDataPerDays = listOf()
-                        ),
-                        isLoading = false
-                    )
-                }
+                        it.copy(
+                            weatherInfo = WeatherInfo(
+                                currentWeatherData = data,
+                                weatherDataPerDays = listOf()
+                            ),
+                            isLoading = false
+                        )
+                    }
 //                Log.d("DEBUG1", _state.value.toString())
-            }
-            Log.d("GET DATA: ", result.toString())
-            Log.d("Location: ", point.location.toString())
-
-            interactor.getWeatherDataPerDay(location = point.location, refresh = !refresh).onSuccess { dataPerDay ->
-
-                Log.d("ViewModel", dataPerDay.getOrNull(0)?.day.toString())
-                _state.update {
-                    it.copy(
-                        weatherInfo = it.weatherInfo?.copy(weatherDataPerDays = dataPerDay)
-                    )
                 }
-                Log.d("ViewModel", _state.value.weatherInfo?.weatherDataPerDays.toString())
-            }
+                 Log.d("GET DATA: ", result.toString())
+                Log.d("Location: ", point.location.toString())
 
-            if(point.cityName.isNotEmpty()) {
-                _state.update {
-                    it.copy(cityName = point.cityName)
+                interactor.getWeatherDataPerDay(location = point.location, refresh = !refresh, city = point.cityName, offline = false)
+                    .onSuccess { dataPerDay ->
+
+                        Log.d("ViewModel", dataPerDay.getOrNull(0)?.day.toString())
+                        _state.update {
+                            it.copy(
+                                weatherInfo = it.weatherInfo?.copy(weatherDataPerDays = dataPerDay)
+                            )
+                        }
+                        Log.d("ViewModel", _state.value.weatherInfo?.weatherDataPerDays.toString())
+                    }
+
+                if (point.cityName.isNotEmpty()) {
+                    _state.update {
+                        it.copy(cityName = point.cityName)
+                    }
                 }
-            }
+
 
         }
 

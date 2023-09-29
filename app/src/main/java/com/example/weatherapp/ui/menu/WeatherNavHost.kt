@@ -55,11 +55,9 @@ fun WeatherNavHost(
             Log.d("Main state:", state.toString())
             Log.d("Main City:", viewModelW.point.cityName)
             MainScreen(modifier = Modifier , state = state,
-                onClickSeeHourly = {
-//                    navController.navigateSingleTopTo(HourlyScreen.route)
-                    navController.navigateSingleTopTo(route = HourlyScreen.route)
-
-                }
+               onRefresh = {
+                   viewModelW.refresh()
+               }
             )
         }
         composable(route =  HourlyScreen.route,

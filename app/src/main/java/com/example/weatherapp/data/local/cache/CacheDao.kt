@@ -3,6 +3,7 @@ package com.example.weatherapp.data.local.cache
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.weatherapp.data.local.weights.Weights
 import kotlinx.coroutines.flow.Flow
 @Dao
@@ -12,6 +13,9 @@ interface CacheDao {
 
     @Insert()
     suspend fun insert(cache: Cache)
+
+    @Update
+    suspend fun update(cache: Cache)
 
     @Query("DELETE FROM cache")
     suspend fun deleteAll()

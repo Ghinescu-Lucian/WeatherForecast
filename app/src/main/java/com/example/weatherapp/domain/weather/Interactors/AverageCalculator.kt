@@ -16,7 +16,7 @@ import javax.inject.Inject
 class AverageCalculator @Inject constructor(
 
     val weatherRepositories : Set<WeatherRepository>,
-    val weights: List<Double>
+    var weights: List<Double>
 
 
 
@@ -25,6 +25,8 @@ class AverageCalculator @Inject constructor(
 //  : Result<WeatherInfo>
     suspend fun calculateAverage(lat: Double, long: Double): WeatherInfo = coroutineScope{
 
+
+    Log.d("Average Weights:", weights.toString())
 
 Log.d("Avg search", ""+lat+" "+long)
 

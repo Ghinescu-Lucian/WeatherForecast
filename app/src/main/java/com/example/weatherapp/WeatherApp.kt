@@ -4,7 +4,6 @@ import android.app.Application
 import android.util.Log
 import com.example.weatherapp.Services.geocoder.CitySearch
 import com.example.weatherapp.data.local.cache.Cache
-import com.example.weatherapp.data.local.cache.CacheDB
 import com.example.weatherapp.data.local.cache.CacheRepository
 import com.example.weatherapp.data.local.cache.json.dtos.CacheConverter
 import com.example.weatherapp.data.local.weights.WeightRepository
@@ -14,10 +13,7 @@ import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
 import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
@@ -202,7 +198,7 @@ class WeatherApp: Application()
 
 //            Log.d("Converter",  weatherInfo.currentWeatherData?.time.toString())
 ////
-             val res = CacheConverter().ConvertToJson(weatherInfo = weatherInfo)
+             val res = CacheConverter().convertToJson(weatherInfo = weatherInfo)
             val cache = Cache(
                 id = 0,
                 city = "Timisoara",
@@ -226,11 +222,11 @@ class WeatherApp: Application()
                         Log.d("Database", itt.toString())
                     }
 
-//                    repositoryCache.insert(cache)
-
-                    repositoryCache.allCaches.collectLatest {
-                        Log.d("Cache: ", it[0].toString())
-                    }
+//                    repositoryCache
+//
+//                    repositoryCache.allCaches.collect {
+//                        Log.d("Cache: ", it.size.toString())
+//                    }
 
 
                 }

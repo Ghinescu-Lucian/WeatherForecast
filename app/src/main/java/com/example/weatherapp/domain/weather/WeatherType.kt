@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 //import com.plcoding.weatherapp.R
 
 
-sealed class WeatherType(
+ sealed class WeatherType(
     val weatherDesc: String,
     @DrawableRes val iconRes: Int
 ) {
