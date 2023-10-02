@@ -14,7 +14,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,6 +35,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -47,11 +47,9 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
@@ -64,13 +62,14 @@ import com.example.weatherapp.ui.menu.menuItems
 import com.example.weatherapp.ui.menu.navigateSingleTopTo
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.viewModels.MainViewModel
+import com.example.weatherapp.ui.viewModels.OfflineViewModel
 import com.example.weatherapp.ui.viewModels.PointsViewModel
 import com.example.weatherapp.ui.viewModels.WeatherViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-@OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
 
 
@@ -93,6 +92,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val locationManager =   LocalContext.current.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            var offline by rememberSaveable {
+                mutableStateOf(false)
+            }
 
             if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 if(isOnline(this)) {
@@ -106,7 +108,7 @@ class MainActivity : ComponentActivity() {
 
 
 
-                    WeatherApp(state = state, this)
+                    WeatherApp(state = state, context = this, viewModel = viewModel)
                     Log.d("Points State", st.toString())
                 }
                 else{
@@ -135,6 +137,30 @@ class MainActivity : ComponentActivity() {
                             }){
                                 Icon(imageVector = Icons.Default.Refresh, contentDescription ="" )
                             }
+                            Button(onClick ={
+
+                               offline = true
+
+                            }){
+                                Row() {
+                                    Text("Access offline mode")
+                                    Icon(
+                                        imageVector = Icons.Default.Refresh,
+                                        contentDescription = ""
+                                    )
+                                }
+                            }
+
+                        }
+                        if(offline){
+
+                            val viewModelOff: OfflineViewModel = hiltViewModel()
+
+                            Log.d("Offline view model", viewModelOff::class.simpleName.toString() )
+
+                            val state by viewModelOff.state.collectAsState()
+
+                            WeatherApp(state = state, context = LocalContext.current , viewModel = viewModelOff )
                         }
 
                     }
@@ -182,18 +208,19 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WeatherApp(
     state: WeatherState,
-    context: Context
+    context: Context,
+    viewModel: MainViewModel
 ){
 
 
     var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 //    var currentScreen: WeatherDestination by remember {mutableStateOf(Main)}
     val navController = rememberNavController()
-    val currentBackStack  by navController.currentBackStackEntryAsState()
-    val currentDestination = currentBackStack?.destination
-    val curentScreen = menuItems.find{it.route == currentDestination?.route} ?: Main
+//    val currentBackStack  by navController.currentBackStackEntryAsState()
+//    val currentDestination = currentBackStack?.destination
+//    val curentScreen = menuItems.find{it.route == currentDestination?.route} ?: Main
 
 
     WeatherAppTheme {
@@ -220,11 +247,7 @@ fun WeatherApp(
                                     label = {
                                         Text(
                                             text =
-                                            if (context != null) {
-                                                context.getString(item.name)
-                                            } else {
-                                                Resources.getSystem().getString(item.name)
-                                            }
+                                            context.getString(item.name)
 //                                           item.route
 //                                         "c"
 
@@ -263,7 +286,8 @@ fun WeatherApp(
 //                    MainScreen(modifier = Modifier.padding(it), state = state )
                     WeatherNavHost(navController = navController,
                         modifier = Modifier.padding(innerPadding),
-                        context = context
+                        context = context,
+                        viewModelW = viewModel
                         )
 
             }
@@ -451,9 +475,10 @@ fun AppPreview(){
     )
     val application =  WeatherApp()// Replace MyApplication with your Application class
     val appContext: Context = application.applicationContext
+    val viewModel: WeatherViewModel = hiltViewModel()
     WeatherAppTheme {
         val x = Resources.getSystem()
-        WeatherApp(state = state, context = appContext )
+        WeatherApp(state = state, context = appContext, viewModel = viewModel )
     }
 
 }

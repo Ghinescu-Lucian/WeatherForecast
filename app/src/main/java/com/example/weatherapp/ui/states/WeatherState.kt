@@ -1,7 +1,6 @@
 package com.example.weatherapp.ui.states
 
 import com.example.weatherapp.domain.weather.WeatherInfo
-import com.example.weatherapp.ui.model.mapper.WeatherInfoUI
 
 data class WeatherState(
     val cityName: String? = null,

@@ -20,8 +20,6 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 
-@Serializable
-data class Person(val name: String, val age: Int)
 
 
 @HiltAndroidApp
@@ -45,7 +43,7 @@ class WeatherApp: Application()
 
     val weatherInfo = WeatherInfo(
         currentWeatherData = WeatherData(
-            time = LocalDateTime.now().toString().toString(),
+            time = LocalDateTime.now().toString(),
             temperature = 25.2,
             pressure = 1000.0,
             humidity = 56.0,
@@ -57,7 +55,7 @@ class WeatherApp: Application()
                 day =0,
                 forecasts = listOf(
                     WeatherData(
-                        time = LocalDateTime.now().toString().toString(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.2,
                         pressure = 1000.0,
                         humidity = 56.0,
@@ -65,7 +63,7 @@ class WeatherApp: Application()
                         windSpeed = 12.0
                     ),
                     WeatherData(
-                        time = LocalDateTime.now().toString().toString(),
+                        time = LocalDateTime.now().toString(),
                         temperature = 25.12,
                         pressure = 1000.0,
                         humidity = 56.0,
@@ -199,12 +197,12 @@ class WeatherApp: Application()
 //            Log.d("Converter",  weatherInfo.currentWeatherData?.time.toString())
 ////
              val res = CacheConverter().convertToJson(weatherInfo = weatherInfo)
-            val cache = Cache(
-                id = 0,
-                city = "Timisoara",
-                partialResult = false,
-                data = res
-            )
+//            val cache = Cache(
+//                id = 0,
+//                city = "Timisoara",
+//                partialResult = false,
+//                data = res
+//            )
 
 
             val citySearch = CitySearch()
@@ -216,17 +214,18 @@ class WeatherApp: Application()
             GlobalScope.launch {
 //
 //                repository.insert(wg)
-                repository.allWeights.collect{ it ->
-                    Log.d("Database", it.size.toString())
-                    it.forEach{itt ->
-                        Log.d("Database", itt.toString())
-                    }
+//                repository.allWeights.collect{ it ->
+//                    Log.d("Database", it.size.toString())
+//                    it.forEach{itt ->
+//                        Log.d("Database", itt.toString())
+//                    }
 
 //                    repositoryCache
-//
-//                    repositoryCache.allCaches.collect {
-//                        Log.d("Cache: ", it.size.toString())
-//                    }
+                        repositoryCache.allCaches.collect {
+                            Log.d("Cache: ", it.size.toString())
+                            Log.d("Cache: ", CacheConverter().convertToWeatherInfo(it[0]).toString())
+                        }
+
 
 
                 }
@@ -240,4 +239,3 @@ class WeatherApp: Application()
 
 
     }
-}

@@ -1,23 +1,17 @@
 package com.example.weatherapp.ui.dailyForecasts
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.weatherapp.R
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
@@ -74,14 +68,14 @@ fun DailyScreen(
 //            DailyGraph(data = points)
         }
 
-            val points = listOf(
-                listOf(0f, 20f),
-                listOf(1f, 30f),
-                listOf(2f, 20f),
-                listOf(3f, 30f),
-                listOf(4f, 35f)
-
-            )
+//            val points = listOf(
+//                listOf(0f, 20f),
+//                listOf(1f, 30f),
+//                listOf(2f, 20f),
+//                listOf(3f, 30f),
+//                listOf(4f, 35f)
+//
+//            )
 
 
 

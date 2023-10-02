@@ -1,9 +1,8 @@
 package com.example.weatherapp.domain.weather
 
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
 
-@Serializable
+
 data class WeatherData(
 //    interfata Clock ce are now() -> long
     val time: String,

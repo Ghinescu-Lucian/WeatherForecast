@@ -1,6 +1,5 @@
 package com.example.weatherapp.data.remote.visualCrossing.dto.hourlyDto
 
-import com.example.weatherapp.ui.menu.WeatherDestination
 import com.squareup.moshi.Json
 
 data class VCHourlyDto(

@@ -15,13 +15,14 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.weatherapp.data.local.weights.Weights
-import com.example.weatherapp.ui.profile.MapScreen
-import com.example.weatherapp.ui.profile.ProfileScreen
-import com.example.weatherapp.ui.searchScreen.SearchScreen
 import com.example.weatherapp.ui.dailyForecasts.DailyScreen
 import com.example.weatherapp.ui.hourlyForecasts.HourlyScreen
 import com.example.weatherapp.ui.mainScreen.MainScreen
+import com.example.weatherapp.ui.profile.MapScreen
+import com.example.weatherapp.ui.profile.ProfileScreen
+import com.example.weatherapp.ui.searchScreen.SearchScreen
+import com.example.weatherapp.ui.splashScreen.SplashScreen
+import com.example.weatherapp.ui.viewModels.MainViewModel
 import com.example.weatherapp.ui.viewModels.PointsViewModel
 import com.example.weatherapp.ui.viewModels.SearchViewModel
 import com.example.weatherapp.ui.viewModels.WeatherViewModel
@@ -31,18 +32,32 @@ import com.example.weatherapp.ui.viewModels.WeatherViewModel
 fun WeatherNavHost(
     navController: NavHostController,
     modifier: Modifier,
+    viewModelW: MainViewModel,
     context: Context
 ){
-    val viewModelW : WeatherViewModel = hiltViewModel()
+//    val viewModelW : WeatherViewModel = hiltViewModel()
 
 
     NavHost(
         navController = navController,
-        startDestination = Main.route,
+        startDestination = SplashScreen.route,
         modifier = modifier
 
 
     ){
+
+        composable(route =  SplashScreen.route,
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
+        ){
+
+           SplashScreen(navController = navController)
+        }
+
         composable(route =  Main.route,
             enterTransition = {
                 fadeIn(animationSpec = tween(500))
@@ -54,7 +69,11 @@ fun WeatherNavHost(
             val state by viewModelW.state.collectAsState()
             Log.d("Main state:", state.toString())
             Log.d("Main City:", viewModelW.point.cityName)
+            var offline = false
+            if(viewModelW::class.simpleName == "OfflineViewModel")
+                offline = true
             MainScreen(modifier = Modifier , state = state,
+                offline = offline,
                onRefresh = {
                    viewModelW.refresh()
                }
@@ -118,11 +137,16 @@ fun WeatherNavHost(
             val viewModelS: SearchViewModel = hiltViewModel()
 
             Log.d("Navigation", "Search icon pressed")
-            SearchScreen(modifier = Modifier.fillMaxSize(), viewModel = viewModelS, viewModelWeahter = viewModelW,
-                onClickSearch = {
-                    navController.navigateSingleTopTo(route = Main.route)
-                }
-            )
+            if(viewModelW::class.simpleName == "WeatherViewModel") {
+
+                SearchScreen(modifier = Modifier.fillMaxSize(),
+                    viewModel = viewModelS,
+                    viewModelWeahter = viewModelW as WeatherViewModel,
+                    onClickSearch = {
+                        navController.navigateSingleTopTo(route = Main.route)
+                    }
+                )
+            }
         }
 
         composable(

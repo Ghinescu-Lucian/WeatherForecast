@@ -1,7 +1,6 @@
 package com.example.weatherapp.data.local.cache
 
 import androidx.annotation.WorkerThread
-import com.example.weatherapp.data.local.weights.Weights
 import kotlinx.coroutines.flow.Flow
 
 

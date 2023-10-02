@@ -1,8 +1,6 @@
 package com.example.weatherapp.data.local.cache.json.dtos
 
-import com.example.weatherapp.domain.weather.WeatherType
 import com.google.gson.annotations.SerializedName
-import java.time.LocalDateTime
 
 data class WeatherDataJsonDto (
     @SerializedName("time")

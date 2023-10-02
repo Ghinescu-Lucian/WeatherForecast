@@ -1,9 +1,9 @@
 package com.example.weatherapp.di
 
 import com.example.weatherapp.data.remote.accuWeather.repository.AccuWeatherRepositoryImpl
-import com.example.weatherapp.domain.repository.WeatherRepository
 import com.example.weatherapp.data.remote.openMeteo.repository.WeatherRepositoryOpenMeteoImpl
 import com.example.weatherapp.data.remote.visualCrossing.repository.VisualCrossingRepositoryImpl
+import com.example.weatherapp.domain.repository.WeatherRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

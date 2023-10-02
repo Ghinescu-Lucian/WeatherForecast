@@ -68,6 +68,16 @@ object Map : WeatherDestination{
     override val name = R.string.map
 }
 
+object SplashScreen : WeatherDestination{
+    override val route = "splash"
+    @DrawableRes
+    override val icon = R.drawable.ic_home_outlined
+    @DrawableRes
+    override val selectedIcon = R.drawable.ic_home_filled
+    @StringRes
+    override val name = R.string.main
+}
+
 val menuItems = listOf(
     Main, HourlyScreen,
 //    Search,

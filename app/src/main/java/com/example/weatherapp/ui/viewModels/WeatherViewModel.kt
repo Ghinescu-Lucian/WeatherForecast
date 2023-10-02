@@ -5,20 +5,13 @@ import android.app.Application
 import android.content.Context
 import android.location.Location
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractor
 import com.example.weatherapp.domain.weather.WeatherInfo
-import com.example.weatherapp.ui.states.WeatherState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 //import javax.inject.Inject
@@ -34,32 +27,33 @@ object Point{
 @HiltViewModel
 class WeatherViewModel @Inject constructor (
     val interactor: WeatherDataInteractor,
-    application : Application
-    ) : AndroidViewModel(application) {
+    application : Application,
+    ) : MainViewModel(application) {
 
 //    stateFlow
 
-    private val _state = MutableStateFlow(WeatherState())
-    val point =  Point
 
-    val state : StateFlow<WeatherState> = _state.asStateFlow()
     val context: Context = getApplication()
+
+
 
     init{
         initialize(refresh = true)
         }
 
-    fun refresh(){
+   override  fun refresh(){
         initialize(refresh = false)
 
     }
+
+
 
     fun refreshContentSearch(refreshCity: Boolean, cityName: String, lat: Double, long: Double) {
             point.cityName = cityName
             point.location.latitude = lat
             point.location.longitude = long
 
-            Log.d("Refresh Called", point.cityName.toString())
+            Log.d("Refresh Called", point.cityName)
             initialize(refreshCity)
             Log.d("State aftr. refresh", _state.value
             .toString())
@@ -79,15 +73,20 @@ class WeatherViewModel @Inject constructor (
             }
 
 
-           if(refresh) {
+           if(refresh || point.cityName.isEmpty()) {
                 Log.d("Refresh City", "REFRESH CURRENT CITY")
-                interactor.getCityName(context = context).onSuccess { res ->
+               Log.d("CityName12:", point.cityName)
+               val r =  interactor.getCityName(context = context)
+               Log.d("CityName1:", r.toString())
+                   r.onSuccess { res ->
                     _state.update {
                         point.cityName = res
+                        Log.d("CityName1:", res)
                         it.copy(
                             cityName = res
 
                         )
+
                     }
                 }
 
@@ -107,6 +106,7 @@ class WeatherViewModel @Inject constructor (
 
                interactor.getWeights(point.location, point = point)
 
+                Log.d("CityName1 :",  point.cityName)
 
                 val result =
                     interactor.getWeatherData(location = point.location, refresh = !refresh, city = point.cityName, offline = false)

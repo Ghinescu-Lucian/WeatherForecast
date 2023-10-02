@@ -45,9 +45,6 @@ import com.example.weatherapp.ui.profile.ExpandableListViewModel
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.viewModels.DailyViewModel
 import com.example.weatherapp.ui.viewModels.PointsViewModel
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.util.Locale
 
 
 @Composable

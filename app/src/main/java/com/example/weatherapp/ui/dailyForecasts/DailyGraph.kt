@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,9 +34,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.ui.theme.WeatherAppTheme
-import com.example.weatherapp.ui.viewModels.DailyViewModel
 
 @Composable
 fun DailyGraph(modifier : Modifier = Modifier,
@@ -66,8 +63,7 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
 //    val xLabels
 
-    var newData = squeezeDimension(data)
-    newData = data
+    val newData = data
 
 
     LaunchedEffect(key1 = data, block = {

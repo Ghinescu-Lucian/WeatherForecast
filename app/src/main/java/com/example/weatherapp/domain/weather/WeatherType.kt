@@ -2,7 +2,6 @@ package com.example.weatherapp.domain.weather
 
 import androidx.annotation.DrawableRes
 import com.example.weatherapp.R
-import kotlinx.serialization.Serializable
 
 //import com.plcoding.weatherapp.R
 
