@@ -48,7 +48,7 @@ fun CurrentHour(
             .background(radialGradient(
                 colorEnd = MaterialTheme.colorScheme.surfaceVariant,
                 colorStart = MaterialTheme.colorScheme.onSurfaceVariant,
-                dimenssionFactor = 4.0
+//                dimenssionFactor = 4.0
             )),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.Start

@@ -43,7 +43,7 @@ fun RowElement(
                 radialGradient(
                     colorStart = MaterialTheme.colorScheme.primary,
                     colorEnd = MaterialTheme.colorScheme.onSecondary,
-                    dimenssionFactor = 4.0
+//                    dimenssionFactor = 4.0
                 )
             )
             .fillMaxWidth()

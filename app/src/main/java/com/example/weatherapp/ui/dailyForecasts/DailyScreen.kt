@@ -1,16 +1,22 @@
 package com.example.weatherapp.ui.dailyForecasts
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
@@ -38,6 +44,17 @@ fun DailyScreen(
     Log.d("Daily Screen", state.weatherInfo?.weatherDataPerDays.toString())
     Log.d("Daily Screen", state.toString())
 
+    Column{
+
+        if(!state.online){
+            Text("Offline mode", textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+                    .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),
+                fontSize = 21.sp,
+//                style = TextStyle(background = Color.Red)
+            )
+        }
+
     Column(
 //        modifier =  Modifier.verticalScroll(state)
         verticalArrangement = Arrangement.SpaceEvenly,
@@ -52,18 +69,18 @@ fun DailyScreen(
 //            modifier= Modifier.height(250.dp)
 //        )
 
-            Title(
-                city = state.cityName,
-                modifier = Modifier
-            )
+        Title(
+            city = state.cityName,
+            modifier = Modifier
+        )
         Box(modifier = Modifier.height(320.dp)) {
 
             ExpandableLazyColumn(state = state, viewModel = viewModel)
 
         }
         if (data != null) {
-            Box( modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)) {
-                DailyGraph(data = data.take(5), xLabels = xLabels )
+            Box(modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)) {
+                DailyGraph(data = data.take(5), xLabels = xLabels)
             }
 //            DailyGraph(data = points)
         }
@@ -76,7 +93,7 @@ fun DailyScreen(
 //                listOf(4f, 35f)
 //
 //            )
-
+    }
 
 
     }

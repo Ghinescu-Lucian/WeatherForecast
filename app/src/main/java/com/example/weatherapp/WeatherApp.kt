@@ -3,7 +3,6 @@ package com.example.weatherapp
 import android.app.Application
 import android.util.Log
 import com.example.weatherapp.Services.geocoder.CitySearch
-import com.example.weatherapp.data.local.cache.Cache
 import com.example.weatherapp.data.local.cache.CacheRepository
 import com.example.weatherapp.data.local.cache.json.dtos.CacheConverter
 import com.example.weatherapp.data.local.weights.WeightRepository
@@ -15,11 +14,8 @@ import com.example.weatherapp.domain.weather.WeatherType
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 import javax.inject.Inject
-
-
 
 
 @HiltAndroidApp
@@ -221,10 +217,10 @@ class WeatherApp: Application()
 //                    }
 
 //                    repositoryCache
-                        repositoryCache.allCaches.collect {
-                            Log.d("Cache: ", it.size.toString())
-                            Log.d("Cache: ", CacheConverter().convertToWeatherInfo(it[0]).toString())
-                        }
+//                        repositoryCache.allCaches.collect {
+//                            Log.d("Cache: ", it.size.toString())
+//                            Log.d("Cache: ", CacheConverter().convertToWeatherInfo(it[0]).toString())
+//                        }
 
 
 

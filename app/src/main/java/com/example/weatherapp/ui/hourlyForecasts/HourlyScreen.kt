@@ -1,10 +1,16 @@
 package com.example.weatherapp.ui.hourlyForecasts
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
@@ -21,20 +27,33 @@ fun HourlyScreen(
 ){
     Log.d("Hourly state :", state.toString())
 
-    Column(
-        modifier = modifier
-    )
-    {
-        Title(
-            city = state.cityName,
-            modifier = Modifier
-        )
-        Log.d("State2", state.weatherInfo?.weatherDataPerDays.toString())
+    Column {
 
-        Hourly12Weather(
-                 data = state.weatherInfo!!.weatherDataPerDays.getOrNull(0)!!.forecasts
-        )
 
+        if(!state.online){
+            Text("Offline mode", textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+                    .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),
+                fontSize = 21.sp,
+//                style = TextStyle(background = Color.Red)
+            )
+        }
+
+        Column(
+            modifier = modifier
+        )
+        {
+            Title(
+                city = state.cityName,
+                modifier = Modifier
+            )
+            Log.d("State2", state.weatherInfo?.weatherDataPerDays.toString())
+
+            Hourly12Weather(
+                data = state.weatherInfo!!.weatherDataPerDays.getOrNull(0)!!.forecasts
+            )
+
+        }
     }
 
 }

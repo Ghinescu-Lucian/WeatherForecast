@@ -13,7 +13,7 @@ class PointsInteractor @Inject constructor(
 
     fun getPoints(): Flow<List<Weights>> {
 //        Log.d("Points Interactor", "Got here!")
-        return repository.allWeights
+        return repository.allWeightsFlow
     }
 
     suspend fun getCurrentPoint(): Weights {

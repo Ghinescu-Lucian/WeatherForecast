@@ -10,7 +10,10 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WeightsDao{
     @Query("SELECT * FROM weights")
-    fun getAllPoints(): Flow<List<Weights>>
+    suspend fun getAllPoints(): List<Weights>
+
+    @Query("SELECT * FROM weights")
+    fun getAllPointsFlow(): Flow<List<Weights>>
 
     @Insert()
     suspend fun insert(weights: Weights)

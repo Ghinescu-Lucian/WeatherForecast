@@ -37,6 +37,7 @@ fun WeatherNavHost(
 ){
 //    val viewModelW : WeatherViewModel = hiltViewModel()
 
+    val state by viewModelW.state.collectAsState()
 
     NavHost(
         navController = navController,
@@ -66,14 +67,13 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
             ){
-            val state by viewModelW.state.collectAsState()
+
             Log.d("Main state:", state.toString())
             Log.d("Main City:", viewModelW.point.cityName)
-            var offline = false
-            if(viewModelW::class.simpleName == "OfflineViewModel")
-                offline = true
+            var offline = state.online
+            Log.d("Networkul22", state.online.toString())
             MainScreen(modifier = Modifier , state = state,
-                offline = offline,
+                online = offline,
                onRefresh = {
                    viewModelW.refresh()
                }
@@ -126,7 +126,8 @@ fun WeatherNavHost(
                 }
             )
         }
-        composable(route = Search.route,
+        composable(
+            route = Search.route,
             enterTransition = {
                 fadeIn(animationSpec = tween(500))
             },
@@ -134,18 +135,21 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
         ){
-            val viewModelS: SearchViewModel = hiltViewModel()
 
-            Log.d("Navigation", "Search icon pressed")
-            if(viewModelW::class.simpleName == "WeatherViewModel") {
+            if(state.online) {
+                val viewModelS: SearchViewModel = hiltViewModel()
 
-                SearchScreen(modifier = Modifier.fillMaxSize(),
-                    viewModel = viewModelS,
-                    viewModelWeahter = viewModelW as WeatherViewModel,
-                    onClickSearch = {
-                        navController.navigateSingleTopTo(route = Main.route)
-                    }
-                )
+                Log.d("Navigation", "Search icon pressed")
+                if (viewModelW::class.simpleName == "WeatherViewModel") {
+
+                    SearchScreen(modifier = Modifier.fillMaxSize(),
+                        viewModel = viewModelS,
+                        viewModelWeahter = viewModelW as WeatherViewModel,
+                        onClickSearch = {
+                            navController.navigateSingleTopTo(route = Main.route)
+                        }
+                    )
+                }
             }
         }
 

@@ -6,10 +6,14 @@ import android.content.Context
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.data.local.cache.CacheRepository
+import com.example.weatherapp.data.local.cache.json.dtos.CacheConverter
 import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.domain.weather.Interactors.WeatherDataInteractor
 import com.example.weatherapp.domain.weather.WeatherInfo
+import com.example.weatherapp.ui.states.WeatherState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,10 +31,13 @@ object Point{
 @HiltViewModel
 class WeatherViewModel @Inject constructor (
     val interactor: WeatherDataInteractor,
+    val cacheRepository: CacheRepository,
     application : Application,
     ) : MainViewModel(application) {
 
 //    stateFlow
+
+
 
 
     val context: Context = getApplication()
@@ -39,6 +46,25 @@ class WeatherViewModel @Inject constructor (
 
     init{
         initialize(refresh = true)
+
+        viewModelScope.launch {
+            cacheRepository.allCaches.collect {
+                val r = it.lastOrNull()
+                if (r != null) {
+                    val res = CacheConverter().convertToWeatherInfo(r)
+                    _state.update {
+                        WeatherState(
+                            cityName = r?.city,
+                            error = "",
+                            isLoading = false,
+                            weatherInfo = res
+                        )
+                    }
+                }
+
+            }
+        }
+
         }
 
    override  fun refresh(){
@@ -60,6 +86,21 @@ class WeatherViewModel @Inject constructor (
 
     }
 
+    fun informOffline(){
+        _state.update {
+            it.copy(
+                online = false
+            )
+        }
+    }
+    fun informOnline(){
+        _state.update{
+            it.copy(
+                online = true
+            )
+        }
+    }
+
 
 
     fun initialize(refresh: Boolean){
@@ -74,6 +115,14 @@ class WeatherViewModel @Inject constructor (
 
 
            if(refresh || point.cityName.isEmpty()) {
+
+               interactor.getCoordinates().onSuccess {
+                   if (it != null) {
+                       point.location.latitude = it.latitude
+                       point.location.longitude = it.longitude
+                   }
+               }
+
                 Log.d("Refresh City", "REFRESH CURRENT CITY")
                Log.d("CityName12:", point.cityName)
                val r =  interactor.getCityName(context = context)
@@ -92,12 +141,7 @@ class WeatherViewModel @Inject constructor (
 
 
 
-                interactor.getCoordinates().onSuccess {
-                    if (it != null) {
-                        point.location.latitude = it.latitude
-                        point.location.longitude = it.longitude
-                    }
-                }
+
 
             }
 
@@ -105,6 +149,9 @@ class WeatherViewModel @Inject constructor (
 
 
                interactor.getWeights(point.location, point = point)
+
+
+
 
                 Log.d("CityName1 :",  point.cityName)
 
@@ -118,14 +165,17 @@ class WeatherViewModel @Inject constructor (
                         )
                     }
                 }
+               val r = cacheRepository.allCaches.first()
+            Log.d("Cache123", r.isEmpty().toString())
                 result.onSuccess { data ->
-//                Log.d("DEBUG1", "CEVA din viewModel $data")
 
-                    _state.update {
+                    if(r.isEmpty())
+//                Log.d("DEBUG1", "CEVA din viewModel $data")
+                        _state.update {
 //                    Log.d("DEBUG1",data.toString())
                         it.copy(
                             weatherInfo = WeatherInfo(
-                                currentWeatherData = data,
+                                currentWeatherData = data.currentWeatherData,
                                 weatherDataPerDays = listOf()
                             ),
                             isLoading = false
@@ -136,6 +186,8 @@ class WeatherViewModel @Inject constructor (
                  Log.d("GET DATA: ", result.toString())
                 Log.d("Location: ", point.location.toString())
 
+
+            if(r.isEmpty()) {
                 interactor.getWeatherDataPerDay(location = point.location, refresh = !refresh, city = point.cityName, offline = false)
                     .onSuccess { dataPerDay ->
 
@@ -147,7 +199,7 @@ class WeatherViewModel @Inject constructor (
                         }
                         Log.d("ViewModel", _state.value.weatherInfo?.weatherDataPerDays.toString())
                     }
-
+            }
                 if (point.cityName.isNotEmpty()) {
                     _state.update {
                         it.copy(cityName = point.cityName)

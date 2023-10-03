@@ -49,13 +49,13 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
 
 
     var accWeight by rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("1")
     }
     var omWeight by rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("1")
     }
     var vcWeight by rememberSaveable {
-        mutableStateOf("")
+        mutableStateOf("1")
     }
 
 //    val state = viewModel.statePoints.collectAsState()
@@ -177,6 +177,7 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
         FloatingActionButton(
             onClick = {
                 val p = viewModel.point.getPoint()
+//              sa fie in viewModel si sa fie string ( in viewModel fac conversia la double
                 val newPoint = p.copy(accWeight = accWeight.toDouble(), vcWeight = vcWeight.toDouble(), omWeight = omWeight.toDouble() )
 
 //                Log.d("Add Point:", viewModel.addPoint(newPoint).toString())

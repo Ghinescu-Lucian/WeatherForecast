@@ -7,6 +7,7 @@ import com.example.weatherapp.data.local.weights.Weights
 import com.example.weatherapp.domain.points.PointsInteractor
 import com.example.weatherapp.ui.states.PointsState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +42,8 @@ class PointsViewModel @Inject constructor(val pointsInteractor: PointsInteractor
     private val _statePoints= MutableStateFlow(PointsState())
     val statePoints :StateFlow<PointsState> = _statePoints.asStateFlow()
     val point = PointOnMap
+
+    val results = MutableSharedFlow<String?>()
 
     val updatePoints = mutableListOf<Weights>()
     val deletePoints = mutableListOf<Weights>()
@@ -134,28 +137,38 @@ class PointsViewModel @Inject constructor(val pointsInteractor: PointsInteractor
           deletePoints.remove(point)
     }
 
-    fun deletePoints(): Result<Boolean>{
-        var result = Result.success (true)
-       deletePoints.forEach {
-            if (deletePoint(it).isFailure)
-                result = Result.failure(Exception("Error occurred when updating points."))
+    fun deletePoints(){
+//        var result = Result.success (true)
+
+        var result = true
+        viewModelScope.launch {
+            deletePoints.forEach {
+                deletePoint(it)
+                if (deletePoint(it) == false)
+                    result = false
+
+//                result = Result.failure(Exception("Error occurred when updating points."))
+            }
+
+            if (!result)
+                results.emit("Error on deleteing")
+            else
+                results.emit("Successfully deleted")
         }
-        return result
 
     }
 
-    fun deletePoint(point: Weights): Result<Weights>{
-        var result = Result.failure<Weights>(Exception("Error on updating the point."))
-        viewModelScope.launch{
-            try {
+   private suspend fun deletePoint(point: Weights): Boolean{
+
+            return try {
                 pointsInteractor.deletePoint(point)
-                result = Result.success(point)
+                true
             }catch(e : Exception){
-                result = Result.failure(Exception(e.message + "\nError on updating the point."))
+                false
             }
 
-        }
-        return result
+
+
     }
 
     fun addPoint(point: Weights): Result<Weights>{

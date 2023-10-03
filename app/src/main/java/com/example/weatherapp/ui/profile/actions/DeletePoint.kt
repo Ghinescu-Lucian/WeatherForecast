@@ -39,6 +39,12 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
     }
     val context = LocalContext.current
 
+    val results  by viewModel.results.collectAsState(initial = null)
+
+    if(results != null){
+//        arat
+        Toast.makeText(context, results, Toast.LENGTH_SHORT).show()
+    }
 
     list.value.points?.forEachIndexed { index, it ->
 
@@ -110,8 +116,8 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
                      accord = true
                      showDialog = false
                      val r = viewModel.deletePoints()
-                     if(r.isSuccess) Toast.makeText(context, context.getText(R.string.DeletePointSucces), Toast.LENGTH_SHORT).show()
-                     else Toast.makeText(context, context.getText(R.string.DeletePointFailure), Toast.LENGTH_SHORT).show()
+//                     if(r.isSuccess) Toast.makeText(context, context.getText(R.string.DeletePointSucces), Toast.LENGTH_SHORT).show()
+//                     else Toast.makeText(context, context.getText(R.string.DeletePointFailure), Toast.LENGTH_SHORT).show()
                      expandViewModel.onItemClicked(3)
                  }){
                     Text("Yes")

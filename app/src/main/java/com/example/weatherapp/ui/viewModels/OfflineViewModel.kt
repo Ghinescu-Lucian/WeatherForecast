@@ -29,16 +29,26 @@ class OfflineViewModel @Inject constructor (
 
     init{
         viewModelScope.launch {
-            val r = cacheRepository.allCaches.first()
-            val res = CacheConverter().convertToWeatherInfo(r[0])
-            _state.update {
-                WeatherState(
-                    cityName = r[0].city ,
-                    error = "",
-                    isLoading = false,
-                    weatherInfo = res
-                )
+
+            cacheRepository.allCaches.collect{
+                val r = it.lastOrNull()
+                if(r != null) {
+                    val res = CacheConverter().convertToWeatherInfo(r)
+                    _state.update {
+                        WeatherState(
+                            cityName = r?.city,
+                            error = "",
+                            isLoading = false,
+                            weatherInfo = res
+                        )
+                    }
+                }
+
             }
+
+            val r = cacheRepository.allCaches.first()
+
+
         }
     }
 
