@@ -23,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -47,11 +48,13 @@ import com.example.weatherapp.ui.viewModels.PointsViewModel
 fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewModel){
     val list = viewModel.statePoints.collectAsState()
     val context = LocalContext.current
+    var count by remember { mutableIntStateOf(0) }
+    var enable by remember { mutableStateOf(false) }
+
     list.value.points?.forEachIndexed {index, it ->
 
         var text = "${index+1}. "
-        text += if(it.city.isNotEmpty()) it.city
-        else ""+it.latitude + " ; "+ it.longitude
+        text += it.city.ifEmpty { ""+it.latitude + " ; "+ it.longitude }
 
         val pointId = it.id
 
@@ -65,6 +68,13 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
 
         var isModified by remember {
             mutableStateOf(false)
+        }
+
+        val results  by viewModel.results.collectAsState(initial = null)
+
+        if(results != null){
+//        arat
+            Toast.makeText(context, results, Toast.LENGTH_SHORT).show()
         }
 
         
@@ -117,6 +127,11 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
 
                                 if(isModified && itt.isNotEmpty()){
                                     viewModel.addUpdatePoint(Weights(pointId, it.city, accWeight = accWeight.toDouble(), omWeight = omWeight.toDouble(), vcWeight = vcWeight.toDouble(), latitude = it.latitude, longitude = it.longitude ))
+                                    count++
+                                }
+                                else{
+                                    viewModel.removeUpdatePoint(Weights(pointId, it.city, accWeight = accWeight.toDouble(), omWeight = omWeight.toDouble(), vcWeight = vcWeight.toDouble(), latitude = it.latitude, longitude = it.longitude ))
+                                    count--
                                 }
 
 
@@ -271,16 +286,17 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
             }
         }
     }
+   enable = count > 0
     Button(onClick ={
         val r = viewModel.updatePoints()
         expandViewModel.onItemClicked(2)
         Log.d("Update result: ", r.toString())
-        if(r.isSuccess)
-         Toast.makeText(context, context.getText(R.string.UpdatePointSuccess), Toast.LENGTH_SHORT).show()
-        else Toast.makeText(context, context.getText(R.string.UpdatePointFailure), Toast.LENGTH_SHORT).show()
+//        if(r.isSuccess)
+//         Toast.makeText(context, context.getText(R.string.UpdatePointSuccess), Toast.LENGTH_SHORT).show()
+//        else Toast.makeText(context, context.getText(R.string.UpdatePointFailure), Toast.LENGTH_SHORT).show()
 
-    }
-
+    },
+    enabled = enable
     ){
         Text(text = "Update")
     }

@@ -2,6 +2,7 @@ package com.example.weatherapp.ui.mainScreen
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,14 +31,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.MainActivity
 import com.example.weatherapp.ui.states.WeatherState
+import java.time.LocalDateTime
 
 @Composable
 fun MainScreen( modifier : Modifier,
                 state : WeatherState,
                 online: Boolean = false,
-                onRefresh:() -> Unit = {}
+                onRefresh:() -> Unit = {},
+                timeViewModel: MainScreenViewModel = hiltViewModel()
 ){
 
     val activity = LocalContext.current as? Activity
@@ -47,7 +51,8 @@ fun MainScreen( modifier : Modifier,
 
         if(!state.online){
             Text("Offline mode", textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),
                 fontSize = 21.sp,
 //                style = TextStyle(background = Color.Red)
@@ -126,11 +131,26 @@ fun MainScreen( modifier : Modifier,
                                 .align(Alignment.TopStart)
                                 .padding(top = 18.dp)
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                tint = Color.White,
-                                contentDescription = "Refresh"
-                            )
+                            Column(verticalArrangement = Arrangement.Center) {
+
+
+                                 Log.d("Time:", LocalDateTime.now().toString() + " "+state.weatherInfo?.currentWeatherData?.time)
+//                                if (state.weatherInfo?.currentWeatherData?.time != LocalDateTime.now().toString()
+//                                )
+
+                                 if(timeViewModel.isTimeOut(state.weatherInfo?.currentWeatherData!!.time))
+                                {
+                                    Text(
+                                        "Offline,\n please refresh", fontSize = 21.sp,
+                                        color = Color.Black,
+                                    )
+                                }
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    tint = Color.White,
+                                    contentDescription = "Refresh"
+                                )
+                            }
                         }
                     }
                 }

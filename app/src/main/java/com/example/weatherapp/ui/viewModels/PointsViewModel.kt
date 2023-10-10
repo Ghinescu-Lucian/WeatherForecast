@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 object PointOnMap {
-    private var point = Weights(0, "",1.0,1.0,1.0,1.0,1.0)
+    private var point = Weights(0, "",1.0,1.0,1.0,-181.0,-181.0)
     var isExp: Boolean = true
     fun getPoint(): Weights { return point }
     fun setCity(s: String){
@@ -30,7 +30,7 @@ object PointOnMap {
     }
 
     fun restore(){
-        point = Weights(0, "",1.0,1.0,1.0,1.0,1.0)
+        point = Weights(0, "",1.0,1.0,1.0,-181.0,-181.0)
     }
 
 
@@ -103,29 +103,30 @@ class PointsViewModel @Inject constructor(val pointsInteractor: PointsInteractor
            updatePoints.remove(point)
     }
 
-    fun updatePoints(): Result<Boolean>{
-        var result = Result.success (true)
-        updatePoints.forEach {
-            if (updatePoint(it).isFailure)
-                result = Result.failure(Exception("Error occurred when updating points."))
-        }
-        return result
-
-    }
-
-    fun updatePoint(point: Weights): Result<Weights>{
-        var result = Result.failure<Weights>(Exception("Error on updating the point."))
-        viewModelScope.launch{
-            try {
-                pointsInteractor.updatePoint(point)
-                result = Result.success(point)
-            }catch(e : Exception){
-                result = Result.failure(Exception(e.message + "\nError on updating the point."))
+    fun updatePoints(){
+        var result = true
+        viewModelScope.launch {
+            updatePoints.forEach {
+                if(!updatePoint(it))
+                    result = false
             }
-
+            if (!result)
+                results.emit("Error on updating")
+            else
+                results.emit("Changes applied")
         }
-        return result
+
     }
+
+   private suspend fun updatePoint(point: Weights) : Boolean {
+
+       return try {
+           pointsInteractor.updatePoint(point)
+           true
+       } catch (e: Exception) {
+           false
+       }
+   }
 
     fun addDeletePoint(point: Weights){
         Log.d("Delete point: ", point.toString())
@@ -144,14 +145,14 @@ class PointsViewModel @Inject constructor(val pointsInteractor: PointsInteractor
         viewModelScope.launch {
             deletePoints.forEach {
                 deletePoint(it)
-                if (deletePoint(it) == false)
+                if (!deletePoint(it))
                     result = false
 
 //                result = Result.failure(Exception("Error occurred when updating points."))
             }
 
             if (!result)
-                results.emit("Error on deleteing")
+                results.emit("Error on deleting")
             else
                 results.emit("Successfully deleted")
         }
@@ -171,23 +172,34 @@ class PointsViewModel @Inject constructor(val pointsInteractor: PointsInteractor
 
     }
 
-    fun addPoint(point: Weights): Result<Weights>{
+    fun addPoint(point: Weights){
 
-        var result = Result.failure<Weights>(Exception("Error on adding the point."))
-
+        Log.d("Add point:1", point.toString())
+       var result = true
         viewModelScope.launch{
-            try {
-                pointsInteractor.addPoint(point)
-                result = Result.success(point)
-                Log.d("Add point:", "Result: $result")
 
-            }catch(e : Exception){
-                result = Result.failure(Exception(e.message + "\nError on adding the point."))
+            if(point.longitude == -181.0 )
+                results.emit("Error on adding")
+            else {
+
+                try {
+                    pointsInteractor.addPoint(point)
+                    result = true
+                    Log.d("Add point:", "Result: $result")
+
+                } catch (e: Exception) {
+                    result = false
+                }
+
+                if (!result)
+                    results.emit("Error on adding")
+                else
+                    results.emit("Successfully added")
             }
 
         }
 
-        return result
+
     }
 
 

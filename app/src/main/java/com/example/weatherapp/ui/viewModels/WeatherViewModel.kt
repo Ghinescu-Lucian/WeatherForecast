@@ -87,13 +87,16 @@ class WeatherViewModel @Inject constructor (
     }
 
     fun informOffline(){
-        _state.update {
+
+         _state.update {
             it.copy(
                 online = false
             )
         }
     }
     fun informOnline(){
+//        Toast.makeText(context, "Back online", Toast.LENGTH_SHORT).show()
+
         _state.update{
             it.copy(
                 online = true

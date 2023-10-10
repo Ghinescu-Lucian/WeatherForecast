@@ -10,6 +10,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 // @Inject constructor
@@ -18,9 +19,6 @@ class AverageCalculator @Inject constructor(
     val weatherRepositories : Set<WeatherRepository>,
     var weights: List<Double>
 
-
-
-
 ){
 //  : Result<WeatherInfo>
     suspend fun calculateAverage(lat: Double, long: Double): WeatherInfo = coroutineScope{
@@ -28,7 +26,7 @@ class AverageCalculator @Inject constructor(
 
     Log.d("Average Weights:", weights.toString())
 
-Log.d("Avg search", ""+lat+" "+long)
+    Log.d("Avg search", ""+lat+" "+long)
 
 //      CURRENT CONDITIONS
 
@@ -128,6 +126,8 @@ fun calculateCurrentConditions(data: List<Result<WeatherInfo>>, weights: List<Do
 
     val successData = mutableListOf<WeatherData>()
     val successWeights = mutableListOf<Double>()
+    val formattedTime =LocalDateTime.now().format(
+            DateTimeFormatter.ofPattern("dd-MMM HH:mm"))
 
     data.forEachIndexed { index, result ->
         result.onSuccess {
@@ -136,7 +136,9 @@ fun calculateCurrentConditions(data: List<Result<WeatherInfo>>, weights: List<Do
         }
     }
 
-    return calculateParams(data = successData, weights = successWeights)
+    var result = calculateParams(data = successData, weights = successWeights)
+    result = result.copy(time = formattedTime)
+    return result
 
 }
 
@@ -146,9 +148,13 @@ fun calculateHourly(data: List<Result<WeatherInfo>>, weights: List<Double>) : We
     val successData = mutableListOf<WeatherDataPerDay>()
     val successWeights = mutableListOf<Double>()
 
+    val timeFormat =DateTimeFormatter.ofPattern("dd-MMMM HH:mm")
+
     data.forEachIndexed { index, result ->
         result.onSuccess {
-            successData.add(it.weatherDataPerDays[0])
+            successData.add(
+                it.weatherDataPerDays[0]
+            )
             successWeights.add(weights[index])
 
         }
@@ -164,15 +170,24 @@ fun calculateHourly(data: List<Result<WeatherInfo>>, weights: List<Double>) : We
     val successForecasts = mutableListOf<WeatherData>()
 
 //    minimumSize = 24
-    for(i in 0..(minimumSize -1)){
+    for(i in 0 until minimumSize){
         successData.forEach{
-            successForecasts.add(it.forecasts[i])
-        }
-        res.add(
-            calculateParams(data = successForecasts,
-                weights = successWeights
+            successForecasts.add(
+                it.forecasts[i]
             )
+
+        }
+
+        var result =  calculateParams(data = successForecasts,
+            weights = successWeights
         )
+
+        result = result.copy(time = LocalDateTime.parse(result.time).format(timeFormat) )
+
+
+        res.add(
+            result
+              )
         successForecasts.clear()
     }
 
@@ -263,8 +278,8 @@ fun calculateParams(data: List<WeatherData>, weights: List<Double>): WeatherData
     var humidity = 0.0
     var pressure = 0.0
     var windSpeed = 0.0
-    var time = data[0].time?: LocalDateTime.now()
-    var description = data[0].description
+    val time = data[0].time?: LocalDateTime.now()
+    val description = data[0].description
 
     data.forEachIndexed{ index, it ->
         temperature += it.temperature*weights[index]

@@ -43,10 +43,9 @@ interface WeatherDataInteractor {
 
 class WeatherDataInteractorImpl @Inject constructor (
     val locationTracker: LocationTracker,
-    // sa am o lista de repository
-    val averageCalculator: AverageCalculator,
-//   @Named("OpenMeteo") val  weatherRepository: WeatherRepository,
 
+    val averageCalculator: AverageCalculator,
+//
     val cacheRepository: CacheRepository,
     val weightRepository: WeightRepository
 
@@ -142,8 +141,8 @@ class WeatherDataInteractorImpl @Inject constructor (
 
         } else {
 //            return state.currentWeather
-//            return success(r)
-            return failure(Exception("Error interactor"))
+            return success(r)
+//            return failure(Exception("Error interactor"))
         }
 
 

@@ -23,8 +23,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,6 +51,7 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
 
 
 
+
     var accWeight by rememberSaveable {
         mutableStateOf("1")
     }
@@ -58,10 +62,38 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
         mutableStateOf("1")
     }
 
+    var accError by remember {
+        mutableStateOf(false)
+    }
+    var omError by remember {
+        mutableStateOf(false)
+    }
+    var vcError by remember {
+        mutableStateOf(false)
+    }
+
+    var count by remember {
+        mutableIntStateOf(0)
+    }
+    var enable by remember{
+        mutableStateOf(true)
+    }
+
+
+
+    val results  by viewModel.results.collectAsState(initial = null)
+    val context = LocalContext.current
+
+    if(results != null){
+//        arat
+        Toast.makeText(context, results, Toast.LENGTH_SHORT).show()
+    }
+
+
 //    val state = viewModel.statePoints.collectAsState()
 
 
-    Log.d("Point J", viewModel.point.getPoint().toString() )
+    Log.d("Point J1", viewModel.point.getPoint().toString() )
 
     Column(verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally)
@@ -85,7 +117,8 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
                 }
 
             }
-            if(viewModel.point.getPoint().city != "")
+
+            if(viewModel.point.getPoint().city != "" || viewModel.point.getPoint().longitude != -181.0)
              Icon(imageVector = Icons.Default.Check, tint = Color.Green, contentDescription ="checked icon" , modifier = Modifier.padding(16.dp))
         }
         OutlinedTextField(
@@ -93,12 +126,13 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
             onValueChange = { it: String ->
 
                 accWeight = it
+                accError = it.isEmpty() 
                 // viewModel.updateCityName(it, context = context)
 
             },
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Next, keyboardType = KeyboardType.Decimal),
             label = { Text(text = "AccuWeather",color = MaterialTheme.colorScheme.onPrimary) },
-            placeholder = { Text(text = "Search by city name") },
+            placeholder = { Text(text = "Give a weight") },
             leadingIcon = {
                 Image(
                     painterResource(id = R.drawable.accuweather),
@@ -112,23 +146,36 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
                 )
 
             },
+
             modifier = Modifier
                 .padding(8.dp)
                 .height(64.dp)
             ,
-            //  isError = state.errors.isNotEmpty()
+              isError = accWeight.isEmpty() || accWeight.toDouble() == 0.0
         )
+        if(accError ) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp)
+                    .background(Color.White)
+                ,
+                text = "Cannot be empty",
+                color = Color.Red
+            )
+
+        }
+
         OutlinedTextField(
             value = omWeight,
             onValueChange = { it: String ->
 
                 omWeight = it
                 // viewModel.updateCityName(it, context = context)
+                omError = it.isEmpty()
 
             },
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Next, keyboardType = KeyboardType.Decimal),
             label = { Text(text = "OpenMeteo",color = MaterialTheme.colorScheme.onPrimary) },
-            placeholder = { Text(text = "Search by city name") },
+            placeholder = { Text(text = "Give a weight") },
             leadingIcon = {
                 Image(
                     painterResource(id = R.drawable.open_meteo),
@@ -143,19 +190,31 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
             },
             modifier = Modifier
                 .padding(8.dp)
-                .height(64.dp)
+                .height(64.dp),
+            isError = omWeight.isEmpty()
         )
+        if(omError ) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp)
+                    .background(Color.White)
+                ,
+                text = "Cannot be empty",
+                color = Color.Red
+            )
+
+        }
         OutlinedTextField(
             value = vcWeight,
             onValueChange = { it: String ->
 
                 vcWeight = it
                 // viewModel.updateCityName(it, context = context)
+                vcError = it.isEmpty()
 
             },
             keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal),
             label = { Text(text = "VisualCrossing",color = MaterialTheme.colorScheme.onPrimary) },
-            placeholder = { Text(text = "Search by city name") },
+            placeholder = { Text(text = "Give a weight") },
             leadingIcon = {
                 Image(
                     painterResource(id = R.drawable.visualcrossing__1_),
@@ -171,42 +230,50 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
             },
             modifier = Modifier
                 .padding(8.dp)
-                .height(64.dp)
+                .height(64.dp),
+            isError = vcWeight.isEmpty()
         )
-        val context = LocalContext.current
+        if(vcError ) {
+            Text(
+                modifier = Modifier.padding(vertical = 8.dp)
+                    .background(Color.White)
+                ,
+                text = "Cannot be empty",
+                color = Color.Red
+            )
+
+        }
+
+        enable = !(accError || omError || vcError)
+        Log.d("Count:1", count.toString())
         FloatingActionButton(
             onClick = {
-                val p = viewModel.point.getPoint()
+                Log.d("Add verify", ""+accError +" "+ omError + " " +vcError )
+                if(enable) {
+                    val p = viewModel.point.getPoint()
 //              sa fie in viewModel si sa fie string ( in viewModel fac conversia la double
-                val newPoint = p.copy(accWeight = accWeight.toDouble(), vcWeight = vcWeight.toDouble(), omWeight = omWeight.toDouble() )
+                    val newPoint = p.copy(
+                        accWeight = accWeight.toDouble(),
+                        vcWeight = vcWeight.toDouble(),
+                        omWeight = omWeight.toDouble()
+                    )
 
 //                Log.d("Add Point:", viewModel.addPoint(newPoint).toString())
 //                Log.d("Add point: ", viewModel.statePoints.value.points.toString())
 
-                val r = viewModel.addPoint(newPoint)
+                    val r = viewModel.addPoint(newPoint)
 
-               // isExpanded = r.isFailure
+                    // isExpanded = r.isFailure
 
-                if(r.isSuccess) {
-                    Toast.makeText(
-                        context,
-                        context.getText(R.string.PointInsSucces),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.point.isExp = false
+                    expandViewModel.onItemClicked(1)
+                    viewModel.point.restore()
                 }
-                else {
-                    Toast.makeText(
-                        context,
-                        context.getText(R.string.PointInsFailure),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    viewModel.point.isExp = true
+                else{
+                    Log.d("Add verify", "verify")
                 }
-                expandViewModel.onItemClicked(1)
-                viewModel.point.restore()
             },
-            containerColor = MaterialTheme.colorScheme.onPrimary
+            containerColor = MaterialTheme.colorScheme.onPrimary,
+
         ) {
 
             Row(

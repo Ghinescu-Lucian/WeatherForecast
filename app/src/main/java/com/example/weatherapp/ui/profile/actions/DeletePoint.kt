@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,6 +39,9 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
         mutableStateOf(false)
     }
     val context = LocalContext.current
+
+    var count by remember { mutableIntStateOf(0) }
+    var enabled by remember { mutableStateOf(false)}
 
     val results  by viewModel.results.collectAsState(initial = null)
 
@@ -65,8 +69,15 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
                         isChecked ->
                         checked.value = isChecked
                         Log.d("Delete point:", "checked")
-                        viewModel.addDeletePoint(Weights(it.id, "", 1.0, 1.0, 1.0, 1.0, 1.0))
 
+                        if(isChecked) {
+                            viewModel.addDeletePoint(Weights(it.id, "", 1.0, 1.0, 1.0, 1.0, 1.0))
+                            count++
+                        }
+                        else {
+                            count--
+                            viewModel.removeDeltePoint(Weights(it.id, "", 1.0, 1.0, 1.0, 1.0, 1.0))
+                        }
                 }
             )
 
@@ -92,10 +103,14 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
         }
 
     }
+
+    enabled = count > 0
+
     Button(onClick = {
         showDialog = true
-
-    }) {
+    },
+        enabled = enabled
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically){
             Icon(
                 imageVector = Icons.Rounded.Delete,
@@ -105,6 +120,8 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
         }
 
     }
+
+
 
     if(showDialog){
         AlertDialog(onDismissRequest = { showDialog = false },

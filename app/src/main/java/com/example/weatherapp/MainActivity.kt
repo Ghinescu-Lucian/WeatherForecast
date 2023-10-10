@@ -14,12 +14,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BadgedBox
@@ -43,7 +40,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -317,7 +313,13 @@ fun WeatherApp(
 
                                    Log.d("Networkul12", "device offline")
                                }
+
                     else{
+                                   LaunchedEffect(key1 = "", block = {
+                                       scope.launch {
+                                           snackbarHostState.showSnackbar("Back online")
+                                       }
+                                   } )
                         Log.d("Networkul12", "device online")
 
                     }
@@ -339,11 +341,11 @@ fun WeatherApp(
 
                     ) {
 
-                        Spacer( modifier = Modifier
-                            .height(4.dp)
-                            .background(Color.Cyan)
-                            .fillMaxWidth()
-                        )
+//                        Spacer( modifier = Modifier
+//                            .height(4.dp)
+//                            .background(Color.Cyan)
+//                            .fillMaxWidth()
+//                        )
 
                         Box(
                             modifier = Modifier.height(135.dp)
