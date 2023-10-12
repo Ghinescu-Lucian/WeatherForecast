@@ -17,12 +17,13 @@ import java.time.format.DateTimeFormatter
 fun WeatherDataDto.toWeatherDataPerDay() : List<WeatherDataPerDay>{
 
     val list = mutableListOf<WeatherDataPerDay>()
+    val dateFormat = DateTimeFormatter.ofPattern("dd - MMM HH:mm")
 
     for(i in 0..6){
 
         val listWeatherData = List(24){
             WeatherData(
-                time = LocalDateTime.parse(time[it+i*24], DateTimeFormatter.ISO_DATE_TIME).toString(),
+                time = LocalDateTime.parse(time[it+i*24], dateFormat).toString(),
                 temperature = temperatures[it+i*24],
                 pressure = pressures[it+i*24],
                 windSpeed = windSpeeds[it+i*24],

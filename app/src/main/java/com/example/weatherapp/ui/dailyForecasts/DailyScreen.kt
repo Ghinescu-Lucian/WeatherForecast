@@ -46,7 +46,7 @@ fun DailyScreen(
 
     Column{
 
-        if(!state.online){
+        if(state.online != null && !state.online){
             Text("Offline mode", textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
                     .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),

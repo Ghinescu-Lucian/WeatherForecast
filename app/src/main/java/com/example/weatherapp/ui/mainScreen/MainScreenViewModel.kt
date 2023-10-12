@@ -19,7 +19,7 @@ class MainScreenViewModel @Inject constructor() : ViewModel(){
     /*
     get two strings of pattern: dd-MMM HH:mm
      */
-    fun difference(time1 : String,time2: String ): Boolean{
+    private fun difference(time1 : String,time2: String ): Boolean{
 
 
         val t1 = LocalTime.parse(time1.takeLast(5))
@@ -31,7 +31,7 @@ class MainScreenViewModel @Inject constructor() : ViewModel(){
         return duration > timeOut
 
     }
-    fun getCurentTimeFormatted(): String{
+   private fun getCurentTimeFormatted(): String{
         val format = DateTimeFormatter.ofPattern("dd-MMM HH:mm")
         return LocalDateTime.now().format(format)
     }

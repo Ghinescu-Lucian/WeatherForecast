@@ -23,14 +23,13 @@ import java.time.LocalDateTime
 fun HourlyScreen(
     modifier : Modifier = Modifier,
     state: WeatherState,
-    onClickSeeCurrent: () ->Unit ={},
 ){
     Log.d("Hourly state :", state.toString())
 
     Column {
 
 
-        if(!state.online){
+        if(state.online!= null && !state.online){
             Text("Offline mode", textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
                     .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),

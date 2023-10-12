@@ -72,7 +72,7 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
         mutableStateOf(false)
     }
 
-    var count by remember {
+    val count by remember {
         mutableIntStateOf(0)
     }
     var enable by remember{
@@ -99,6 +99,7 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
         horizontalAlignment = Alignment.CenterHorizontally)
     {
         Row(verticalAlignment = Alignment.CenterVertically) {
+
 
             FloatingActionButton(
                 onClick = navigate,
@@ -161,7 +162,6 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
                 text = "Cannot be empty",
                 color = Color.Red
             )
-
         }
 
         OutlinedTextField(
@@ -248,7 +248,7 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
         Log.d("Count:1", count.toString())
         FloatingActionButton(
             onClick = {
-                Log.d("Add verify", ""+accError +" "+ omError + " " +vcError )
+                Log.d("Add verify", "$accError $omError $vcError")
                 if(enable) {
                     val p = viewModel.point.getPoint()
 //              sa fie in viewModel si sa fie string ( in viewModel fac conversia la double
@@ -258,15 +258,16 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
                         omWeight = omWeight.toDouble()
                     )
 
-//                Log.d("Add Point:", viewModel.addPoint(newPoint).toString())
+                Log.d("Add Point:", viewModel.addPoint(newPoint).toString())
 //                Log.d("Add point: ", viewModel.statePoints.value.points.toString())
 
-                    val r = viewModel.addPoint(newPoint)
 
                     // isExpanded = r.isFailure
+                    if(results == null) {
+                        expandViewModel.onItemClicked(1)
+                        viewModel.point.restore()
+                    }
 
-                    expandViewModel.onItemClicked(1)
-                    viewModel.point.restore()
                 }
                 else{
                     Log.d("Add verify", "verify")

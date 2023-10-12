@@ -1,13 +1,11 @@
 package com.example.weatherapp.ui.mainScreen
 
 import android.app.Activity
-import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,25 +30,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.weatherapp.MainActivity
 import com.example.weatherapp.ui.states.WeatherState
 import java.time.LocalDateTime
 
 @Composable
 fun MainScreen( modifier : Modifier,
                 state : WeatherState,
-                online: Boolean = false,
+                online: Boolean?,
                 onRefresh:() -> Unit = {},
                 timeViewModel: MainScreenViewModel = hiltViewModel()
-){
+) {
 
     val activity = LocalContext.current as? Activity
     val context = LocalContext.current
 
     Column {
 
-        if(!state.online){
-            Text("Offline mode", textAlign = TextAlign.Center,
+        if (state.online != null && !state.online) {
+            Text(
+                "Offline mode", textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),
@@ -94,77 +92,79 @@ fun MainScreen( modifier : Modifier,
                 )
             } else if (state.error != null) {
                 if (state.error.isEmpty()) {
-                    if (!online) {
-                        Row(
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(top = 16.dp, start = 16.dp),
-                            horizontalArrangement = Arrangement.Center,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                "Offline", fontSize = 21.sp,
-                                color = Color.Black,
+//                    if (state.online!= null && !online) {
+//                        Row(
+//                            modifier = Modifier
+//                                .align(Alignment.TopStart)
+//                                .padding(top = 16.dp, start = 16.dp),
+//                            horizontalArrangement = Arrangement.Center,
+//                            verticalAlignment = Alignment.CenterVertically
+//                        ) {
+//                            Text(
+//                                "Offline", fontSize = 21.sp,
+//                                color = Color.Black,
+//                            )
+//                            Button(
+//                                onClick = {
+//
+//                                    val intent = Intent(context, MainActivity::class.java)
+//                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                                    context.startActivity(intent)
+//                                    activity?.finish()
+//                                },
+//                                colors = ButtonDefaults.buttonColors(Color.Transparent),
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Refresh,
+//                                    tint = Color.White,
+//                                    contentDescription = "Refresh"
+//                                )
+//                            }
+//                        }
+//                    } else {
+                    Button(
+                        onClick = onRefresh,
+                        colors = ButtonDefaults.buttonColors(Color.Transparent),
+                        modifier = Modifier
+                            .align(Alignment.TopStart)
+                            .padding(top = 18.dp)
+                    ) {
+                        Column(verticalArrangement = Arrangement.Center) {
+
+
+                            Log.d("Time:",
+                                LocalDateTime.now()
+                                    .toString() + " " + state.weatherInfo?.currentWeatherData?.time
                             )
-                            Button(
-                                onClick = {
-
-                                    val intent = Intent(context, MainActivity::class.java)
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                    context.startActivity(intent)
-                                    activity?.finish()
-                                },
-                                colors = ButtonDefaults.buttonColors(Color.Transparent),
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Refresh,
-                                    tint = Color.White,
-                                    contentDescription = "Refresh"
-                                )
-                            }
-                        }
-                    } else {
-                        Button(
-                            onClick = onRefresh,
-                            colors = ButtonDefaults.buttonColors(Color.Transparent),
-                            modifier = Modifier
-                                .align(Alignment.TopStart)
-                                .padding(top = 18.dp)
-                        ) {
-                            Column(verticalArrangement = Arrangement.Center) {
-
-
-                                 Log.d("Time:", LocalDateTime.now().toString() + " "+state.weatherInfo?.currentWeatherData?.time)
 //                                if (state.weatherInfo?.currentWeatherData?.time != LocalDateTime.now().toString()
 //                                )
 
-                                 if(timeViewModel.isTimeOut(state.weatherInfo?.currentWeatherData!!.time))
-                                {
-                                    Text(
-                                        "Offline,\n please refresh", fontSize = 21.sp,
-                                        color = Color.Black,
-                                    )
-                                }
-                                Icon(
-                                    imageVector = Icons.Default.Refresh,
-                                    tint = Color.White,
-                                    contentDescription = "Refresh"
+                            if (timeViewModel.isTimeOut(state.weatherInfo?.currentWeatherData!!.time)) {
+                                Text(
+                                    "Old data,\n please refresh", fontSize = 21.sp,
+                                    color = Color.Black,
                                 )
                             }
+                            Icon(
+                                imageVector = Icons.Default.Refresh,
+                                tint = Color.White,
+                                contentDescription = "Refresh"
+                            )
                         }
                     }
                 }
             }
-
-            state.error?.let { errorMessage ->
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    textAlign = TextAlign.Center
-                )
-            }
-
-
         }
+
+        state.error?.let { errorMessage ->
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                textAlign = TextAlign.Center
+            )
+        }
+
+
     }
-}
+
+    }

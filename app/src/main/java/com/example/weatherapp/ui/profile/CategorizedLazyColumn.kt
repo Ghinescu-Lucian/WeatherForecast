@@ -54,14 +54,24 @@ fun CategorizedLazyColumn( modifier:Modifier   = Modifier, actions: List<Int>, c
 
     val itemsIds by viewModelExpandable.itemIds.collectAsState()
     //val itemsIds1 by rememberSaveable { mutableStateOf(mutableListOf<Int>()) } Rotatie de ecrane
-    LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround,
-    ){
-        itemsIndexed(actions){index, item ->
-            ExpandableContainerView(text = context.getString(item), onClickItem = {viewModelExpandable.onItemClicked(index)}, expanded = itemsIds.contains(index), viewModel = viewModelPoints, index = index, navigate = navigate, expandViewModel = viewModelExpandable )
+    Box(modifier = modifier) {
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround,
+        ) {
+            itemsIndexed(actions) { index, item ->
+                ExpandableContainerView(
+                    text = context.getString(item),
+                    onClickItem = { viewModelExpandable.onItemClicked(index) },
+                    expanded = itemsIds.contains(index),
+                    viewModel = viewModelPoints,
+                    index = index,
+                    navigate = navigate,
+                    expandViewModel = viewModelExpandable
+                )
 
+            }
         }
     }
 }

@@ -70,10 +70,10 @@ fun WeatherNavHost(
 
             Log.d("Main state:", state.toString())
             Log.d("Main City:", viewModelW.point.cityName)
-            var offline = state.online
+//            var offline = state.online
             Log.d("Networkul22", state.online.toString())
             MainScreen(modifier = Modifier , state = state,
-                online = offline,
+                online = state.online,
                onRefresh = {
                    viewModelW.refresh()
                }
@@ -90,11 +90,6 @@ fun WeatherNavHost(
             val state by viewModelW.state.collectAsState()
             Log.d("Navigation","Hourly icon pressed")
             HourlyScreen(modifier = Modifier , state = state,
-                onClickSeeCurrent = {
-//                    navController.navigateSingleTopTo(HourlyScreen.route)
-                    navController.navigateSingleTopTo(route = Main.route)
-
-                }
             )
         }
         composable(route = DailyScreen.route,
@@ -119,6 +114,8 @@ fun WeatherNavHost(
             }
         ){
             val state by viewModelW.state.collectAsState()
+
+
             Log.d("Navigation", "Profile icon pressed")
             ProfileScreen(modifier = Modifier, state = state, context = context,
                 navigate = {
@@ -136,7 +133,10 @@ fun WeatherNavHost(
             }
         ){
 
-            if(state.online) {
+            Log.d("Online12:", "online")
+            val online = state.online
+
+            if(online != null && online) {
                 val viewModelS: SearchViewModel = hiltViewModel()
 
                 Log.d("Navigation", "Search icon pressed")

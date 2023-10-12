@@ -78,7 +78,8 @@ fun WeatherCard(
                 Text(
                     text = data.time,
                     modifier = Modifier.align(Alignment.End),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = Color.White
+//                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Spacer(
                     modifier = Modifier.height(16.dp)

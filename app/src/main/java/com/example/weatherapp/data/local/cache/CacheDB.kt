@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 
-@Database(entities = arrayOf(Cache::class), version = 1, exportSchema = true)
-public abstract class CacheDB : RoomDatabase() {
+@Database(entities = arrayOf(Cache::class), version = 1, exportSchema = false)
+ abstract class CacheDB : RoomDatabase() {
     abstract fun CacheDao(): CacheDao
 
     companion object {

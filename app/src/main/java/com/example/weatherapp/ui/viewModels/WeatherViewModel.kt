@@ -57,7 +57,7 @@ class WeatherViewModel @Inject constructor (
                             cityName = r?.city,
                             error = "",
                             isLoading = false,
-                            weatherInfo = res
+                            weatherInfo = res,
                         )
                     }
                 }
@@ -86,20 +86,11 @@ class WeatherViewModel @Inject constructor (
 
     }
 
-    fun informOffline(){
 
-         _state.update {
+    fun informOnline(isOnline: Boolean){
+        _state.update {
             it.copy(
-                online = false
-            )
-        }
-    }
-    fun informOnline(){
-//        Toast.makeText(context, "Back online", Toast.LENGTH_SHORT).show()
-
-        _state.update{
-            it.copy(
-                online = true
+                online = isOnline
             )
         }
     }

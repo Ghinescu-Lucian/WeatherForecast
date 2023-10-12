@@ -10,13 +10,14 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.ComponentActivity
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BadgedBox
@@ -28,7 +29,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.domain.weather.WeatherData
@@ -57,6 +61,8 @@ import com.example.weatherapp.ui.menu.WeatherNavHost
 import com.example.weatherapp.ui.menu.menuItems
 import com.example.weatherapp.ui.menu.navigateSingleTopTo
 import com.example.weatherapp.ui.networkListener.NetworkListener
+import com.example.weatherapp.ui.profile.biometric.Biometric
+import com.example.weatherapp.ui.states.AuthState
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.ui.viewModels.MainViewModel
@@ -75,7 +81,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
 
 
         private lateinit var viewModel : WeatherViewModel
@@ -95,21 +101,81 @@ class MainActivity : ComponentActivity() {
             Manifest.permission.ACCESS_COARSE_LOCATION,
         ))
 
+//
 
 
         checkGPSEnabled()
 
         setContent {
 
-            val networkListener = NetworkListener(Context.CONNECTIVITY_SERVICE, this, viewModel = hiltViewModel())
-            networkListener.register()
+            TextButton(
+                onClick = {
+                    Biometric.authenticate(
+                        this@MainActivity,
+                        title = "Biometric Authentication",
+                        subtitle = "Authenticate to proceed",
+                        description = "Authentication is must",
+                        negativeText = "Cancel",
+                        onSuccess = {
+                            runOnUiThread {
+                                Toast.makeText(
+                                    this,
+                                    "Authenticated successfully",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        },
+                        onError = {errorCode,errorString->
+                            runOnUiThread {
+                                Toast.makeText(
+                                    this,
+                                    "Authentication error: $errorCode, $errorString",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        },
+                        onFailed = {
+                            runOnUiThread {
+                                Toast.makeText(
+                                    this,
+                                    "Authentication failed",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            }
+                        }
+                    )
 
-            val locationManager =   LocalContext.current.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    "Authenticate"
+                )
+            }
+
+            val viewModel: WeatherViewModel = hiltViewModel()
+            val context = LocalContext.current
+
+            DisposableEffect(key1 = Unit, effect ={
+                val networkListener = NetworkListener(Context.CONNECTIVITY_SERVICE, context, viewModel::informOnline )
+                networkListener.register()
+               onDispose { networkListener.unregister() }
+            } )
+
+
+            val locationManager = remember {
+                context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            }
             var offline by rememberSaveable {
                 mutableStateOf(false)
             }
 
-            viewModel = hiltViewModel()
+
                     val points: PointsViewModel = hiltViewModel()
                     val st by points.statePoints.collectAsState()
 
@@ -119,110 +185,8 @@ class MainActivity : ComponentActivity() {
 
 
 
-                    WeatherApp(state = state, context = this, viewModel = viewModel)
+                    WeatherApp(state = state, context = this, viewModel = viewModel, activity = this@MainActivity, authState = AuthState)
 
-//            if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//                if(isOnline(this)) {
-//                    viewModel = hiltViewModel()
-//                    val points: PointsViewModel = hiltViewModel()
-//                    val st by points.statePoints.collectAsState()
-//
-//
-//                    val state by viewModel.state.collectAsState()
-//                    Log.d("State", state.weatherInfo.toString())
-//
-//
-//
-//                    WeatherApp(state = state, context = this, viewModel = viewModel)
-//                    Log.d("Points State", st.toString())
-//                }
-//                else{
-//                    Box(modifier = Modifier.fillMaxSize()) {
-//                        Column(
-//                            horizontalAlignment = Alignment.CenterHorizontally,
-//                            modifier = Modifier.align(Alignment.Center)
-//                        ){
-//                            Text("Please check your internet connection", fontSize = 21.sp)
-//                            Spacer(Modifier.size(16.dp))
-//                            Text("Offline device", fontSize = 21.sp)
-//                            Spacer(Modifier.size(16.dp))
-//                            Button(onClick ={
-//
-//                                val intent = Intent(applicationContext, MainActivity::class.java)
-//
-//                                // Clear the back stack so that the user cannot navigate back to the previous activities
-//                                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//
-//                                // Start the main activity
-//                                startActivity(intent)
-//
-//                                // Finish this activity
-//                                finish()
-//
-//                            }){
-//                                Icon(imageVector = Icons.Default.Refresh, contentDescription ="" )
-//                            }
-//                            Button(onClick ={
-//
-//                               offline = true
-//
-//                            }){
-//                                Row() {
-//                                    Text("Access offline mode")
-//                                    Icon(
-//                                        imageVector = Icons.Default.Refresh,
-//                                        contentDescription = ""
-//                                    )
-//                                }
-//                            }
-//
-//                        }
-////                        if(offline){
-////
-////                            val viewModelOff: OfflineViewModel = hiltViewModel()
-////
-////                            Log.d("Offline view model", viewModelOff::class.simpleName.toString() )
-////
-////                            val state by viewModelOff.state.collectAsState()
-////
-////                            WeatherApp(state = state, context = LocalContext.current , viewModel = viewModelOff )
-////                        }
-////
-//                    }
-//                }
-//            }
-//            else{
-//                Box(modifier = Modifier.fillMaxSize()) {
-//                Column(
-//                    horizontalAlignment = Alignment.CenterHorizontally,
-//                    modifier = Modifier.align(Alignment.Center)
-//                ) {
-//                    Text("Please enable GPS", fontSize = 21.sp)
-//                    Spacer(Modifier.size(16.dp))
-//                    Text("GPS is not enabled", fontSize = 21.sp)
-//                    Spacer(Modifier.size(16.dp))
-//                    Button(onClick ={
-//
-//                        val intent = Intent(applicationContext, MainActivity::class.java)
-//
-//                        // Clear the back stack so that the user cannot navigate back to the previous activities
-//                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//
-//                        // Start the main activity
-//                        startActivity(intent)
-//
-//                        // Finish this activity
-//                        finish()
-//
-//                    }){
-//                             Icon(imageVector = Icons.Default.Refresh, contentDescription = "")
-//
-//
-//                    }
-//                }
-//
-//            }
-//            }
         }
     }
 
@@ -279,7 +243,9 @@ class MainActivity : ComponentActivity() {
 fun WeatherApp(
     state: WeatherState,
     context: Context,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    activity: FragmentActivity,
+    authState: AuthState
 ){
 
 
@@ -294,6 +260,9 @@ fun WeatherApp(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    var auth by rememberSaveable { mutableStateOf(false
+    )}
+
 
     WeatherAppTheme {
 
@@ -304,25 +273,26 @@ fun WeatherApp(
 
                     SnackbarHost(hostState = snackbarHostState)
 
-                               if(!state.online){
-                                   LaunchedEffect(key1 = "", block = {
+                               if(state.online != null ){
+                                   LaunchedEffect(key1 = state.online, block = {
                                        scope.launch {
-                                           snackbarHostState.showSnackbar("You are in offline")
+                                           val message = if(state.online) "Back online" else "You are in offline"
+                                           snackbarHostState.showSnackbar(message)
                                        }
                                    } )
 
                                    Log.d("Networkul12", "device offline")
                                }
 
-                    else{
-                                   LaunchedEffect(key1 = "", block = {
-                                       scope.launch {
-                                           snackbarHostState.showSnackbar("Back online")
-                                       }
-                                   } )
-                        Log.d("Networkul12", "device online")
-
-                    }
+//                    else{
+//                                   LaunchedEffect(key1 = "", block = {
+//                                       scope.launch {
+//                                           snackbarHostState.showSnackbar("Back online")
+//                                       }
+//                                   } )
+//                        Log.d("Networkul12", "device online")
+//
+//                    }
 //                               sa pun intr-un viewModel daca am aplicatia online
                 },
 //                floatingActionButton = {
@@ -358,8 +328,77 @@ fun WeatherApp(
                                         modifier = Modifier.padding(start = 10.dp, end = 10.dp),
                                         selected = selectedItemIndex == index,
                                         onClick = {
-                                            selectedItemIndex = index
-                                            navController.navigateSingleTopTo(item.route)
+
+                                            Log.d("Auth", authState.timeOut().toString())
+                                            Log.d("Auth", authState.lastTime.toString())
+                                            Log.d("Auth Duration:", authState.timeOut().toString() )
+                                            if(item.name == R.string.profile ) {
+                                                if(authState.timeOut()) {
+                                                    Biometric.authenticate(
+                                                        activity,
+                                                        title = "Biometric Authentication",
+                                                        subtitle = "Authenticate to proceed",
+                                                        description = "Authentication is must",
+                                                        negativeText = "Cancel",
+                                                        onSuccess = {
+                                                            activity.runOnUiThread {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "Authenticated successfully",
+                                                                    Toast.LENGTH_SHORT
+                                                                )
+                                                                    .show()
+                                                                selectedItemIndex = index
+                                                                navController.navigateSingleTopTo(
+                                                                    item.route
+                                                                )
+                                                                authState.lastTime =
+                                                                    LocalDateTime.now()
+                                                                authState.isAuthenticated = true
+                                                                auth = true
+
+                                                            }
+                                                        },
+                                                        onError = { errorCode, errorString ->
+                                                            activity.runOnUiThread {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "Authentication error: $errorCode, $errorString",
+                                                                    Toast.LENGTH_SHORT
+                                                                )
+                                                                    .show()
+                                                                auth = false
+                                                                authState.isAuthenticated = false
+                                                            }
+                                                        },
+                                                        onFailed = {
+                                                            activity.runOnUiThread {
+                                                                Toast.makeText(
+                                                                    context,
+                                                                    "Authentication failed",
+                                                                    Toast.LENGTH_SHORT
+                                                                )
+                                                                    .show()
+                                                                auth = false
+                                                                authState.isAuthenticated = false
+                                                            }
+                                                        }
+                                                    )
+                                                }
+                                                else{
+                                                    selectedItemIndex = index
+                                                    navController.navigateSingleTopTo(
+                                                        item.route
+                                                    )
+                                                }
+
+                                            }
+
+                                            if(item.name != R.string.profile) {
+                                                selectedItemIndex = index
+                                                navController.navigateSingleTopTo(item.route)
+                                            }
+
                                         },
                                         label = {
                                             Text(
@@ -388,9 +427,13 @@ fun WeatherApp(
                                             }
                                         }
                                     )
+
+
+
                                 }
                             }
-                            if(state.online) {
+
+                            if(state.online != null && state.online ) {
                                 MenuItem(icon = ImageVector.vectorResource(Search.icon),
                                     modifier = Modifier.align(Alignment.TopCenter),
                                     onClick = { navController.navigateSingleTopTo(Search.route) }
@@ -599,7 +642,7 @@ fun AppPreview(){
     val viewModel: WeatherViewModel = hiltViewModel()
     WeatherAppTheme {
         val x = Resources.getSystem()
-        WeatherApp(state = state, context = appContext, viewModel = viewModel )
+//        WeatherApp(state = state, context = appContext, viewModel = viewModel, activity = MainActivity )
     }
 
 }
