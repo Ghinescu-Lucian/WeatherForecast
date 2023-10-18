@@ -67,7 +67,7 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
 
     LaunchedEffect(key1 = data, block = {
-        animationProgress.animateTo(1f, tween(5500 ))
+        animationProgress.animateTo(1f, tween(2500 ))
     })
 
     Box(

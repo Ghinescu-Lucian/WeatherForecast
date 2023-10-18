@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,10 +49,14 @@ fun DailyScreen(
     Column{
 
         if(state.online != null && !state.online){
-            Text("Offline mode", textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-                    .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),
-                fontSize = 21.sp,
+            Text(
+                "Offline mode", textAlign = TextAlign.Center,
+                modifier = Modifier
+
+                    .fillMaxWidth()
+                    .background(Color(0xFFFD0000).copy(alpha = 0.95f)),
+                fontSize = 14.sp,
+                color = Color.White
 //                style = TextStyle(background = Color.Red)
             )
         }
@@ -59,6 +65,10 @@ fun DailyScreen(
 //        modifier =  Modifier.verticalScroll(state)
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+             .weight(weight = 1f, fill = false)
+
         ) {
 
 
@@ -78,6 +88,7 @@ fun DailyScreen(
             ExpandableLazyColumn(state = state, viewModel = viewModel)
 
         }
+        Text("Max. temperature evolution")
         if (data != null) {
             Box(modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)) {
                 DailyGraph(data = data.take(5), xLabels = xLabels)

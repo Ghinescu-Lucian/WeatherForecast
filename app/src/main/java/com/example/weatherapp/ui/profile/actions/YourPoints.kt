@@ -44,7 +44,8 @@ fun YourPoints(viewModel: PointsViewModel, text: String){
             Text(
                 modifier = Modifier.width(128.dp),
                 text = text1,
-                fontSize = 18.sp
+                fontSize = 18.sp,
+                color = Color.White
 
             )
 
@@ -55,7 +56,8 @@ fun YourPoints(viewModel: PointsViewModel, text: String){
                     Text(
                         modifier = Modifier.width(128.dp),
                         text = item,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = Color.White
 
                     )
                 }

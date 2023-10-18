@@ -44,15 +44,19 @@ fun MainScreen( modifier : Modifier,
     val activity = LocalContext.current as? Activity
     val context = LocalContext.current
 
+    Log.d("StateSearch1:", state.online.toString())
+
     Column {
 
         if (state.online != null && !state.online) {
             Text(
                 "Offline mode", textAlign = TextAlign.Center,
                 modifier = Modifier
+
                     .fillMaxWidth()
-                    .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),
-                fontSize = 21.sp,
+                    .background(Color(0xFFFD0000).copy(alpha = 0.95f)),
+                fontSize = 14.sp,
+                color = Color.White
 //                style = TextStyle(background = Color.Red)
             )
         }
@@ -139,17 +143,19 @@ fun MainScreen( modifier : Modifier,
 //                                if (state.weatherInfo?.currentWeatherData?.time != LocalDateTime.now().toString()
 //                                )
 
-                            if (timeViewModel.isTimeOut(state.weatherInfo?.currentWeatherData!!.time)) {
-                                Text(
-                                    "Old data,\n please refresh", fontSize = 21.sp,
-                                    color = Color.Black,
+                            if (state.online == null || state.online) {
+                                if (timeViewModel.isTimeOut(state.weatherInfo?.currentWeatherData!!.time)) {
+                                    Text(
+                                        "Old data,\n please refresh", fontSize = 21.sp,
+                                        color = Color.Black,
+                                    )
+                                }
+                                Icon(
+                                    imageVector = Icons.Default.Refresh,
+                                    tint = Color.White,
+                                    contentDescription = "Refresh"
                                 )
                             }
-                            Icon(
-                                imageVector = Icons.Default.Refresh,
-                                tint = Color.White,
-                                contentDescription = "Refresh"
-                            )
                         }
                     }
                 }

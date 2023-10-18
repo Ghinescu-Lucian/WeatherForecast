@@ -4,25 +4,37 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherType
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import kotlinx.serialization.json.JsonNull.content
 import java.time.LocalDateTime
 
 @Composable
 fun Hourly12Weather(
     modifier: Modifier = Modifier,
-    data: List<WeatherData>
+    data: List<WeatherData>,
+    current: Int = 0
 ){
 
+    val scrollState = rememberLazyListState()
+
+    LaunchedEffect(key1 = current){
+        if(current > 2)
+            scrollState.scrollToItem(current - 2)
+        else scrollState.scrollToItem(0)
+    }
 
     Column( modifier = modifier) {
-        CurrentHour(data = data[0])
+        CurrentHour(data = data[current])
         LazyColumn(
+            state = scrollState,
             content = {
                 items(data.subList(1, data.lastIndex)) { weatherData ->
                     RowElement(weatherData = weatherData)

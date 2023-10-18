@@ -203,8 +203,10 @@ fun calculateDaily(data: List<Result<WeatherInfo>>, weights: List<Double>) : Lis
     val successData = mutableListOf<List<WeatherDataPerDay>>()
     val successWeights = mutableListOf<Double>()
 
+    Log.d("Calculate daily: ", "")
 
     data.forEachIndexed { index, result ->
+        Log.d("Calculate daily: ", ""+index + " "+result )
         result.onSuccess {
             successData.add(it.weatherDataPerDays)
             successWeights.add(weights[index])

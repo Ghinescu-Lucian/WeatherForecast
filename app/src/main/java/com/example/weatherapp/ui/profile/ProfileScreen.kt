@@ -2,6 +2,7 @@ package com.example.weatherapp.ui.profile
 
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
@@ -32,26 +33,30 @@ fun ProfileScreen(
     navigate: () -> Unit = {},
     viewModel : PointsViewModel = hiltViewModel()
 ){
-//    Box (contentAlignment = Alignment.Center){
-    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier ){
-    if(state.online != null && !state.online){
-        Text("Offline mode", textAlign = TextAlign.Center,
-            modifier = Modifier
+    Box (contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier.align(
+            Alignment.Center
+        )) {
+            if (state.online != null && !state.online) {
+                Text(
+                    "Offline mode", textAlign = TextAlign.Center,
+                    modifier = Modifier
 
-                .fillMaxWidth()
-                .background(Color(0xFFFD0000).copy(alpha = 0.95f)),
-            fontSize = 14.sp,
-            color = Color.White
+                        .fillMaxWidth()
+                        .background(Color(0xFFFD0000).copy(alpha = 0.95f)),
+                    fontSize = 14.sp,
+                    color = Color.White
 //                style = TextStyle(background = Color.Red)
-        )
-    }
+                )
+            }
 
 
-        CategorizedLazyColumn(
-            actions = profileActions, context = context, modifier = Modifier,
-            navigate = navigate, viewModelPoints = viewModel
+            CategorizedLazyColumn(
+                actions = profileActions, context = context, modifier = Modifier,
+                navigate = navigate, viewModelPoints = viewModel
             )
 
+        }
     }
 //    MapScreen()
 }

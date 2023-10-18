@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +45,7 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
     var enabled by remember { mutableStateOf(false)}
 
     val results  by viewModel.results.collectAsState(initial = null)
+    var ok by remember { mutableIntStateOf(0) }
 
     if(results != null){
 //        arat
@@ -76,6 +78,7 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
                         }
                         else {
                             count--
+                            ok  = 0
                             viewModel.removeDeltePoint(Weights(it.id, "", 1.0, 1.0, 1.0, 1.0, 1.0))
                         }
                 }
@@ -84,7 +87,8 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
             Text(
                 modifier = Modifier.width(128.dp),
                 text = text,
-                fontSize = 18.sp
+                fontSize = 18.sp,
+                color = Color.White
 
             )
 
@@ -95,7 +99,8 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
                     Text(
                         modifier = Modifier.width(128.dp),
                         text = item,
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = Color.White
 
                     )
                 }
@@ -104,7 +109,12 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
 
     }
 
-    enabled = count > 0
+    enabled = count > 0 && ok == 0
+    if(count == list.value.points?.size && ok==0) {
+        enabled = false
+        ok =1
+        Toast.makeText(LocalContext.current, "Cannot delete all points", Toast.LENGTH_SHORT).show()
+    }
 
     Button(onClick = {
         showDialog = true
@@ -125,6 +135,7 @@ fun DeletePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
 
     if(showDialog){
         AlertDialog(onDismissRequest = { showDialog = false },
+            title = {Text("Attention")},
             text = {
                 Text(context.getString(R.string.DeleteAlert))
             },

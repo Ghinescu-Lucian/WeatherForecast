@@ -11,18 +11,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
 import com.example.weatherapp.domain.weather.WeatherType
 import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
+import com.example.weatherapp.ui.viewModels.WeatherViewModel
 import java.time.LocalDateTime
 
 @Composable
 fun HourlyScreen(
     modifier : Modifier = Modifier,
     state: WeatherState,
+    viewModel: WeatherViewModel = hiltViewModel()
 ){
     Log.d("Hourly state :", state.toString())
 
@@ -30,10 +33,14 @@ fun HourlyScreen(
 
 
         if(state.online!= null && !state.online){
-            Text("Offline mode", textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-                    .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),
-                fontSize = 21.sp,
+            Text(
+                "Offline mode", textAlign = TextAlign.Center,
+                modifier = Modifier
+
+                    .fillMaxWidth()
+                    .background(Color(0xFFFD0000).copy(alpha = 0.95f)),
+                fontSize = 14.sp,
+                color = Color.White
 //                style = TextStyle(background = Color.Red)
             )
         }
@@ -49,7 +56,8 @@ fun HourlyScreen(
             Log.d("State2", state.weatherInfo?.weatherDataPerDays.toString())
 
             Hourly12Weather(
-                data = state.weatherInfo!!.weatherDataPerDays.getOrNull(0)!!.forecasts
+                data = state.weatherInfo!!.weatherDataPerDays.getOrNull(0)!!.forecasts,
+                current = viewModel.getCurrentHour()
             )
 
         }

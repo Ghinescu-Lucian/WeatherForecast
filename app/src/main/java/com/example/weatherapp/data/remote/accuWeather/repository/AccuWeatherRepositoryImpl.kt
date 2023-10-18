@@ -73,16 +73,22 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
             )
         }
 
-        return Result.success(
-            WeatherInfo(
-                currentWeatherData = list[0],
-                weatherDataPerDays = listOf(
-                    WeatherDataPerDay(
-                        day = 0,
-                        forecasts = list
-                    )
+        val ret =  WeatherInfo(
+            currentWeatherData = list[0],
+            weatherDataPerDays = listOf(
+                WeatherDataPerDay(
+                    day = 0,
+                    forecasts = list
                 )
             )
+        )
+
+        Log.d("AccuWeather Hourly1", ret.toString())
+
+
+
+        return Result.success(
+           ret
         )
 
 
@@ -91,6 +97,7 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
     }
 
     override suspend fun getDailyWeatherData(lat: Double, long: Double): Result<WeatherInfo> {
+        Log.d("Daily12:", "")
         if (locationKey.isEmpty()) {
             val r = getLocationKey(lat, long).onSuccess {
                 locationKey = it
@@ -99,21 +106,23 @@ class AccuWeatherRepositoryImpl @Inject constructor(private val api: AccuWeather
                 return Result.failure(Exception("[AccuWeather] Error on location key."))
         }
         val result = api.getDailyForecasts(locationKey = locationKey)
-        Log.d("Daily", result.toString())
-       // val list = mutableListOf<WeatherDataPerDay>()
+        Log.d("Daily12", result.toString())
+
+        val list = mutableListOf<WeatherDataPerDay>()
         result.dailyForecasts.forEachIndexed { index, dailyDto ->
 
-            var aju = dailyDto.toWeatherDataPerDay()
+            val aju = dailyDto.toWeatherDataPerDay()
 //                index, dailyWeatherDto ->
 //            var aju = dailyWeatherDto.toWeatherDataPerDay()
 //        }
-//            aju.day = index
-//            list.add(aju)
+            aju.day = index
+            list.add(aju)
         }
+        Log.d("Daily12:", list.toString())
         return Result.success(
             WeatherInfo(
                 currentWeatherData = null,
-                weatherDataPerDays = listOf()
+                weatherDataPerDays = list
             )
         )
 

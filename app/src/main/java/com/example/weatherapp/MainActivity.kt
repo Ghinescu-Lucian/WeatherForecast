@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
@@ -108,58 +109,10 @@ class MainActivity : FragmentActivity() {
 
         setContent {
 
-            TextButton(
-                onClick = {
-                    Biometric.authenticate(
-                        this@MainActivity,
-                        title = "Biometric Authentication",
-                        subtitle = "Authenticate to proceed",
-                        description = "Authentication is must",
-                        negativeText = "Cancel",
-                        onSuccess = {
-                            runOnUiThread {
-                                Toast.makeText(
-                                    this,
-                                    "Authenticated successfully",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            }
-                        },
-                        onError = {errorCode,errorString->
-                            runOnUiThread {
-                                Toast.makeText(
-                                    this,
-                                    "Authentication error: $errorCode, $errorString",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            }
-                        },
-                        onFailed = {
-                            runOnUiThread {
-                                Toast.makeText(
-                                    this,
-                                    "Authentication failed",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            }
-                        }
-                    )
-
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text(
-                    "Authenticate"
-                )
-            }
-
             val viewModel: WeatherViewModel = hiltViewModel()
             val context = LocalContext.current
+
+          viewModel.informOnline(isOnline(this))
 
             DisposableEffect(key1 = Unit, effect ={
                 val networkListener = NetworkListener(Context.CONNECTIVITY_SERVICE, context, viewModel::informOnline )
@@ -284,38 +237,13 @@ fun WeatherApp(
                                    Log.d("Networkul12", "device offline")
                                }
 
-//                    else{
-//                                   LaunchedEffect(key1 = "", block = {
-//                                       scope.launch {
-//                                           snackbarHostState.showSnackbar("Back online")
-//                                       }
-//                                   } )
-//                        Log.d("Networkul12", "device online")
+                        },
 //
-//                    }
-//                               sa pun intr-un viewModel daca am aplicatia online
-                },
-//                floatingActionButton = {
-//                    ExtendedFloatingActionButton(
-//                        text = { Text("Show snackbar") },
-//                        icon = { Icon(Icons.Filled.Info, contentDescription = "") },
-//                        onClick = {
-//                            scope.launch {
-//                                snackbarHostState.showSnackbar("Snackbar")
-//                            }
-//                        }
-//                    )
-//                },
                 bottomBar = {
                     Column(
 
                     ) {
 
-//                        Spacer( modifier = Modifier
-//                            .height(4.dp)
-//                            .background(Color.Cyan)
-//                            .fillMaxWidth()
-//                        )
 
                         Box(
                             modifier = Modifier.height(135.dp)
@@ -334,6 +262,7 @@ fun WeatherApp(
                                             Log.d("Auth Duration:", authState.timeOut().toString() )
                                             if(item.name == R.string.profile ) {
                                                 if(authState.timeOut()) {
+                                                    Biometric.statusName(context)
                                                     Biometric.authenticate(
                                                         activity,
                                                         title = "Biometric Authentication",
@@ -361,14 +290,23 @@ fun WeatherApp(
                                                         },
                                                         onError = { errorCode, errorString ->
                                                             activity.runOnUiThread {
-                                                                Toast.makeText(
-                                                                    context,
-                                                                    "Authentication error: $errorCode, $errorString",
-                                                                    Toast.LENGTH_SHORT
-                                                                )
-                                                                    .show()
-                                                                auth = false
-                                                                authState.isAuthenticated = false
+                                                                if(errorCode != 13 ) {
+                                                                    if(errorCode != 11) {
+                                                                        Toast.makeText(
+                                                                            context,
+                                                                            "Authentication error: $errorCode, $errorString",
+                                                                            Toast.LENGTH_SHORT
+                                                                        )
+                                                                            .show()
+                                                                    }
+                                                                    auth = false
+                                                                    authState.isAuthenticated =
+                                                                        false
+                                                                    selectedItemIndex = index
+                                                                    navController.navigateSingleTopTo(
+                                                                        item.route
+                                                                    )
+                                                                }
                                                             }
                                                         },
                                                         onFailed = {
@@ -433,12 +371,20 @@ fun WeatherApp(
                                 }
                             }
 
-                            if(state.online != null && state.online ) {
+                            Log.d("StateSearch:", state.online.toString())
+
+
+
+
+//
+                            if (state.online == null || state.online) {
+
                                 MenuItem(icon = ImageVector.vectorResource(Search.icon),
                                     modifier = Modifier.align(Alignment.TopCenter),
                                     onClick = { navController.navigateSingleTopTo(Search.route) }
                                 )
                             }
+
                         }
                     }
                 }

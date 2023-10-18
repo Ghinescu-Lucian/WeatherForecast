@@ -39,6 +39,7 @@ fun WeatherNavHost(
 
     val state by viewModelW.state.collectAsState()
 
+
     NavHost(
         navController = navController,
         startDestination = SplashScreen.route,
@@ -71,7 +72,7 @@ fun WeatherNavHost(
             Log.d("Main state:", state.toString())
             Log.d("Main City:", viewModelW.point.cityName)
 //            var offline = state.online
-            Log.d("Networkul22", state.online.toString())
+            Log.d("StateSearch", state.online.toString())
             MainScreen(modifier = Modifier , state = state,
                 online = state.online,
                onRefresh = {
@@ -132,11 +133,14 @@ fun WeatherNavHost(
                 fadeOut(animationSpec = tween(500))
             }
         ){
+            val state1 by viewModelW.state.collectAsState()
+
+
 
             Log.d("Online12:", "online")
-            val online = state.online
-
-            if(online != null && online) {
+//            val online = state.online
+//
+//            if(online != null && !online) {
                 val viewModelS: SearchViewModel = hiltViewModel()
 
                 Log.d("Navigation", "Search icon pressed")
@@ -147,9 +151,10 @@ fun WeatherNavHost(
                         viewModelWeahter = viewModelW as WeatherViewModel,
                         onClickSearch = {
                             navController.navigateSingleTopTo(route = Main.route)
-                        }
+                        },
+                        stateO = state1
                     )
-                }
+//                }
             }
         }
 

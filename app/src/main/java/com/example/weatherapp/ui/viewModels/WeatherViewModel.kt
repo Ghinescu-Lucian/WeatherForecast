@@ -6,6 +6,7 @@ import android.content.Context
 import android.location.Location
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.example.weatherapp.Services.geocoder.CitySearch
 import com.example.weatherapp.data.local.cache.CacheRepository
 import com.example.weatherapp.data.local.cache.json.dtos.CacheConverter
 import com.example.weatherapp.data.local.weights.Weights
@@ -16,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 import javax.inject.Inject
 
 //import javax.inject.Inject
@@ -48,6 +50,8 @@ class WeatherViewModel @Inject constructor (
         initialize(refresh = true)
 
         viewModelScope.launch {
+            val citySearchCoordinates = CitySearch().retrieveCoordinates("Timisoara", context)
+            Log.d("CitySearch:", citySearchCoordinates.toString())
             cacheRepository.allCaches.collect {
                 val r = it.lastOrNull()
                 if (r != null) {
@@ -127,7 +131,6 @@ class WeatherViewModel @Inject constructor (
                         Log.d("CityName1:", res)
                         it.copy(
                             cityName = res
-
                         )
 
                     }
@@ -203,6 +206,11 @@ class WeatherViewModel @Inject constructor (
 
         }
 
+    }
+
+    fun getCurrentHour():Int{
+        val time = LocalTime.now()
+        return time.hour
     }
 
 

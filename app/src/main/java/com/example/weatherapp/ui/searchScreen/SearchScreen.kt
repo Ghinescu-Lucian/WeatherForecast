@@ -2,10 +2,12 @@ package com.example.weatherapp.ui.searchScreen
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,11 +36,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.R
 import com.example.weatherapp.Services.geocoder.CitySearch
+import com.example.weatherapp.ui.states.WeatherState
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 import com.example.weatherapp.ui.viewModels.SearchViewModel
 import com.example.weatherapp.ui.viewModels.WeatherViewModel
@@ -49,7 +54,8 @@ fun SearchScreen(
     modifier : Modifier = Modifier,
     viewModel: SearchViewModel,
     viewModelWeahter: WeatherViewModel,
-    onClickSearch: () -> Unit = {}
+    onClickSearch: () -> Unit = {},
+    stateO: WeatherState
 
 ){
     var text by rememberSaveable {
@@ -60,6 +66,19 @@ fun SearchScreen(
 
     var count by rememberSaveable {
         mutableIntStateOf(0)
+    }
+    var enable by remember { mutableStateOf(true) }
+
+    if (stateO.online != null && !stateO.online) {
+        enable = false
+        Text(
+            "Offline mode", textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFFD3D00).copy(alpha = 0.6f)),
+            fontSize = 21.sp,
+//                style = TextStyle(background = Color.Red)
+        )
     }
     Box(
         modifier = modifier
@@ -108,21 +127,32 @@ fun SearchScreen(
 
             ExtendedFloatingActionButton(
                 onClick = {
-                   val latLng=  viewModel.getLatLong(context = context)
-                    count++
-                    Log.d("Search latLng", ""+state.latitude+","+state.longitude)
-                    if (state.errors.isEmpty()) {
-                        viewModelWeahter.refreshContentSearch(
-                            refreshCity = false,
-                            cityName = text,
-                            lat = latLng.latitude,
-                            long = latLng.longitude
-                        )
-                        onClickSearch()
+                    if(stateO.online != null && !stateO.online) {
+                        enable = false
+                    }
+                    else {
+                        val latLng = viewModel.getLatLong(context = context)
+                        count++
+                        Log.d("Search latLng", "" + state.latitude + "," + state.longitude)
+                        if (state.errors.isEmpty()) {
+                            viewModelWeahter.refreshContentSearch(
+                                refreshCity = false,
+                                cityName = text,
+                                lat = latLng.latitude,
+                                long = latLng.longitude
+                            )
+                            onClickSearch()
+                        }
                     }
                 },
                 shape = RoundedCornerShape(10.dp),
-                text = {Text(text = "Get forecasts")},
+
+                text = {
+                    if(enable)
+                         Text(text = "Get forecasts")
+                    else
+                        Text(text = "Offlineø")
+                       },
                 icon = {
                     Icon(Icons.Filled.Search, "search icon")
                 },
@@ -130,6 +160,8 @@ fun SearchScreen(
 
 
             )
+
+
             Text(
                 text = count.toString(),
                 modifier = Modifier.alpha(0f)
@@ -149,6 +181,6 @@ fun SearchScreen(
 @Composable
 fun SearchScreenPreview(){
     WeatherAppTheme {
-        SearchScreen(modifier = Modifier, viewModel = SearchViewModel( citySearch = CitySearch()), viewModelWeahter = hiltViewModel())
+        SearchScreen(modifier = Modifier, viewModel = SearchViewModel( citySearch = CitySearch()), viewModelWeahter = hiltViewModel(), stateO = WeatherState())
     }
 }
