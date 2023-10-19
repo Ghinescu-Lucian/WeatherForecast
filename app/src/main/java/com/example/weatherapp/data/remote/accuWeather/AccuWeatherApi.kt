@@ -10,6 +10,8 @@ import retrofit2.http.Query
 
 val api_key = "Rv1IGtx7Psyf8ma8hSSGneGMTU2rsisq"
 
+// http interceptor
+
 interface AccuWeatherApi {
 
 //    locations/v1/cities/geoposition/search

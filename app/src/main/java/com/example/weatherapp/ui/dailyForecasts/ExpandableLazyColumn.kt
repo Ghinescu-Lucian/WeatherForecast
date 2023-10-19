@@ -121,13 +121,15 @@ fun HeaderView1(text:String, day: WeatherDataPerDay, onClickItem: () -> Unit, ex
             if(expanded)
                 Icon(
                     imageVector = Icons.Default.KeyboardArrowDown,
-                    tint = MaterialTheme.colorScheme.onSurface,
+//                    tint = MaterialTheme.colorScheme.onSurface,
+                    tint = Color.White,
                     contentDescription="",
                     modifier = Modifier.padding(start = 8.dp)
                 )
             else Icon(
                 imageVector = Icons.Default.KeyboardArrowRight,
-                tint = MaterialTheme.colorScheme.onSurface,
+                tint = Color.White,
+//                tint = MaterialTheme.colorScheme.onSurface,
                 contentDescription="",
                 modifier = Modifier.padding(start = 8.dp)
             )
@@ -144,7 +146,8 @@ fun HeaderView1(text:String, day: WeatherDataPerDay, onClickItem: () -> Unit, ex
 
             if(!expanded)
                 Text(
-                text = "" + day.maxTemperature+" ºC"
+                text = "" + day.maxTemperature+" ºC",
+                    color = Color.White
             )
             else Text( text = "          ")
             Image(

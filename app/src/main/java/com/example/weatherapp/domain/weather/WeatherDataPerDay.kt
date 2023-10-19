@@ -13,5 +13,5 @@ data class WeatherDataPerDay(
     val moonSet: String = "",
     val weatherTypeDay: WeatherType = WeatherType.ClearSky,
     val weatherTypeNight: WeatherType = WeatherType.ClearSky,
-    val forecasts:List<WeatherData>
+    var forecasts:List<WeatherData>
 )

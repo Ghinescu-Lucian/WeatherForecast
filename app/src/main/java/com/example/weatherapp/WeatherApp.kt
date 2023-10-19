@@ -190,41 +190,41 @@ class WeatherApp: Application()
         override fun onCreate() {
         super.onCreate()
 
-//            Log.d("Converter",  weatherInfo.currentWeatherData?.time.toString())
-////
-             val res = CacheConverter().convertToJson(weatherInfo = weatherInfo)
-//            val cache = Cache(
-//                id = 0,
-//                city = "Timisoara",
-//                partialResult = false,
-//                data = res
-//            )
-
-
-            val citySearch = CitySearch()
-            val response = citySearch.retrieveCoordinates("Novigrad",this)
-            Log.d("CitySearch", response.toString())
-
-//            val wg = Weights(id = 2, "Munich",1.0, 1.0, 1.0, 48.142286, 11.579616)
-
-            GlobalScope.launch {
+////            Log.d("Converter",  weatherInfo.currentWeatherData?.time.toString())
+//////
+//             val res = CacheConverter().convertToJson(weatherInfo = weatherInfo)
+////            val cache = Cache(
+////                id = 0,
+////                city = "Timisoara",
+////                partialResult = false,
+////                data = res
+////            )
 //
-//                repository.insert(wg)
-//                repository.allWeights.collect{ it ->
-//                    Log.d("Database", it.size.toString())
-//                    it.forEach{itt ->
-//                        Log.d("Database", itt.toString())
-//                    }
+//
+//            val citySearch = CitySearch()
+//            val response = citySearch.retrieveCoordinates("Novigrad",this)
+//            Log.d("CitySearch", response.toString())
+//
+////            val wg = Weights(id = 2, "Munich",1.0, 1.0, 1.0, 48.142286, 11.579616)
+//
+//            GlobalScope.launch {
+////
+////                repository.insert(wg)
+////                repository.allWeights.collect{ it ->
+////                    Log.d("Database", it.size.toString())
+////                    it.forEach{itt ->
+////                        Log.d("Database", itt.toString())
+////                    }
+//
+////                    repositoryCache
+////                        repositoryCache.allCaches.collect {
+////                            Log.d("Cache: ", it.size.toString())
+////                            Log.d("Cache: ", CacheConverter().convertToWeatherInfo(it[0]).toString())
+////                        }
+//
 
-//                    repositoryCache
-//                        repositoryCache.allCaches.collect {
-//                            Log.d("Cache: ", it.size.toString())
-//                            Log.d("Cache: ", CacheConverter().convertToWeatherInfo(it[0]).toString())
-//                        }
 
-
-
-                }
+//                }
 
 
 

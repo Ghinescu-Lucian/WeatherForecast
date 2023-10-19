@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.drawscope.scale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,16 +38,16 @@ import androidx.compose.ui.unit.dp
 import com.example.weatherapp.ui.theme.WeatherAppTheme
 
 @Composable
-fun DailyGraph(modifier : Modifier = Modifier,
-                data: List<List<Float>>,
-               xLabels : List<String>
-               ){
+fun DailyGraph(
+    modifier: Modifier = Modifier,
+    data: List<List<Float>>,
+    xLabels: List<String>
+) {
 
-    val animationProgress = remember{
+    val animationProgress = remember {
         Animatable(0f)
     }
-    val  textMeasurer = rememberTextMeasurer()
-
+    val textMeasurer = rememberTextMeasurer()
 
 
     val minimum = data.minWith(Comparator.comparing { it[1] })
@@ -55,9 +56,9 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
     val yLabels = mutableListOf<String>()
     yLabels.add(minimum[1].toString())
-    val step = diff/4
-    for(i in 0..3)
-        yLabels.add(String.format("%.1f",minimum[1] + step *i ))
+    val step = diff / 4
+    for (i in 0..3)
+        yLabels.add(String.format("%.1f", minimum[1] + step * i))
     yLabels.add(maximum[1].toString())
     yLabels.reverse()
 
@@ -67,15 +68,14 @@ fun DailyGraph(modifier : Modifier = Modifier,
 
 
     LaunchedEffect(key1 = data, block = {
-        animationProgress.animateTo(1f, tween(2500 ))
+        animationProgress.animateTo(1f, tween(3500))
     })
 
     Box(
         modifier = modifier
             .background(MaterialTheme.colorScheme.primary)
             .fillMaxSize()
-     ) {
-
+    ) {
 
 
         Canvas(
@@ -87,29 +87,32 @@ fun DailyGraph(modifier : Modifier = Modifier,
 //                .fillMaxHeight()
 //                .width(600.dp)
                 .fillMaxSize()
-        ){
+        ) {
 
 
             val verticalLines = 5
             val verticalSize = size.width / (verticalLines + 1)
+            val horizontalLines = 5
+            val sectionSize = size.height / (horizontalLines + 1)
 
             repeat(verticalLines) { i ->
                 val startX = verticalSize * (i + 1)
                 drawText(
                     textMeasurer,
-                          xLabels[i],
-                                topLeft = Offset(startX-60, 520f)
+                    xLabels[i],
+                    topLeft = Offset(startX - 65, sectionSize*5 + 35),
+                    style = TextStyle.Default.copy(color = Color.White)
                 )
             }
 
-            val horizontalLines = 5
-            val sectionSize = size.height / (horizontalLines + 1)
+
             repeat(horizontalLines) { i ->
                 val startY = sectionSize * (i + 1)
                 drawText(
                     textMeasurer,
-                    text = yLabels[i]+ "ºC",
-                    topLeft = Offset(15f, startY-35)
+                    text = yLabels[i] + "ºC",
+                    topLeft = Offset(15f, startY - 35),
+                    style = TextStyle.Default.copy(color = Color.White)
                 )
 
             }
@@ -121,7 +124,7 @@ fun DailyGraph(modifier : Modifier = Modifier,
         Spacer(
             modifier = Modifier
                 .flipped()
-                .padding(start = 50.dp, end = 50.dp)
+                .padding(start = 60.dp, end = 50.dp)
                 .aspectRatio(3 / 2f)
                 .align(Alignment.Center)
 //                .horizontalScroll(rememberScrollState())
@@ -182,57 +185,57 @@ fun DailyGraph(modifier : Modifier = Modifier,
                         val unitX = size.width / (data.size - 1)
 
 
-                         val filledPath = Path()
+                        val filledPath = Path()
                         filledPath.addPath(path = path)
                         filledPath.lineTo(size.width, size.height)
                         filledPath.lineTo(size.width, 0f)
                         filledPath.close()
 
-                        clipRect( right = size.width*animationProgress.value) {
+                        clipRect(right = size.width * animationProgress.value) {
 //                        Draw path
-                        drawPath(
-                            path, Color.Green,
-                            style = Stroke(
-                                width = 2.5.dp.toPx(),
-                                cap = StrokeCap.Round
+                            drawPath(
+                                path, Color.Green,
+                                style = Stroke(
+                                    width = 2.5.dp.toPx(),
+                                    cap = StrokeCap.Round
+                                )
                             )
-                        )
-                        drawPath(
-                            filledPath,
-                            brush = brush,
-                            style = Fill
+                            drawPath(
+                                filledPath,
+                                brush = brush,
+                                style = Fill
 
-                        )
+                            )
 //                        Draw points
-                        for (i in newData) {
-                            drawCircle(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.White,
-                                        Color.Yellow.copy(alpha = 0.75f)
-                                    )
-                                ),
-                                radius = 20f,
-                                center = Offset(i[0] * unitX, (i[1] - minimum[1]) * unitY),
+                            for (i in newData) {
+                                drawCircle(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.White,
+                                            Color.Yellow.copy(alpha = 0.75f)
+                                        )
+                                    ),
+                                    radius = 20f,
+                                    center = Offset(i[0] * unitX, (i[1] - minimum[1]) * unitY),
 
+
+                                    )
+                            }
+                            for (i in newData) {
+                                drawCircle(
+                                    brush = Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.LightGray,
+                                            Color.Yellow
+                                        )
+                                    ),
+                                    radius = 20f,
+                                    center = Offset(i[0] * unitX, (i[1] - minimum[1]) * unitY),
+                                    style = Stroke(width = 3.dp.toPx())
 
                                 )
+                            }
                         }
-                        for (i in newData) {
-                            drawCircle(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.LightGray,
-                                        Color.Yellow
-                                    )
-                                ),
-                                radius = 20f,
-                                center = Offset(i[0] * unitX, (i[1] - minimum[1]) * unitY),
-                                style = Stroke(width = 3.dp.toPx())
-
-                            )
-                        }
-                    }
                     }
                 }
         )
@@ -240,17 +243,18 @@ fun DailyGraph(modifier : Modifier = Modifier,
     }
 }
 
-fun squeezeDimension( data: List<List<Float>>):List<List<Float>>{
+fun squeezeDimension(data: List<List<Float>>): List<List<Float>> {
 
     val minimum = data.minWith(Comparator.comparing { it[1] })
     val maximum = data.maxWith(Comparator.comparing { it[1] })
 
 
-    Log.d("Graph", "max = "+maximum+"\n min = "+minimum)
+    Log.d("Graph", "max = " + maximum + "\n min = " + minimum)
     val newData = mutableListOf<List<Float>>()
-    for(i in data){
-        val temperature = minimum[1]*1.1f + ( (0.9f * maximum[1] - 1.1f * minimum[1]) / (maximum[1] - minimum[1]) ) * ( i[1] - minimum[1])
-        val item = listOf(i[0], temperature )
+    for (i in data) {
+        val temperature =
+            minimum[1] * 1.1f + ((0.9f * maximum[1] - 1.1f * minimum[1]) / (maximum[1] - minimum[1])) * (i[1] - minimum[1])
+        val item = listOf(i[0], temperature)
         newData.add(item)
 //        Log.d("Graph", "${item[0]} - ${item[1]}\n Dif = ${i[1]/item[1]}")
     }
@@ -260,14 +264,14 @@ fun squeezeDimension( data: List<List<Float>>):List<List<Float>>{
 }
 
 
-fun generatePath(size: Size, data : List<List<Float>>): Path {
+fun generatePath(size: Size, data: List<List<Float>>): Path {
     val path = Path()
     val minimum = data.minWith(Comparator.comparing { it[1] })
     val maximum = data.maxWith(Comparator.comparing { it[1] })
     val diff = maximum[1] - minimum[1]
 
-    val unitY  = size.height / diff
-    val unitX = size.width / (data.size-1)
+    val unitY = size.height / diff
+    val unitX = size.width / (data.size - 1)
 
 
 // Control points
@@ -284,11 +288,11 @@ fun generatePath(size: Size, data : List<List<Float>>): Path {
     val newData = data
 
     newData.forEachIndexed { i, item ->
-        val x = item[0]*unitX
-        val y = (item[1]- minimum[1])*unitY
+        val x = item[0] * unitX
+        val y = (item[1] - minimum[1]) * unitY
 
-        val controlPoint1 = PointF(x*1.01f, y*1.1f)
-        val controlPoint2 = PointF(x*0.99f, y*0.9f)
+        val controlPoint1 = PointF(x * 1.01f, y * 1.1f)
+        val controlPoint2 = PointF(x * 0.99f, y * 0.9f)
 
         path.cubicTo(
             controlPoint1.x, controlPoint1.y,
@@ -301,7 +305,6 @@ fun generatePath(size: Size, data : List<List<Float>>): Path {
 }
 
 
-
 class FlippedModifier : DrawModifier {
     override fun ContentDrawScope.draw() {
         scale(1f, -1f) {
@@ -309,21 +312,25 @@ class FlippedModifier : DrawModifier {
         }
     }
 }
+
 fun Modifier.flipped() = this.then(FlippedModifier())
 
 @Composable
 @Preview
-fun DailyGraphPreview(){
-    
+fun DailyGraphPreview() {
+
     val points = listOf(
-        listOf(0f,20f),
+        listOf(0f, 20f),
         listOf(1f, 23f),
         listOf(2f, 24f),
         listOf(3f, 25f),
         listOf(4f, 29f)
-        )
+    )
     WeatherAppTheme {
-        DailyGraph(data = points,xLabels = listOf("05 Sep","05 Sep","05 Sep","05 Sep","05 Sep") )
+        DailyGraph(
+            data = points,
+            xLabels = listOf("05 Sep", "05 Sep", "05 Sep", "05 Sep", "05 Sep")
+        )
     }
 }
 

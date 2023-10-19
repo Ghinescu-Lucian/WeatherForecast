@@ -31,12 +31,14 @@ fun Hourly12Weather(
         else scrollState.scrollToItem(0)
     }
 
+    val dataCurrent = data.getOrNull(current) ?: data.lastOrNull() ?: return
+
     Column( modifier = modifier) {
-        CurrentHour(data = data[current])
+        CurrentHour(data = dataCurrent)
         LazyColumn(
             state = scrollState,
             content = {
-                items(data.subList(1, data.lastIndex)) { weatherData ->
+                items(data) { weatherData ->
                     RowElement(weatherData = weatherData)
                 }
             },

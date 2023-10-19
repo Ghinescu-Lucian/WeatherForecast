@@ -10,6 +10,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
@@ -159,13 +160,40 @@ fun calculateHourly(data: List<Result<WeatherInfo>>, weights: List<Double>) : We
 
         }
     }
+
+
+
     val res = mutableListOf<WeatherData>()
     var minimumSize = successData[0].forecasts.size
-    successData.forEach{
+    var maximumSize = successData[0].forecasts.size
+    var index = 0
+
+    successData.forEachIndexed{ indx, it ->
         if( it.forecasts.size < minimumSize){
             minimumSize = it.forecasts.size
         }
+        if(it.forecasts.size > maximumSize){
+            maximumSize = it.forecasts.size
+            index  = indx
+        }
     }
+
+    val currentTime = LocalTime.now().hour
+    val listAdding = mutableListOf<WeatherData>()
+    successData.forEach{ it->
+        if(it.forecasts.size != maximumSize){
+            listAdding.clear()
+            for(i in 0 until currentTime){
+                listAdding.add(successData[index].forecasts[i])
+            }
+            listAdding.plus(it.forecasts)
+            for(i in listAdding.size .. 23){
+                listAdding.add(successData[index].forecasts[i])
+            }
+            it.forecasts = listAdding
+        }
+    }
+
 
     val successForecasts = mutableListOf<WeatherData>()
 

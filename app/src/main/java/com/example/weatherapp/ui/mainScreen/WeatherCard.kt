@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,6 +40,7 @@ import kotlin.math.roundToInt
 fun WeatherCard(
 
     data: WeatherData?,
+    city: String = "City",
     modifier: Modifier = Modifier
 ){
 
@@ -75,12 +78,27 @@ fun WeatherCard(
                 horizontalAlignment = Alignment.CenterHorizontally
 
             ) {
-                Text(
-                    text = data.time,
+                Box(
                     modifier = Modifier.align(Alignment.End),
-                    color = Color.White
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(
+                            text = data.time,
+                            modifier = Modifier.fillMaxWidth(),
+                            color = Color.White,
+                            textAlign = TextAlign.End
 //                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                        )
+                        Text(
+                            text = city,
+                            modifier = Modifier.fillMaxWidth(),
+                            color = Color.White,
+                            textAlign = TextAlign.End
+                        )
+                    }
+                }
                 Spacer(
                     modifier = Modifier.height(16.dp)
                 )

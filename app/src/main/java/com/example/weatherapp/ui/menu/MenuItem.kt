@@ -37,15 +37,15 @@ fun MenuItem(
 
     )
     {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp)
-                .height(0.5.dp)
-                .background(MaterialTheme.colorScheme.outline)
-                .align(Alignment.Center)
-
-        )
+//        Box(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(horizontal = 10.dp)
+//                .height(0.5.dp)
+//                .background(MaterialTheme.colorScheme.outline)
+//                .align(Alignment.Center)
+//
+//        )
         Box(modifier = Modifier
             .align(Alignment.Center)
             .size(50.dp)

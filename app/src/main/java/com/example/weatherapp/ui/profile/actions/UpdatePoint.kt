@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -84,7 +85,8 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
             if(isModified)
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "edited icon"
+                    contentDescription = "edited icon",
+                    tint = Color.White
                 )
             Text(
                 modifier = Modifier.width(128.dp),
@@ -118,6 +120,11 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
 
                     if(index == 0) {
                         OutlinedTextField(
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = Color.White,
+                                placeholderColor = Color.White.copy(alpha = 0.75f)
+                            ),
+                            supportingText = { Text("Oarecare", modifier = Modifier.background(Color.White)) },
                             value = accWeight,
                             onValueChange = { itt: String ->
 
@@ -126,6 +133,8 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
 
                                 Log.d("Update point: ", "$accWeight \n$omWeight\n$vcWeight")
 
+
+                                if(accWeight.isEmpty()) accWeight = "0"
 
                                 if(isModified && itt.isNotEmpty()){
                                     viewModel.addUpdatePoint(Weights(pointId, it.city, accWeight = accWeight.toDouble(), omWeight = omWeight.toDouble(), vcWeight = vcWeight.toDouble(), latitude = it.latitude, longitude = it.longitude ))
@@ -161,7 +170,7 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
                                         .clip(RoundedCornerShape(8.dp))
                                         .width(48.dp)
                                         .height(48.dp)
-                                        .background(MaterialTheme.colorScheme.onSurface),
+                                        .background(Color.White),
                                     contentDescription = "Search icon"
                                 )
 
@@ -176,10 +185,18 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
                     if(index == 1){
 
                         OutlinedTextField(
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = Color.White,
+                                placeholderColor = Color.White.copy(alpha = 0.75f)
+                            ),
+                            supportingText = { Text("Oarecare", modifier = Modifier.background(Color.White)) },
                             value = omWeight,
                             onValueChange = { itt: String ->
 
                                 omWeight = itt
+
+                                if(omWeight.isEmpty()) omWeight = "0"
+
 
                                 isModified = (itt != weights[index]) || (accWeight != weights[0]) || (vcWeight != weights[2])
 
@@ -216,7 +233,7 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
                                         .clip(RoundedCornerShape(8.dp))
                                         .width(48.dp)
                                         .height(48.dp)
-                                        .background(MaterialTheme.colorScheme.onSurface),
+                                        .background(Color.White),
                                     contentDescription = "Search icon"
                                 )
 
@@ -232,6 +249,11 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
 
                         OutlinedTextField(
                             value = vcWeight,
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                textColor = Color.White,
+                                placeholderColor = Color.White.copy(alpha = 0.75f)
+                            ),
+                            supportingText = { Text("Oarecare", modifier = Modifier.background(Color.White)) },
                             onValueChange = { itt: String ->
 
                                 vcWeight = itt
@@ -241,7 +263,7 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
 
                                 Log.d("Update point: ", "$accWeight \n$omWeight\n$vcWeight")
 
-
+                                if(vcWeight.isEmpty()) vcWeight = "0"
 
                                 if(isModified && itt.isNotEmpty()){
                                     viewModel.addUpdatePoint(Weights(pointId, it.city, accWeight = accWeight.toDouble(), omWeight = omWeight.toDouble(), vcWeight = vcWeight.toDouble(), latitude = it.latitude, longitude = it.longitude ))
@@ -272,7 +294,8 @@ fun UpdatePoint(viewModel: PointsViewModel, expandViewModel: ExpandableListViewM
                                         .clip(RoundedCornerShape(8.dp))
                                         .width(48.dp)
                                         .height(48.dp)
-                                        .background(MaterialTheme.colorScheme.onSurface),
+//                                        .background(Color.White),
+                                        .background(Color.White),
                                     contentDescription = "Search icon"
                                 )
 

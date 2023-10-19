@@ -29,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,15 +45,18 @@ import com.example.weatherapp.ui.profile.actions.DeletePoint
 import com.example.weatherapp.ui.profile.actions.UpdatePoint
 import com.example.weatherapp.ui.profile.actions.YourPoints
 import com.example.weatherapp.ui.viewModels.PointsViewModel
+import com.example.weatherapp.ui.viewModels.WeatherViewModel
 
 
 @Composable
 fun CategorizedLazyColumn( modifier:Modifier   = Modifier, actions: List<Int>, context : Context, viewModelExpandable: ExpandableListViewModel = hiltViewModel(),
                            viewModelPoints: PointsViewModel ,
-                           navigate: () -> Unit = {}
-                           ){
+                           navigate: () -> Unit = {},
+                           online: Boolean?
+                             ){
 
     val itemsIds by viewModelExpandable.itemIds.collectAsState()
+
     //val itemsIds1 by rememberSaveable { mutableStateOf(mutableListOf<Int>()) } Rotatie de ecrane
     Box(modifier = modifier) {
         LazyColumn(
@@ -68,7 +72,9 @@ fun CategorizedLazyColumn( modifier:Modifier   = Modifier, actions: List<Int>, c
                     viewModel = viewModelPoints,
                     index = index,
                     navigate = navigate,
-                    expandViewModel = viewModelExpandable
+                    expandViewModel = viewModelExpandable,
+                   enabled = index!=1 || online == true
+
                 )
 
             }
@@ -77,7 +83,7 @@ fun CategorizedLazyColumn( modifier:Modifier   = Modifier, actions: List<Int>, c
 }
 
 @Composable
-fun ExpandableContainerView(text: String, onClickItem:()->Unit, expanded: Boolean, viewModel: PointsViewModel, index: Int, navigate: () -> Unit = {}, expandViewModel: ExpandableListViewModel){
+fun ExpandableContainerView(text: String, onClickItem:()->Unit, expanded: Boolean, viewModel: PointsViewModel, index: Int, navigate: () -> Unit = {}, expandViewModel: ExpandableListViewModel,enabled: Boolean ){
     Box(
         modifier = Modifier
             .padding(16.dp)
@@ -88,14 +94,14 @@ fun ExpandableContainerView(text: String, onClickItem:()->Unit, expanded: Boolea
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            HeaderView(text = text , onClickItem= onClickItem, expanded = expanded )
+            HeaderView(text = text , onClickItem= onClickItem, expanded = expanded, enabled=enabled )
             ExpandableView(text = text, isExpanded = expanded, viewModel = viewModel, index = index, navigate = navigate, expandViewModel = expandViewModel)
 
         }
     }
 }
 @Composable
-fun HeaderView(text: String, onClickItem: () -> Unit, expanded: Boolean) {
+fun HeaderView(text: String, onClickItem: () -> Unit, expanded: Boolean, enabled : Boolean = true) {
 
     Box(
         modifier = Modifier
@@ -104,25 +110,31 @@ fun HeaderView(text: String, onClickItem: () -> Unit, expanded: Boolean) {
             .clickable(
                 indication = null, // Removes the ripple effect on tap
                 interactionSource = remember { MutableInteractionSource() }, // Removes the ripple effect on tap
-                onClick = onClickItem
+                onClick = {
+                    if (enabled)
+                        onClickItem()
+                }
             )
             .padding(8.dp)
     ) {
         Row(
-            modifier = Modifier.width(256.dp),
+//            modifier = Modifier.width(256.dp),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ){
            if(expanded)
             Icon(
                imageVector = Icons.Default.KeyboardArrowDown,
-                tint = MaterialTheme.colorScheme.onSurface,
+//                tint = MaterialTheme.colorScheme.onSurface,
+                tint = Color.White,
                 contentDescription="",
                 modifier = Modifier.padding(start = 8.dp)
             )
             else Icon(
                imageVector = Icons.Default.KeyboardArrowRight,
-               tint = MaterialTheme.colorScheme.onSurface,
+//               tint = MaterialTheme.colorScheme.onSurface,
+               tint = Color.White,
                contentDescription="",
                modifier = Modifier.padding(start = 8.dp)
            )
@@ -219,7 +231,8 @@ fun ExpandableContainerViewPreview() {
         expanded = true,
         viewModel = v,
         index = 1,
-        expandViewModel = v1
+        expandViewModel = v1,
+        enabled = true
 
     )
 }

@@ -53,7 +53,7 @@ fun ProfileScreen(
 
             CategorizedLazyColumn(
                 actions = profileActions, context = context, modifier = Modifier,
-                navigate = navigate, viewModelPoints = viewModel
+                navigate = navigate, viewModelPoints = viewModel, online = state.online
             )
 
         }

@@ -14,13 +14,19 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -43,6 +49,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
@@ -52,6 +60,7 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.FragmentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.weatherapp.data.local.cache.CacheRepository
 import com.example.weatherapp.domain.weather.WeatherData
 import com.example.weatherapp.domain.weather.WeatherDataPerDay
 import com.example.weatherapp.domain.weather.WeatherInfo
@@ -78,14 +87,19 @@ import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 
+    @Inject
+    lateinit var repositoryCache: CacheRepository
 
-        private lateinit var viewModel : WeatherViewModel
+    private lateinit var viewModel: WeatherViewModel
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,14 +107,17 @@ class MainActivity : FragmentActivity() {
 
 
         permissionLauncher = registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions()){
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) {
             //  viewModel.loadWeatherInfo()
         }
 ////
-        permissionLauncher.launch(arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-        ))
+        permissionLauncher.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            )
+        )
 
 //
 
@@ -108,18 +125,21 @@ class MainActivity : FragmentActivity() {
         checkGPSEnabled()
 
         setContent {
-
-            val viewModel: WeatherViewModel = hiltViewModel()
             val context = LocalContext.current
 
-          viewModel.informOnline(isOnline(this))
 
-            DisposableEffect(key1 = Unit, effect ={
-                val networkListener = NetworkListener(Context.CONNECTIVITY_SERVICE, context, viewModel::informOnline )
+            val onlineState = isOnline(this)
+
+            val viewModel: WeatherViewModel = hiltViewModel()
+
+            viewModel.informOnline(onlineState)
+
+            DisposableEffect(key1 = Unit, effect = {
+                val networkListener =
+                    NetworkListener(Context.CONNECTIVITY_SERVICE, context, viewModel::informOnline)
                 networkListener.register()
-               onDispose { networkListener.unregister() }
-            } )
-
+                onDispose { networkListener.unregister() }
+            })
 
             val locationManager = remember {
                 context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -129,16 +149,47 @@ class MainActivity : FragmentActivity() {
             }
 
 
-                    val points: PointsViewModel = hiltViewModel()
-                    val st by points.statePoints.collectAsState()
+            val points: PointsViewModel = hiltViewModel()
+            val st by points.statePoints.collectAsState()
 
 
-                    val state by viewModel.state.collectAsState()
-                    Log.d("State", state.weatherInfo.toString())
+            val state by viewModel.state.collectAsState()
+            Log.d("State", state.weatherInfo.toString())
 
 
 
-                    WeatherApp(state = state, context = this, viewModel = viewModel, activity = this@MainActivity, authState = AuthState)
+//            if ( state.weatherInfo == null ) {
+//                Box(modifier = Modifier.fillMaxSize()) {
+//                    Column(modifier = Modifier.align(Alignment.Center),
+//                        horizontalAlignment = Alignment.CenterHorizontally
+//                    ) {
+//                        Text("You don't have any data" )
+//                        Text("Please connect to the internet")
+//                        Button(onClick={
+//                            val mIntent = intent
+//                            finish()
+//                            startActivity(mIntent)
+//
+//                        }){
+//                            Row( verticalAlignment = Alignment.CenterVertically) {
+//                                Icon(imageVector = Icons.Default.Refresh, contentDescription = "")
+//                                Text("Retry")
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            }
+//            else {
+
+                WeatherApp(
+                    state = state,
+                    context = this,
+                    viewModel = viewModel,
+                    activity = this@MainActivity,
+                    authState = AuthState
+                )
+//            }
 
         }
     }
@@ -164,9 +215,11 @@ class MainActivity : FragmentActivity() {
         val client = LocationServices.getSettingsClient(this)
         val task = client.checkLocationSettings(builder.build())
 
-        task.addOnSuccessListener(this, OnSuccessListener<LocationSettingsResponse> { locationSettingsResponse ->
-            // GPS is enabled or user agreed to enable it
-        })
+        task.addOnSuccessListener(
+            this,
+            OnSuccessListener<LocationSettingsResponse> { locationSettingsResponse ->
+                // GPS is enabled or user agreed to enable it
+            })
 
         task.addOnFailureListener(this, OnFailureListener { exception ->
             when ((exception as? ResolvableApiException)?.statusCode) {
@@ -188,7 +241,6 @@ class MainActivity : FragmentActivity() {
     }
 
 
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -199,7 +251,7 @@ fun WeatherApp(
     viewModel: MainViewModel,
     activity: FragmentActivity,
     authState: AuthState
-){
+) {
 
 
     var selectedItemIndex by rememberSaveable {
@@ -213,192 +265,206 @@ fun WeatherApp(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var auth by rememberSaveable { mutableStateOf(false
-    )}
+    var auth by rememberSaveable {
+        mutableStateOf(
+            false
+        )
+    }
+
+    var count by remember { mutableIntStateOf(0) }
 
 
     WeatherAppTheme {
 
-            Scaffold(
-                modifier = Modifier
-                    .fillMaxSize(),
-                snackbarHost = {
 
-                    SnackbarHost(hostState = snackbarHostState)
+        Scaffold(
+            modifier = Modifier
+                .fillMaxSize(),
+            snackbarHost = {
 
-                               if(state.online != null ){
-                                   LaunchedEffect(key1 = state.online, block = {
-                                       scope.launch {
-                                           val message = if(state.online) "Back online" else "You are in offline"
-                                           snackbarHostState.showSnackbar(message)
-                                       }
-                                   } )
+                SnackbarHost(hostState = snackbarHostState)
 
-                                   Log.d("Networkul12", "device offline")
-                               }
+                if (state.online != null) {
+                    LaunchedEffect(key1 = state.online, block = {
+                        scope.launch {
+//                                           count++
+                            val message =
+                                if (state.online) "Back online" else "You are in offline"
+                            if (count != 0)
+                                snackbarHostState.showSnackbar(message)
+                            count++
+                        }
+                    })
 
-                        },
+//                                   Log.d("Networkul12", "device offline")
+                }
+
+            },
 //
-                bottomBar = {
-                    Column(
+            bottomBar = {
+                Column(
+                    modifier = Modifier.background(Color.Transparent)
 
+                ) {
+
+
+                    Box(
+//                            modifier = Modifier.height(135.dp)
                     ) {
-
-
-                        Box(
-                            modifier = Modifier.height(135.dp)
+                        NavigationBar(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .shadow(elevation = 16.dp)
+//                                    .background(Color.Transparent)
                         ) {
-                            NavigationBar(
-                                modifier = Modifier.align(Alignment.Center)
-                            ) {
-                                menuItems.forEachIndexed { index, item ->
-                                    NavigationBarItem(
-                                        modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                                        selected = selectedItemIndex == index,
-                                        onClick = {
+                            menuItems.forEachIndexed { index, item ->
+                                NavigationBarItem(
+                                    modifier = Modifier.padding(start = 10.dp, end = 10.dp),
+                                    selected = selectedItemIndex == index,
+                                    onClick = {
 
-                                            Log.d("Auth", authState.timeOut().toString())
-                                            Log.d("Auth", authState.lastTime.toString())
-                                            Log.d("Auth Duration:", authState.timeOut().toString() )
-                                            if(item.name == R.string.profile ) {
-                                                if(authState.timeOut()) {
-                                                    Biometric.statusName(context)
-                                                    Biometric.authenticate(
-                                                        activity,
-                                                        title = "Biometric Authentication",
-                                                        subtitle = "Authenticate to proceed",
-                                                        description = "Authentication is must",
-                                                        negativeText = "Cancel",
-                                                        onSuccess = {
-                                                            activity.runOnUiThread {
-                                                                Toast.makeText(
-                                                                    context,
-                                                                    "Authenticated successfully",
-                                                                    Toast.LENGTH_SHORT
-                                                                )
-                                                                    .show()
+                                        Log.d("Auth", authState.timeOut().toString())
+                                        Log.d("Auth", authState.lastTime.toString())
+                                        Log.d("Auth Duration:", authState.timeOut().toString())
+                                        if (item.name == R.string.profile) {
+                                            if (authState.timeOut()) {
+                                                Biometric.statusName(context)
+                                                Biometric.authenticate(
+                                                    activity,
+                                                    title = "Biometric Authentication",
+                                                    subtitle = "Authenticate to proceed",
+                                                    description = "Authentication is must",
+                                                    negativeText = "Cancel",
+                                                    onSuccess = {
+                                                        activity.runOnUiThread {
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Authenticated successfully",
+                                                                Toast.LENGTH_SHORT
+                                                            )
+                                                                .show()
+                                                            selectedItemIndex = index
+                                                            navController.navigateSingleTopTo(
+                                                                item.route
+                                                            )
+                                                            authState.lastTime =
+                                                                LocalDateTime.now()
+                                                            authState.isAuthenticated = true
+                                                            auth = true
+
+                                                        }
+                                                    },
+                                                    onError = { errorCode, errorString ->
+                                                        activity.runOnUiThread {
+                                                            if (errorCode != 13) {
+                                                                if (errorCode != 11) {
+                                                                    Toast.makeText(
+                                                                        context,
+                                                                        "Authentication error: $errorCode, $errorString",
+                                                                        Toast.LENGTH_SHORT
+                                                                    )
+                                                                        .show()
+                                                                }
+                                                                auth = false
+                                                                authState.isAuthenticated =
+                                                                    false
                                                                 selectedItemIndex = index
                                                                 navController.navigateSingleTopTo(
                                                                     item.route
                                                                 )
-                                                                authState.lastTime =
-                                                                    LocalDateTime.now()
-                                                                authState.isAuthenticated = true
-                                                                auth = true
-
-                                                            }
-                                                        },
-                                                        onError = { errorCode, errorString ->
-                                                            activity.runOnUiThread {
-                                                                if(errorCode != 13 ) {
-                                                                    if(errorCode != 11) {
-                                                                        Toast.makeText(
-                                                                            context,
-                                                                            "Authentication error: $errorCode, $errorString",
-                                                                            Toast.LENGTH_SHORT
-                                                                        )
-                                                                            .show()
-                                                                    }
-                                                                    auth = false
-                                                                    authState.isAuthenticated =
-                                                                        false
-                                                                    selectedItemIndex = index
-                                                                    navController.navigateSingleTopTo(
-                                                                        item.route
-                                                                    )
-                                                                }
-                                                            }
-                                                        },
-                                                        onFailed = {
-                                                            activity.runOnUiThread {
-                                                                Toast.makeText(
-                                                                    context,
-                                                                    "Authentication failed",
-                                                                    Toast.LENGTH_SHORT
-                                                                )
-                                                                    .show()
-                                                                auth = false
-                                                                authState.isAuthenticated = false
                                                             }
                                                         }
-                                                    )
-                                                }
-                                                else{
-                                                    selectedItemIndex = index
-                                                    navController.navigateSingleTopTo(
-                                                        item.route
-                                                    )
-                                                }
-
-                                            }
-
-                                            if(item.name != R.string.profile) {
+                                                    },
+                                                    onFailed = {
+                                                        activity.runOnUiThread {
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Authentication failed",
+                                                                Toast.LENGTH_SHORT
+                                                            )
+                                                                .show()
+                                                            auth = false
+                                                            authState.isAuthenticated = false
+                                                        }
+                                                    }
+                                                )
+                                            } else {
                                                 selectedItemIndex = index
-                                                navController.navigateSingleTopTo(item.route)
+                                                navController.navigateSingleTopTo(
+                                                    item.route
+                                                )
                                             }
 
-                                        },
-                                        label = {
-                                            Text(
-                                                text =
-                                                context.getString(item.name)
+                                        }
+
+                                        if (item.name != R.string.profile) {
+                                            selectedItemIndex = index
+                                            navController.navigateSingleTopTo(item.route)
+                                        }
+
+                                    },
+                                    label = {
+                                        Text(
+                                            text =
+                                            context.getString(item.name)
 //                                           item.route
 //                                         "c"
 
 
-                                                //  Resources.getSystem().getString(item.name)
-                                            )
-                                        },
-                                        icon = {
-                                            BadgedBox(
-                                                badge = {
+                                            //  Resources.getSystem().getString(item.name)
+                                        )
+                                    },
+                                    icon = {
+                                        BadgedBox(
+                                            badge = {
 
-                                                }
-                                            ) {
-                                                Icon(
-
-                                                    imageVector = if (index == selectedItemIndex) {
-                                                        ImageVector.vectorResource(id = item.selectedIcon)
-                                                    } else ImageVector.vectorResource(id = item.icon),
-                                                    contentDescription = item.route
-                                                )
                                             }
+                                        ) {
+                                            Icon(
+
+                                                imageVector = if (index == selectedItemIndex) {
+                                                    ImageVector.vectorResource(id = item.selectedIcon)
+                                                } else ImageVector.vectorResource(id = item.icon),
+                                                contentDescription = item.route
+                                            )
                                         }
-                                    )
+                                    }
+                                )
 
 
-
-                                }
                             }
+                        }
 
-                            Log.d("StateSearch:", state.online.toString())
-
-
+                        Log.d("StateSearch:", state.online.toString())
 
 
 //
-                            if (state.online == null || state.online) {
+                        if (state.online == null || state.online) {
 
-                                MenuItem(icon = ImageVector.vectorResource(Search.icon),
-                                    modifier = Modifier.align(Alignment.TopCenter),
-                                    onClick = { navController.navigateSingleTopTo(Search.route) }
-                                )
-                            }
-
+                            MenuItem(icon = ImageVector.vectorResource(Search.icon),
+                                modifier = Modifier
+                                    .align(Alignment.TopCenter)
+                                    .offset(y = -30.dp),
+                                onClick = { navController.navigateSingleTopTo(Search.route) }
+                            )
                         }
+
                     }
                 }
-
-            ) {
-                    innerPadding ->
-//                    MainScreen(modifier = Modifier.padding(it), state = state )
-                    WeatherNavHost(navController = navController,
-                        modifier = Modifier.padding(innerPadding),
-                        context = context,
-                        viewModelW = viewModel
-                        )
-
             }
+
+        ) { innerPadding ->
+//                    MainScreen(modifier = Modifier.padding(it), state = state )
+            WeatherNavHost(
+                navController = navController,
+                modifier = Modifier.padding(innerPadding),
+//                        modifier = Modifier,
+                context = context,
+                viewModelW = viewModel
+            )
+
+
+        }
 
     }
 
@@ -427,11 +493,9 @@ fun isOnline(context: Context): Boolean {
 }
 
 
-
-
 @Preview
 @Composable
-fun AppPreview(){
+fun AppPreview() {
 
 
     val state = WeatherState(
@@ -447,7 +511,7 @@ fun AppPreview(){
             ),
             weatherDataPerDays = listOf(
                 WeatherDataPerDay(
-                    day =0,
+                    day = 0,
                     forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now().toString(),
@@ -493,8 +557,8 @@ fun AppPreview(){
                     )
                 ),
                 WeatherDataPerDay(
-                    day =1,
-                   forecasts = listOf(
+                    day = 1,
+                    forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now().toString(),
                             temperature = 25.2,
@@ -515,8 +579,8 @@ fun AppPreview(){
                     )
                 ),
                 WeatherDataPerDay(
-                    day =2,
-                   forecasts =  listOf(
+                    day = 2,
+                    forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now().toString(),
                             temperature = 25.2,
@@ -537,7 +601,7 @@ fun AppPreview(){
                     )
                 ),
                 WeatherDataPerDay(
-                    day =3,
+                    day = 3,
                     forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now().toString(),
@@ -559,8 +623,8 @@ fun AppPreview(){
                     )
                 ),
                 WeatherDataPerDay(
-                    day =4,
-                  forecasts =   listOf(
+                    day = 4,
+                    forecasts = listOf(
                         WeatherData(
                             time = LocalDateTime.now().toString(),
                             temperature = 25.2,
@@ -583,7 +647,7 @@ fun AppPreview(){
             )
         )
     )
-    val application =  WeatherApp()// Replace MyApplication with your Application class
+    val application = WeatherApp()// Replace MyApplication with your Application class
     val appContext: Context = application.applicationContext
     val viewModel: WeatherViewModel = hiltViewModel()
     WeatherAppTheme {

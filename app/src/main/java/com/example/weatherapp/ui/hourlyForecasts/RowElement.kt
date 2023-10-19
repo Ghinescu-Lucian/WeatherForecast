@@ -42,7 +42,7 @@ fun RowElement(
             .background(
                 radialGradient(
                     colorStart = MaterialTheme.colorScheme.primary,
-                    colorEnd = MaterialTheme.colorScheme.onSecondary,
+                    colorEnd = MaterialTheme.colorScheme.primaryContainer,
 //                    dimenssionFactor = 4.0
                 )
             )
@@ -65,12 +65,12 @@ fun RowElement(
                 modifier = Modifier,
                 text = formattedTime,
                 fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-                color = Color.Black
+//                color = Color.Black
             )
             Text(
                 modifier = Modifier,
                 text = formattedDate,
-                color = Color.Black
+//                color = Color.Black
             )
 
         }

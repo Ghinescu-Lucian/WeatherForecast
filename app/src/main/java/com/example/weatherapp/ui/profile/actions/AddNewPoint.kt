@@ -6,7 +6,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -17,11 +19,14 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -47,9 +52,11 @@ import com.example.weatherapp.ui.viewModels.PointsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandViewModel: ExpandableListViewModel){
-
-
+fun AddNewPoint(
+    navigate: () -> Unit = {},
+    viewModel: PointsViewModel,
+    expandViewModel: ExpandableListViewModel
+) {
 
 
     var accWeight by rememberSaveable {
@@ -75,16 +82,15 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
     val count by remember {
         mutableIntStateOf(0)
     }
-    var enable by remember{
+    var enable by remember {
         mutableStateOf(true)
     }
 
 
-
-    val results  by viewModel.results.collectAsState(initial = null)
+    val results by viewModel.results.collectAsState(initial = null)
     val context = LocalContext.current
 
-    if(results != null){
+    if (results != null) {
 //        arat
         Toast.makeText(context, results, Toast.LENGTH_SHORT).show()
     }
@@ -93,10 +99,12 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
 //    val state = viewModel.statePoints.collectAsState()
 
 
-    Log.d("Point J1", viewModel.point.getPoint().toString() )
+    Log.d("Point J1", viewModel.point.getPoint().toString())
 
-    Column(verticalArrangement = Arrangement.SpaceBetween,
-        horizontalAlignment = Alignment.CenterHorizontally)
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    )
     {
         Row(verticalAlignment = Alignment.CenterVertically) {
 
@@ -119,137 +127,202 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
 
             }
 
-            if(viewModel.point.getPoint().city != "" || viewModel.point.getPoint().longitude != -181.0)
-             Icon(imageVector = Icons.Default.Check, tint = Color.Green, contentDescription ="checked icon" , modifier = Modifier.padding(16.dp))
-        }
-        OutlinedTextField(
-            value = accWeight,
-            onValueChange = { it: String ->
-
-                accWeight = it
-                accError = it.isEmpty() 
-                // viewModel.updateCityName(it, context = context)
-
-            },
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Next, keyboardType = KeyboardType.Decimal),
-            label = { Text(text = "AccuWeather",color = MaterialTheme.colorScheme.onPrimary) },
-            placeholder = { Text(text = "Give a weight") },
-            leadingIcon = {
-                Image(
-                    painterResource(id = R.drawable.accuweather),
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .width(48.dp)
-                        .height(48.dp)
-                        .background(MaterialTheme.colorScheme.onSurface),
-                    contentDescription = "Search icon"
+            if (viewModel.point.getPoint().city != "" || viewModel.point.getPoint().longitude != -181.0)
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    tint = Color.Green,
+                    contentDescription = "checked icon",
+                    modifier = Modifier.padding(16.dp)
                 )
-
-            },
-
-            modifier = Modifier
-                .padding(8.dp)
-                .height(64.dp)
-            ,
-              isError = accWeight.isEmpty() || accWeight.toDouble() == 0.0
-        )
-        if(accError ) {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp)
-                    .background(Color.White)
-                ,
-                text = "Cannot be empty",
-                color = Color.Red
-            )
         }
+        Column(
+            modifier = Modifier.width(intrinsicSize = IntrinsicSize.Min)
+        ) {
+            OutlinedTextField(
+                value = accWeight,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = Color.White,
+                    placeholderColor = Color.White.copy(alpha = 0.75f)
+                ),
+                supportingText = { Text("Oarecare", modifier = Modifier.background(Color.White)) },
+                onValueChange = { it: String ->
 
-        OutlinedTextField(
-            value = omWeight,
-            onValueChange = { it: String ->
+                    accWeight = it
+                    accError = it.isEmpty()
+                    // viewModel.updateCityName(it, context = context)
 
-                omWeight = it
-                // viewModel.updateCityName(it, context = context)
-                omError = it.isEmpty()
-
-            },
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Next, keyboardType = KeyboardType.Decimal),
-            label = { Text(text = "OpenMeteo",color = MaterialTheme.colorScheme.onPrimary) },
-            placeholder = { Text(text = "Give a weight") },
-            leadingIcon = {
-                Image(
-                    painterResource(id = R.drawable.open_meteo),
-                    contentDescription = "Search icon",
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .width(48.dp)
-                        .height(48.dp)
-                        .background(MaterialTheme.colorScheme.onSurface),
-                )
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .height(64.dp),
-            isError = omWeight.isEmpty()
-        )
-        if(omError ) {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp)
-                    .background(Color.White)
-                ,
-                text = "Cannot be empty",
-                color = Color.Red
-            )
-
-        }
-        OutlinedTextField(
-            value = vcWeight,
-            onValueChange = { it: String ->
-
-                vcWeight = it
-                // viewModel.updateCityName(it, context = context)
-                vcError = it.isEmpty()
-
-            },
-            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences, imeAction = ImeAction.Done, keyboardType = KeyboardType.Decimal),
-            label = { Text(text = "VisualCrossing",color = MaterialTheme.colorScheme.onPrimary) },
-            placeholder = { Text(text = "Give a weight") },
-            leadingIcon = {
-                Image(
-                    painterResource(id = R.drawable.visualcrossing__1_),
-                    contentDescription = "Search icon",
-                    modifier = Modifier
-                        .padding(8.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .width(48.dp)
-                        .height(48.dp)
-                        .background(MaterialTheme.colorScheme.onSurface),
-
+                },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Decimal
+                ),
+                label = { Text(text = "AccuWeather", color = MaterialTheme.colorScheme.onPrimary) },
+                placeholder = { Text(text = "Give a weight") },
+                leadingIcon = {
+                    Image(
+                        painterResource(id = R.drawable.accuweather),
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .width(48.dp)
+                            .height(48.dp)
+                            .background(MaterialTheme.colorScheme.onSurface),
+                        contentDescription = "Search icon"
                     )
-            },
-            modifier = Modifier
-                .padding(8.dp)
-                .height(64.dp),
-            isError = vcWeight.isEmpty()
-        )
-        if(vcError ) {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp)
-                    .background(Color.White)
-                ,
-                text = "Cannot be empty",
-                color = Color.Red
-            )
 
+                },
+
+                modifier = Modifier
+                    .padding(8.dp)
+                    .height(64.dp),
+                isError = accWeight.isEmpty() || accWeight.toDouble() == 0.0
+            )
+            if (accError) {
+                Text(
+                    modifier = Modifier
+//                    .padding(vertical .dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(bottomEnd = 4.dp, bottomStart = 4.dp))
+//                    .background(Color.Transparent)
+                        .background(Color.White.copy(alpha = 0.4f))
+                        .padding(start = 8.dp),
+
+                    text = "Cannot be empty",
+                    fontSize = 12.sp,
+                    color = Color.Red
+                )
+            }
+        }
+        Column(
+            modifier = Modifier.width(intrinsicSize = IntrinsicSize.Min)
+        ) {
+            OutlinedTextField(
+                value = omWeight,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = Color.White,
+                    placeholderColor = Color.White.copy(alpha = 0.75f)
+                ),
+                supportingText = { Text("Oarecare", modifier = Modifier.background(Color.White)) },
+                onValueChange = { it: String ->
+
+                    omWeight = it
+                    // viewModel.updateCityName(it, context = context)
+                    omError = it.isEmpty()
+
+                },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Next,
+                    keyboardType = KeyboardType.Decimal
+                ),
+                label = { Text(text = "OpenMeteo", color = MaterialTheme.colorScheme.onPrimary) },
+                placeholder = { Text(text = "Give a weight") },
+                leadingIcon = {
+                    Image(
+                        painterResource(id = R.drawable.open_meteo),
+                        contentDescription = "Search icon",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .width(48.dp)
+                            .height(48.dp)
+                            .background(MaterialTheme.colorScheme.onSurface),
+                    )
+                },
+                modifier = Modifier
+                    .padding(8.dp)
+                    .height(64.dp),
+                isError = omWeight.isEmpty()
+            )
+            if (omError) {
+                Text(
+                    modifier = Modifier
+//                    .padding(vertical .dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(bottomEnd = 4.dp, bottomStart = 4.dp))
+//                    .background(Color.Transparent)
+                        .background(Color.White.copy(alpha = 0.4f))
+                        .padding(start = 8.dp),
+
+                    text = "Cannot be empty",
+                    fontSize = 12.sp,
+                    color = Color.Red
+                )
+
+            }
+        }
+        Column(
+            modifier = Modifier.width(intrinsicSize = IntrinsicSize.Min)
+        ) {
+            OutlinedTextField(
+                value = vcWeight,
+                colors = TextFieldDefaults.outlinedTextFieldColors(
+                    textColor = Color.White,
+                    placeholderColor = Color.White.copy(alpha = 0.75f)
+                ),
+                supportingText = { Text("Oarecare", modifier = Modifier.background(Color.White)) },
+                onValueChange = { it: String ->
+
+                    vcWeight = it
+                    // viewModel.updateCityName(it, context = context)
+                    vcError = it.isEmpty()
+
+                },
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Sentences,
+                    imeAction = ImeAction.Done,
+                    keyboardType = KeyboardType.Decimal
+                ),
+                label = {
+                    Text(
+                        text = "VisualCrossing",
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                },
+                placeholder = { Text(text = "Give a weight") },
+                leadingIcon = {
+                    Image(
+                        painterResource(id = R.drawable.visualcrossing__1_),
+                        contentDescription = "Search icon",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .width(48.dp)
+                            .height(48.dp)
+                            .background(MaterialTheme.colorScheme.onSurface),
+
+                        )
+                },
+                modifier = Modifier
+                    .height(64.dp),
+                isError = vcWeight.isEmpty()
+            )
+            if (vcError) {
+                Text(
+                    modifier = Modifier
+//                    .padding(vertical .dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(bottomEnd = 4.dp, bottomStart = 4.dp))
+//                    .background(Color.Transparent)
+                        .background(Color.White.copy(alpha = 0.4f))
+                        .padding(start = 8.dp),
+
+                    text = "Cannot be empty",
+                    fontSize = 12.sp,
+                    color = Color.Red
+                )
+
+            }
         }
 
         enable = !(accError || omError || vcError)
         Log.d("Count:1", count.toString())
-        FloatingActionButton(
+        ExtendedFloatingActionButton(
+            modifier = Modifier.padding(top = 8.dp),
             onClick = {
                 Log.d("Add verify", "$accError $omError $vcError")
-                if(enable) {
+                if (enable) {
                     val p = viewModel.point.getPoint()
 //              sa fie in viewModel si sa fie string ( in viewModel fac conversia la double
                     val newPoint = p.copy(
@@ -258,24 +331,23 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
                         omWeight = omWeight.toDouble()
                     )
 
-                Log.d("Add Point:", viewModel.addPoint(newPoint).toString())
+                    Log.d("Add Point:", viewModel.addPoint(newPoint).toString())
 //                Log.d("Add point: ", viewModel.statePoints.value.points.toString())
 
 
                     // isExpanded = r.isFailure
-                    if(results == null) {
+                    if (results == null) {
                         expandViewModel.onItemClicked(1)
                         viewModel.point.restore()
                     }
 
-                }
-                else{
+                } else {
                     Log.d("Add verify", "verify")
                 }
             },
             containerColor = MaterialTheme.colorScheme.onPrimary,
 
-        ) {
+            ) {
 
             Row(
                 modifier = Modifier.padding(8.dp),
@@ -293,4 +365,8 @@ fun AddNewPoint(navigate : () -> Unit = {}, viewModel: PointsViewModel, expandVi
 
     }
 
+}
+
+@Composable
+fun editTextfieldItem() {
 }

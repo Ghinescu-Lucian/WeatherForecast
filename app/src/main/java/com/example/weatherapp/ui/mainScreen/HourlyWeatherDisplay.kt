@@ -53,7 +53,8 @@ fun HourlyWeatherDisplay(
     ) {
         Text(
             text = formattedTime.takeLast(5),
-            color = MaterialTheme.colorScheme.background
+            color = textColor,
+            fontWeight = FontWeight.Bold
         )
         Image(
             painter = painterResource(id = weatherData.weatherType.iconRes),

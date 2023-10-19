@@ -8,5 +8,7 @@ data class WeatherState(
     val weatherInfo: WeatherInfo? = null,
     val isLoading: Boolean = false,
     val error:String? = "",
-    val online: Boolean? = null
+    val online: Boolean? = null,
+    val cacheEmpty: Boolean = true
+
 )

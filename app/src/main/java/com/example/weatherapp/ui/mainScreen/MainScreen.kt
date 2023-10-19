@@ -26,6 +26,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,7 +44,8 @@ fun MainScreen( modifier : Modifier,
 
     val activity = LocalContext.current as? Activity
     val context = LocalContext.current
-
+    var cityName = "Unknown"
+    if(!state.cityName.isNullOrEmpty()) cityName = state.cityName
     Log.d("StateSearch1:", state.online.toString())
 
     Column {
@@ -78,7 +80,7 @@ fun MainScreen( modifier : Modifier,
             ) {
 
                 WeatherCard(
-                    data = state.weatherInfo?.currentWeatherData,
+                    data = state.weatherInfo?.currentWeatherData, city = cityName
                 )
 
 
@@ -133,7 +135,7 @@ fun MainScreen( modifier : Modifier,
                             .align(Alignment.TopStart)
                             .padding(top = 18.dp)
                     ) {
-                        Column(verticalArrangement = Arrangement.Center) {
+
 
 
                             Log.d("Time:",
@@ -143,19 +145,28 @@ fun MainScreen( modifier : Modifier,
 //                                if (state.weatherInfo?.currentWeatherData?.time != LocalDateTime.now().toString()
 //                                )
 
+
+
+
                             if (state.online == null || state.online) {
-                                if (timeViewModel.isTimeOut(state.weatherInfo?.currentWeatherData!!.time)) {
-                                    Text(
-                                        "Old data,\n please refresh", fontSize = 21.sp,
-                                        color = Color.Black,
-                                    )
-                                }
+
                                 Icon(
                                     imageVector = Icons.Default.Refresh,
                                     tint = Color.White,
                                     contentDescription = "Refresh"
                                 )
-                            }
+
+                                if (timeViewModel.isTimeOut(state.weatherInfo?.currentWeatherData!!.time)) {
+                                    Text(
+                                        "Old data, please refresh", fontSize = 10.sp,
+                                        color = Color.White,
+                                        fontStyle = FontStyle.Italic,
+                                        modifier = Modifier.padding(start = 8.dp)
+
+                                    )
+                                }
+
+
                         }
                     }
                 }

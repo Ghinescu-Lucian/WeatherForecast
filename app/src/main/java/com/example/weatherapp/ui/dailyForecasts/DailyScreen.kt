@@ -90,7 +90,7 @@ fun DailyScreen(
         }
         Text("Max. temperature evolution")
         if (data != null) {
-            Box(modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp)) {
+            Box(modifier = Modifier.padding( start = 8.dp, end = 8.dp, bottom = 8.dp)) {
                 DailyGraph(data = data.take(5), xLabels = xLabels)
             }
 //            DailyGraph(data = points)
